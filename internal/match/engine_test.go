@@ -39,6 +39,13 @@ func (s *tieStore) Match(promptID, guess string) (string, bool) {
 	return "e1", true
 }
 
+func (s *tieStore) Suggest(promptID, guess string) (string, bool) {
+	if guess == "" {
+		return "", false
+	}
+	return "Alpha", true
+}
+
 func (s *tieStore) Entry(promptID, entryID string) (data.Entry, bool) {
 	if entryID == "e1" {
 		return data.Entry{ID: "e1", Label: "Alpha", Rarity: 40}, true
@@ -76,6 +83,13 @@ func (s *selectiveStore) Match(promptID, guess string) (string, bool) {
 	return "e1", true
 }
 
+func (s *selectiveStore) Suggest(promptID, guess string) (string, bool) {
+	if _, ok := s.Match(promptID, guess); !ok {
+		return "", false
+	}
+	return "Alpha", true
+}
+
 func (r *recordingEvents) OnRoundStart(round int, prompt data.Prompt, deadlineMs int64, suddenDeath bool) {
 	r.rounds++
 	if round > r.maxRound {
@@ -84,6 +98,7 @@ func (r *recordingEvents) OnRoundStart(round int, prompt data.Prompt, deadlineMs
 }
 func (r *recordingEvents) OnLocked(seat string)                   {}
 func (r *recordingEvents) OnTeammateDraft(seat, text string)      {}
+func (r *recordingEvents) OnSuggest(playerID, label string)       {}
 func (r *recordingEvents) OnRoundResult(out RoundOutcome)         { r.results = append(r.results, out) }
 func (r *recordingEvents) OnMatchEnd(end MatchEnd)                { r.ends = append(r.ends, end) }
 func (r *recordingEvents) OnRoomState()                           {}

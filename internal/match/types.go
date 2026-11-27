@@ -40,6 +40,7 @@ const (
 type PromptStore interface {
 	RandomPrompts(n int, exclude []string) []data.Prompt
 	Match(promptID, guess string) (entryID string, ok bool)
+	Suggest(promptID, guess string) (label string, ok bool)
 	Entry(promptID, entryID string) (data.Entry, bool)
 }
 
@@ -99,6 +100,7 @@ type Events interface {
 	OnRoundStart(round int, prompt data.Prompt, deadlineMs int64, suddenDeath bool)
 	OnLocked(seat string)
 	OnTeammateDraft(seat, text string)
+	OnSuggest(playerID, label string)
 	OnRoundResult(out RoundOutcome)
 	OnMatchEnd(end MatchEnd)
 	OnRoomState()

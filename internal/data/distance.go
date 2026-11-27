@@ -48,13 +48,13 @@ func fuzzyBudget(runeLen int) int {
 	switch {
 	case runeLen <= 0:
 		return 0
-	case runeLen <= 3:
+	case runeLen <= 2:
 		return 0
-	case runeLen <= 6:
-		return 1
-	case runeLen <= 10:
+	case runeLen <= 5:
 		return 2
-	default:
+	case runeLen <= 9:
 		return 3
+	default:
+		return 4
 	}
 }
