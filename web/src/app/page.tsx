@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import { KrillionMark } from "@/components/KrillionMark";
+import { MuteToggle } from "@/components/MuteToggle";
 import { ALL_TIERS, TierBadge } from "@/components/TierBadge";
 import { DepthMeter } from "@/components/DepthMeter";
 import { apiURL } from "@/lib/config";
@@ -72,6 +74,14 @@ export default function Home() {
       />
 
       <div className="relative z-10 w-full max-w-xl text-center">
+        <div className="mb-6 flex items-center justify-between gap-3">
+          <span className="flex items-center gap-2">
+            <KrillionMark name="schooler" size={36} />
+            <KrillionMark name="rare" size={36} />
+            <KrillionMark name="krillion" size={44} />
+          </span>
+          <MuteToggle />
+        </div>
         <p className="mb-3 text-sm tracking-[0.4em] text-cyan-accent/60">
           DEPTH PROTOCOL // COMMIT-BASED DUELS
         </p>

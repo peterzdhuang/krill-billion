@@ -15,6 +15,7 @@ import type {
   RoomStateData,
   Seat,
 } from "@/lib/protocol";
+import { playSfx } from "@/lib/audio";
 import {
   loadHostToken,
   loadReconnectToken,
@@ -138,6 +139,7 @@ export default function PlayPage() {
         case "error": {
           const d = env.data as ErrorData;
           if (d.code === "not_in_bank") {
+            playSfx("reject");
             setAnswerError(d.message || "not in this category");
             setLocked(false);
             break;
