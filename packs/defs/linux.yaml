@@ -1,0 +1,93 @@
+prompts:
+  - id: linux-distro
+    category: Linux distributions
+    text: A Linux distribution
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P31/wdt:P279* wd:Q131669 .
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+      LIMIT 300
+
+  - id: debian-based
+    category: Linux distributions
+    text: A Debian-based distro
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P31/wdt:P279* wd:Q131669 ;
+              wdt:P144 wd:Q7715973 .
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: rpm-distro
+    category: Linux distributions
+    text: An RPM-based Linux distribution
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        VALUES ?item {
+          wd:Q58676 wd:Q58576 wd:Q28010 wd:Q215518 wd:Q1295558 wd:Q80737
+          wd:Q11241 wd:Q207783 wd:Q131382 wd:Q48263 wd:Q26876 wd:Q16471
+        }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: arch-based
+    category: Linux distributions
+    text: An Arch-based Linux distribution
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        VALUES ?item {
+          wd:Q80737 wd:Q216794 wd:Q15275324 wd:Q21041353 wd:Q17147124
+          wd:Q25345924 wd:Q28975100 wd:Q17047990 wd:Q21041347 wd:Q28975096
+          wd:Q21041344 wd:Q28975104
+        }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: mobile-linux
+    category: Linux distributions
+    text: A mobile Linux distribution
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        VALUES ?item {
+          wd:Q94 wd:Q478762 wd:Q152294 wd:Q21041353 wd:Q16972991
+          wd:Q4042997 wd:Q16972790 wd:Q4042174 wd:Q21041347 wd:Q28975100
+          wd:Q4042995 wd:Q21041344
+        }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
