@@ -21,7 +21,7 @@ export function MuteToggle({ className = "" }: { className?: string }) {
       onClick={() => {
         toggleMuted();
       }}
-      className={`rounded border border-cyan-accent/40 px-3 py-1 text-xl text-cyan-glow hover:border-cyan-glow/70 ${className}`}
+      className={`inline-flex min-h-11 items-center rounded border border-cyan-accent/40 px-3 text-xl text-cyan-glow hover:border-cyan-glow/70 ${className}`}
     >
       {muted ? "Sound off" : "Sound on"}
     </button>
