@@ -22,8 +22,9 @@ prompts:
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
         VALUES ?item {
-          wd:Q28865 wd:Q349387 wd:Q3770685 wd:Q1321919 wd:Q188822 wd:Q1334586
-          wd:Q4035747 wd:Q15241004 wd:Q105599023 wd:Q51798 wd:Q726239 wd:Q2005
+          wd:Q978185 wd:Q1106819 wd:Q21659868 wd:Q5366250 wd:Q406009
+          wd:Q285886 wd:Q3816639 wd:Q16963446 wd:Q116885321 wd:Q65082796
+          wd:Q20080327
         }
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
@@ -41,8 +42,9 @@ prompts:
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
         VALUES ?item {
-          wd:Q15777 wd:Q2407 wd:Q163233 wd:Q37227 wd:Q161053 wd:Q132874
-          wd:Q188822 wd:Q5112206 wd:Q426829 wd:Q2005 wd:Q337562 wd:Q829355
+          wd:Q15777 wd:Q2407 wd:Q575650 wd:Q51885456 wd:Q37227
+          wd:Q20080327 wd:Q17118377 wd:Q154755 wd:Q113157814 wd:Q21921428
+          wd:Q64840933 wd:Q319268 wd:Q83303 wd:Q188531 wd:Q165436
         }
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
@@ -60,8 +62,9 @@ prompts:
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
         VALUES ?item {
-          wd:Q28865 wd:Q59 wd:Q161053 wd:Q2005 wd:Q42478 wd:Q51798
-          wd:Q37227 wd:Q131914 wd:Q849146 wd:Q46440 wd:Q2370 wd:Q132874
+          wd:Q28865 wd:Q161053 wd:Q42478 wd:Q59 wd:Q2005 wd:Q207316
+          wd:Q189248 wd:Q5288 wd:Q504453 wd:Q213970 wd:Q206904
+          wd:Q840410 wd:Q2613697 wd:Q2052676
         }
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
@@ -79,8 +82,9 @@ prompts:
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
         VALUES ?item {
-          wd:Q34010 wd:Q188822 wd:Q132874 wd:Q1132275 wd:Q849146 wd:Q37227
-          wd:Q5112206 wd:Q1201807 wd:Q2370 wd:Q2005 wd:Q726239 wd:Q163233
+          wd:Q34010 wd:Q212587 wd:Q648619 wd:Q334879 wd:Q5362035
+          wd:Q51798 wd:Q187560 wd:Q132874 wd:Q849146 wd:Q460584
+          wd:Q597330 wd:Q1254148 wd:Q5366250 wd:Q15408477 wd:Q1334586
         }
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .

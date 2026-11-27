@@ -5,12 +5,11 @@ prompts:
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
         VALUES ?item {
-          wd:Q2283 wd:Q312 wd:Q95 wd:Q3884 wd:Q380 wd:Q2013 wd:Q37033
-          wd:Q308991 wd:Q7414 wd:Q483551 wd:Q163261 wd:Q456084
-          wd:Q11422 wd:Q179200 wd:Q20800404 wd:Q355 wd:Q246065
-          wd:Q13916 wd:Q37156 wd:Q8092 wd:Q780712 wd:Q308962
-          wd:Q679182 wd:Q14001 wd:Q478214 wd:Q8072 wd:Q855124
-          wd:Q1630305 wd:Q191824 wd:Q4830453
+          wd:Q2283 wd:Q312 wd:Q95 wd:Q3884 wd:Q380 wd:Q20800404
+          wd:Q37156 wd:Q182477 wd:Q478214 wd:Q248 wd:Q128896
+          wd:Q19900 wd:Q941127 wd:Q11463 wd:Q173395 wd:Q14799
+          wd:Q552581 wd:Q21404084 wd:Q20718 wd:Q41187 wd:Q907311
+          wd:Q689141 wd:Q780442 wd:Q63327
         }
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
@@ -28,9 +27,9 @@ prompts:
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
         VALUES ?item {
-          wd:Q312 wd:Q3884 wd:Q27978 wd:Q163261 wd:Q2013 wd:Q11422
-          wd:Q308991 wd:Q483551 wd:Q179200 wd:Q246065 wd:Q8092
-          wd:Q855124
+          wd:Q312 wd:Q20718 wd:Q95 wd:Q1636958 wd:Q160120 wd:Q1418
+          wd:Q934853 wd:Q41187 wd:Q16499972 wd:Q2084900 wd:Q162345
+          wd:Q186012 wd:Q171819 wd:Q2283
         }
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
@@ -48,9 +47,9 @@ prompts:
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
         VALUES ?item {
-          wd:Q380 wd:Q2013 wd:Q355 wd:Q1630305 wd:Q2283 wd:Q95
-          wd:Q246065 wd:Q179200 wd:Q308962 wd:Q4830453 wd:Q14001
-          wd:Q191824
+          wd:Q380 wd:Q355 wd:Q1390577 wd:Q55606242 wd:Q255381
+          wd:Q213660 wd:Q1136 wd:Q22907849 wd:Q32049814 wd:Q95
+          wd:Q333618
         }
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
@@ -64,12 +63,13 @@ prompts:
 
   - id: chip-company
     category: Tech companies
-    text: A semiconductor company
+    text: A company that makes chips
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
         VALUES ?item {
-          wd:Q182477 wd:Q11467 wd:Q475080 wd:Q209281 wd:Q7414 wd:Q1477735
-          wd:Q48911 wd:Q485046 wd:Q11422 wd:Q163261 wd:Q3884 wd:Q312
+          wd:Q248 wd:Q128896 wd:Q182477 wd:Q544847 wd:Q713418
+          wd:Q555925 wd:Q20718 wd:Q193412 wd:Q699848 wd:Q1197548
+          wd:Q37156 wd:Q297879 wd:Q312
         }
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
@@ -83,12 +83,13 @@ prompts:
 
   - id: streaming-company
     category: Tech companies
-    text: A streaming / media tech company
+    text: A streaming company
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
         VALUES ?item {
-          wd:Q907311 wd:Q163261 wd:Q95 wd:Q2283 wd:Q355 wd:Q179200
-          wd:Q246065 wd:Q8092 wd:Q483551 wd:Q191824 wd:Q308962 wd:Q14001
+          wd:Q907311 wd:Q689141 wd:Q7414 wd:Q3884 wd:Q312
+          wd:Q866 wd:Q1630304 wd:Q4555537 wd:Q568769 wd:Q602243
+          wd:Q95 wd:Q107074885
         }
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .

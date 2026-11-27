@@ -27,7 +27,20 @@ type Options struct {
 	CacheDir string
 }
 
-// Build loads defs, fetches Wikidata + pageviews, and writes pack JSON.
+type builtPrompt struct {
+	prompt        data.Prompt
+	check         string
+	disagreed     bool
+	pageviewsUsed bool
+}
+
+type raw struct {
+	Member Member
+	Views  int64
+}
+
+// Build loads defs, fetches Wikidata, sitelinks, pageviews, and any second
+// membership list, then writes pack JSON.
 func Build(ctx context.Context, opt Options) (*data.Pack, error) {
 	if opt.DefsDir == "" {
 		opt.DefsDir = "packs/defs"
@@ -74,33 +87,73 @@ func Build(ctx context.Context, opt Options) (*data.Pack, error) {
 		Concurrency: 6,
 		HTTP:        &http.Client{Timeout: 30 * time.Second},
 	}
-
-	pack := &data.Pack{
-		PackID:  opt.PackID,
-		Version: 1,
-		BuiltAt: time.Now().UTC().Format(time.RFC3339),
-		Attribution: []string{
-			"Wikidata (CC0)",
-			"Wikimedia Pageviews API",
-		},
+	checks := &CheckClient{
+		CacheDir: opt.CacheDir,
+		Offline:  opt.Offline,
+		HTTP:     &http.Client{Timeout: 90 * time.Second},
 	}
+
+	var (
+		pageviewsUsed bool
+		restUsed      bool
+		pokeUsed      bool
+		restDisagree  []string
+		pokeDisagree  []string
+		prompts       []data.Prompt
+	)
 
 	for i, def := range defs {
 		fmt.Fprintf(os.Stderr, "[%d/%d] %s …\n", i+1, len(defs), def.ID)
-		prompt, err := buildPrompt(ctx, def, wd, pv)
+		built, err := buildPrompt(ctx, def, wd, pv, checks)
 		if err != nil {
 			return nil, fmt.Errorf("prompt %s: %w", def.ID, err)
 		}
-		fmt.Fprintf(os.Stderr, "  → %d entries\n", len(prompt.Entries))
-		pack.Prompts = append(pack.Prompts, *prompt)
+		note := ""
+		if built.disagreed {
+			note = " (kept Wikidata membership)"
+		}
+		fmt.Fprintf(os.Stderr, "  → %d entries%s\n", len(built.prompt.Entries), note)
+		switch built.check {
+		case "restcountries":
+			restUsed = true
+			if built.disagreed {
+				restDisagree = append(restDisagree, def.ID)
+			}
+		case "pokeapi":
+			pokeUsed = true
+			if built.disagreed {
+				pokeDisagree = append(pokeDisagree, def.ID)
+			}
+		}
+		if built.pageviewsUsed {
+			pageviewsUsed = true
+		}
+		prompts = append(prompts, built.prompt)
 	}
 
-	sort.SliceStable(pack.Prompts, func(i, j int) bool {
-		if pack.Prompts[i].Category != pack.Prompts[j].Category {
-			return pack.Prompts[i].Category < pack.Prompts[j].Category
+	sort.SliceStable(prompts, func(i, j int) bool {
+		if prompts[i].Category != prompts[j].Category {
+			return prompts[i].Category < prompts[j].Category
 		}
-		return pack.Prompts[i].ID < pack.Prompts[j].ID
+		return prompts[i].ID < prompts[j].ID
 	})
+	sort.Strings(restDisagree)
+	sort.Strings(pokeDisagree)
+
+	pack := &data.Pack{
+		PackID:      opt.PackID,
+		Version:     1,
+		BuiltAt:     time.Now().UTC().Format(time.RFC3339),
+		Attribution: packAttribution(pageviewsUsed, restUsed, pokeUsed, restDisagree, pokeDisagree),
+		Prompts:     prompts,
+	}
+	if len(restDisagree) > 0 {
+		fmt.Fprintf(os.Stderr, "REST Countries disagreement: %s\n", strings.Join(restDisagree, ", "))
+	}
+	if len(pokeDisagree) > 0 {
+		fmt.Fprintf(os.Stderr, "PokeAPI disagreement: %s\n", strings.Join(pokeDisagree, ", "))
+	}
+	fmt.Fprintf(os.Stderr, "attribution: %s\n", strings.Join(pack.Attribution, " | "))
 
 	if err := writePack(opt.OutPath, pack); err != nil {
 		return nil, err
@@ -108,18 +161,36 @@ func Build(ctx context.Context, opt Options) (*data.Pack, error) {
 	return pack, nil
 }
 
-func buildPrompt(ctx context.Context, def PromptDef, wd *WikidataClient, pv *PageviewsClient) (*data.Prompt, error) {
+func packAttribution(pageviewsUsed, restUsed, pokeUsed bool, restDisagree, pokeDisagree []string) []string {
+	attr := []string{"Wikidata (CC0)"}
+	if pageviewsUsed {
+		attr = append(attr, "Wikimedia Pageviews API")
+	}
+	if restUsed {
+		attr = append(attr, "REST Countries")
+	}
+	if pokeUsed {
+		attr = append(attr, "PokeAPI")
+	}
+	if len(restDisagree) > 0 {
+		attr = append(attr, "REST Countries disagreement: kept Wikidata membership")
+	}
+	if len(pokeDisagree) > 0 {
+		attr = append(attr, "PokeAPI disagreement: kept Wikidata membership")
+	}
+	return attr
+}
+
+func buildPrompt(ctx context.Context, def PromptDef, wd *WikidataClient, pv *PageviewsClient, checks *CheckClient) (*builtPrompt, error) {
 	members, err := wd.Query(ctx, def.ID, def.SPARQL)
 	if err != nil {
 		return nil, err
 	}
 
-	type raw struct {
-		Member Member
-		Views  int64
+	if len(members) == 0 {
+		return nil, fmt.Errorf("wikidata returned no rows")
 	}
 	candidates := make([]raw, 0, len(members))
-	articles := make([]string, 0, len(members))
 	for _, m := range members {
 		if m.Article == "" {
 			continue
@@ -127,15 +198,65 @@ func buildPrompt(ctx context.Context, def PromptDef, wd *WikidataClient, pv *Pag
 		if m.Label == "" || qidLabel.MatchString(m.Label) {
 			continue
 		}
-		articles = append(articles, m.Article)
 		candidates = append(candidates, raw{Member: m})
 	}
+	if len(candidates) == 0 {
+		return nil, fmt.Errorf("no wikidata rows with an enwiki article")
+	}
 
-	views, err := pv.FetchMany(ctx, articles)
-	if err != nil && len(views) == 0 {
+	needLinks := make([]string, 0, len(candidates))
+	for _, c := range candidates {
+		if !c.Member.SitelinksKnown {
+			needLinks = append(needLinks, c.Member.ID)
+		}
+	}
+	counts, err := wd.SitelinkCounts(ctx, needLinks)
+	if err != nil {
 		return nil, err
 	}
 	for i := range candidates {
+		m := &candidates[i].Member
+		if m.SitelinksKnown {
+			continue
+		}
+		if n, ok := counts[m.ID]; ok {
+			m.Sitelinks = n
+			m.SitelinksKnown = true
+		}
+	}
+
+	disagreed := false
+	if def.Check != "" {
+		list, err := checks.List(ctx, def.Check)
+		if err != nil {
+			return nil, err
+		}
+		var kept []raw
+		kept, disagreed = applySecondSource(candidates, list)
+		fmt.Fprintf(os.Stderr, "  %s: %d/%d wikidata rows in the second list\n", def.Check, countMatches(candidates, list), len(candidates))
+		candidates = kept
+	}
+	if len(candidates) == 0 {
+		return nil, fmt.Errorf("no entries after membership check")
+	}
+
+	articles := make([]string, 0, len(candidates))
+	for _, c := range candidates {
+		articles = append(articles, c.Member.Article)
+	}
+	fmt.Fprintf(os.Stderr, "  pageviews: %d articles\n", len(articles))
+	views, err := pv.FetchMany(ctx, articles)
+	pageviewsUsed := err == nil && !allZeroViews(views)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "  pageviews unavailable (%v); sitelinks only\n", err)
+	} else if !pageviewsUsed {
+		fmt.Fprintf(os.Stderr, "  pageviews all zero; sitelinks only\n")
+	}
+	for i := range candidates {
+		if !pageviewsUsed {
+			candidates[i].Views = 0
+			continue
+		}
 		candidates[i].Views = views[candidates[i].Member.Article]
 	}
 
@@ -160,11 +281,15 @@ func buildPrompt(ctx context.Context, def PromptDef, wd *WikidataClient, pv *Pag
 		labelSet[strings.ToLower(c.Member.Label)] = c.Member.ID
 	}
 
-	viewed := make([]Viewed, 0, len(kept))
+	scored := make([]Scored, 0, len(kept))
 	for _, c := range kept {
-		viewed = append(viewed, Viewed{ID: c.Member.ID, Views: c.Views})
+		scored = append(scored, Scored{
+			ID:        c.Member.ID,
+			Views:     c.Views,
+			Sitelinks: int64(c.Member.Sitelinks),
+		})
 	}
-	rarities := AssignRarity(viewed)
+	rarities := AssignBlendedRarity(scored)
 
 	entries := make([]data.Entry, 0, len(kept))
 	for _, c := range kept {
@@ -184,12 +309,83 @@ func buildPrompt(ctx context.Context, def PromptDef, wd *WikidataClient, pv *Pag
 		return entries[i].ID < entries[j].ID
 	})
 
-	return &data.Prompt{
-		ID:       def.ID,
-		Category: def.Category,
-		Text:     def.Text,
-		Entries:  entries,
+	return &builtPrompt{
+		prompt: data.Prompt{
+			ID:       def.ID,
+			Category: def.Category,
+			Text:     def.Text,
+			Entries:  entries,
+		},
+		check:         def.Check,
+		disagreed:     disagreed,
+		pageviewsUsed: pageviewsUsed,
 	}, nil
+}
+
+// applySecondSource keeps the intersection of Wikidata rows and list.
+// If that would drop more than 40% of the Wikidata rows, the Wikidata set is
+// kept and disagreed is true. Rows that do match still pick up the second
+// source's spellings. Names with no Wikidata id are never added.
+func applySecondSource(rows []raw, list *ExternalList) ([]raw, bool) {
+	if list == nil || len(rows) == 0 {
+		return rows, false
+	}
+	matched := make([]raw, 0, len(rows))
+	matchedAt := make(map[string][]string, len(rows))
+	for _, row := range rows {
+		ok, extras := list.Match(row.Member.Label, row.Member.Aliases)
+		if !ok {
+			continue
+		}
+		aliases := make([]string, 0, len(row.Member.Aliases)+len(extras))
+		aliases = append(aliases, row.Member.Aliases...)
+		aliases = append(aliases, extras...)
+		row.Member.Aliases = aliases
+		matched = append(matched, row)
+		matchedAt[row.Member.ID] = aliases
+	}
+	if !keepIntersection(len(rows), len(matched)) {
+		out := make([]raw, len(rows))
+		for i, row := range rows {
+			if aliases, ok := matchedAt[row.Member.ID]; ok {
+				row.Member.Aliases = aliases
+			}
+			out[i] = row
+		}
+		return out, true
+	}
+	return matched, false
+}
+
+// keepIntersection is false when the overlap would drop more than 40% of rows.
+func keepIntersection(wikidataRows, intersectionRows int) bool {
+	if wikidataRows <= 0 || intersectionRows >= wikidataRows {
+		return true
+	}
+	dropped := wikidataRows - intersectionRows
+	return dropped*5 <= wikidataRows*2
+}
+
+func countMatches(rows []raw, list *ExternalList) int {
+	n := 0
+	for _, row := range rows {
+		if ok, _ := list.Match(row.Member.Label, row.Member.Aliases); ok {
+			n++
+		}
+	}
+	return n
+}
+
+func allZeroViews(views map[string]int64) bool {
+	if len(views) == 0 {
+		return true
+	}
+	for _, v := range views {
+		if v != 0 {
+			return false
+		}
+	}
+	return true
 }
 
 func filterAliases(aliases []string, label string, labelSet map[string]string, selfID string) []string {
@@ -223,5 +419,9 @@ func writePack(path string, pack *data.Pack) error {
 		return err
 	}
 	b = append(b, '\n')
-	return os.WriteFile(path, b, 0o644)
+	tmp := path + ".tmp"
+	if err := os.WriteFile(tmp, b, 0o644); err != nil {
+		return err
+	}
+	return os.Rename(tmp, path)
 }

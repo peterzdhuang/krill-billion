@@ -10,11 +10,13 @@ import (
 )
 
 // PromptDef is one prompt definition from packs/defs/*.yaml.
+// Check is an optional second membership list: "restcountries" or "pokeapi".
 type PromptDef struct {
 	ID       string `yaml:"id"`
 	Category string `yaml:"category"`
 	Text     string `yaml:"text"`
 	SPARQL   string `yaml:"sparql"`
+	Check    string `yaml:"check"`
 }
 
 // DefFile is the on-disk YAML shape (single prompt or a list under prompts:).
@@ -23,6 +25,7 @@ type DefFile struct {
 	Category string      `yaml:"category"`
 	Text     string      `yaml:"text"`
 	SPARQL   string      `yaml:"sparql"`
+	Check    string      `yaml:"check"`
 	Prompts  []PromptDef `yaml:"prompts"`
 }
 
@@ -69,7 +72,7 @@ func loadDefFile(path string) ([]PromptDef, error) {
 		}
 		return f.Prompts, nil
 	}
-	p := PromptDef{ID: f.ID, Category: f.Category, Text: f.Text, SPARQL: f.SPARQL}
+	p := PromptDef{ID: f.ID, Category: f.Category, Text: f.Text, SPARQL: f.SPARQL, Check: f.Check}
 	if err := validateDef(p); err != nil {
 		return nil, fmt.Errorf("%s: %w", path, err)
 	}
@@ -88,6 +91,11 @@ func validateDef(p PromptDef) error {
 	}
 	if strings.TrimSpace(p.SPARQL) == "" {
 		return fmt.Errorf("missing sparql")
+	}
+	switch p.Check {
+	case "", "restcountries", "pokeapi":
+	default:
+		return fmt.Errorf("unknown check %q", p.Check)
 	}
 	return nil
 }

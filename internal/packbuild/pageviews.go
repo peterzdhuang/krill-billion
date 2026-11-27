@@ -24,11 +24,11 @@ type pageviewsResponse struct {
 
 // PageviewsClient sums the last 12 months of enwiki pageviews with disk cache.
 type PageviewsClient struct {
-	HTTP       *http.Client
-	CacheDir   string
-	Offline    bool
+	HTTP        *http.Client
+	CacheDir    string
+	Offline     bool
 	Concurrency int
-	MinGap     time.Duration
+	MinGap      time.Duration
 
 	mu     sync.Mutex
 	lastAt time.Time
@@ -133,7 +133,12 @@ func (c *PageviewsClient) FetchMany(ctx context.Context, articles []string) (map
 
 	var firstErr error
 	failed := 0
+	done := 0
 	for r := range resCh {
+		done++
+		if done%250 == 0 {
+			fmt.Fprintf(os.Stderr, "    pageviews %d\n", done)
+		}
 		if r.err != nil {
 			failed++
 			if firstErr == nil {

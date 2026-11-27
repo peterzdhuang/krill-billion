@@ -27,7 +27,7 @@ prompts:
             wd:Q2 wd:Q313 wd:Q308 wd:Q111 wd:Q319 wd:Q193 wd:Q324 wd:Q332
           }
         } UNION {
-          ?item wdt:P31/wdt:P279* wd:Q1086007 .
+          ?item wdt:P31/wdt:P279* wd:Q2537 .
           ?item wdt:P397 ?parent .
           VALUES ?parent { wd:Q2 wd:Q313 wd:Q308 wd:Q111 wd:Q319 wd:Q193 wd:Q324 wd:Q332 wd:Q525 }
         }
@@ -46,7 +46,7 @@ prompts:
     text: A moon of Saturn
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
-        ?item wdt:P31/wdt:P279* wd:Q1086007 ;
+        ?item wdt:P31/wdt:P279* wd:Q2537 ;
               wdt:P397 wd:Q193 .
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
@@ -63,7 +63,7 @@ prompts:
     text: A moon of Jupiter
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
-        ?item wdt:P31/wdt:P279* wd:Q1086007 ;
+        ?item wdt:P31/wdt:P279* wd:Q2537 ;
               wdt:P397 wd:Q319 .
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
@@ -80,7 +80,7 @@ prompts:
     text: A dwarf planet
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
-        ?item wdt:P31/wdt:P279* wd:Q338 .
+        ?item wdt:P31/wdt:P279* wd:Q2199 .
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
         OPTIONAL {
