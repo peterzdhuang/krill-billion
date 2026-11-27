@@ -33,9 +33,7 @@ FRONTEND_ORIGIN=http://localhost:3000 make server
 
 ## Packs
 
-Question packs live in `packs/*.json`. Main pack: `packs/core-v1.json`. Sample: `packs/sample.json`.
-
-Prompt definitions for the builder are YAML under `packs/defs/`. A two-prompt acceptance fixture is in `packs/defs-sample/`.
+`packs/core-v1.json` is built by `make packbuild` from Wikidata, Wikimedia pageviews, and the optional second datasets named on a prompt definition (`check: restcountries` or `check: pokeapi`). Sample pack: `packs/sample.json`. Prompt definitions are YAML under `packs/defs/`. A two-prompt acceptance fixture is in `packs/defs-sample/`.
 
 The server keeps one in-memory copy of the bank. On boot it loads that copy from Supabase when credentials are set, and from `packs/*.json` otherwise.
 

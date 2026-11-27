@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"testing"
 )
 
@@ -44,6 +45,53 @@ func TestSamplePackParses(t *testing.T) {
 			}
 			if e.Rarity < 0 || e.Rarity > 100 {
 				t.Fatalf("rarity out of range for %s: %d", e.ID, e.Rarity)
+			}
+		}
+	}
+}
+
+func TestCorePackLoads(t *testing.T) {
+	_, file, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatal("runtime.Caller failed")
+	}
+	dir := filepath.Join(filepath.Dir(file), "..", "..", "packs")
+	store, err := Load(dir)
+	if err != nil {
+		t.Fatalf("Load: %v", err)
+	}
+	if store.PromptCount() < 52 {
+		t.Fatalf("prompts = %d, want sample plus core", store.PromptCount())
+	}
+
+	b, err := os.ReadFile(filepath.Join(dir, "core-v1.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var pack Pack
+	if err := json.Unmarshal(b, &pack); err != nil {
+		t.Fatal(err)
+	}
+	if pack.PackID != "core-v1" {
+		t.Fatalf("pack_id = %q", pack.PackID)
+	}
+	if len(pack.Prompts) != 50 {
+		t.Fatalf("prompts = %d, want 50", len(pack.Prompts))
+	}
+	attr := strings.Join(pack.Attribution, "\n")
+	for _, want := range []string{"Wikidata (CC0)", "Wikimedia Pageviews API", "REST Countries", "PokeAPI"} {
+		if !strings.Contains(attr, want) {
+			t.Fatalf("attribution missing %q: %v", want, pack.Attribution)
+		}
+	}
+	for _, p := range pack.Prompts {
+		if len(p.Entries) == 0 {
+			t.Fatalf("prompt %s has no entries", p.ID)
+		}
+		for i := 1; i < len(p.Entries); i++ {
+			a, b := p.Entries[i-1], p.Entries[i]
+			if a.Rarity > b.Rarity || (a.Rarity == b.Rarity && a.ID > b.ID) {
+				t.Fatalf("prompt %s entries not ordered at %s", p.ID, b.ID)
 			}
 		}
 	}

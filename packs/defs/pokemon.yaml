@@ -2,10 +2,11 @@ prompts:
   - id: pokemon-gen1
     category: Pokemon
     text: A Pokémon introduced in Generation I
+    check: pokeapi
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
-        ?item wdt:P31/wdt:P279* wd:Q39646 ;
-              wdt:P361 wd:Q1158221 .
+        ?item wdt:P31/wdt:P279* wd:Q3966183 ;
+              wdt:P4584 wd:Q27118928 .
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
         OPTIONAL {
@@ -19,10 +20,10 @@ prompts:
   - id: water-pokemon
     category: Pokemon
     text: A Water-type Pokémon
+    check: pokeapi
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
-        ?item wdt:P31/wdt:P279* wd:Q39646 ;
-              wdt:P6945 wd:Q2593047 .
+        ?item wdt:P31 wd:Q25930495 .
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
         OPTIONAL {
@@ -37,10 +38,10 @@ prompts:
   - id: fire-pokemon
     category: Pokemon
     text: A Fire-type Pokémon
+    check: pokeapi
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
-        ?item wdt:P31/wdt:P279* wd:Q39646 ;
-              wdt:P6945 wd:Q2593043 .
+        ?item wdt:P31 wd:Q25930490 .
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
         OPTIONAL {
@@ -55,9 +56,10 @@ prompts:
   - id: legendary-pokemon
     category: Pokemon
     text: A legendary Pokémon
+    check: pokeapi
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
-        ?item wdt:P31 wd:Q1587830 .
+        ?item wdt:P31 wd:Q2251118 .
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
         OPTIONAL {
@@ -71,9 +73,10 @@ prompts:
   - id: starter-pokemon
     category: Pokemon
     text: A starter Pokémon
+    check: pokeapi
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
-        ?item wdt:P31 wd:Q12042548 .
+        ?item wdt:P31 wd:Q15141638 .
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
         OPTIONAL {

@@ -20,8 +20,14 @@ prompts:
     text: A terrier
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
-        ?item wdt:P31 wd:Q39367 ;
-              wdt:P279* wd:Q39376 .
+        ?item wdt:P31 wd:Q39367 .
+        {
+          ?item wdt:P279* wd:Q38984 .
+        } UNION {
+          ?item rdfs:label ?enLabel .
+          FILTER(LANG(?enLabel) = "en")
+          FILTER(CONTAINS(LCASE(?enLabel), "terrier"))
+        }
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
         OPTIONAL {
@@ -37,8 +43,14 @@ prompts:
     text: A herding dog breed
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
-        ?item wdt:P31 wd:Q39367 ;
-              wdt:P279* wd:Q1477746 .
+        ?item wdt:P31 wd:Q39367 .
+        {
+          ?item wdt:P279* wd:Q38967 .
+        } UNION {
+          ?item rdfs:label ?enLabel .
+          FILTER(LANG(?enLabel) = "en")
+          FILTER(REGEX(LCASE(?enLabel), "collie|sheepdog|shepherd|herder|corgi|kelpie|heeler|malinois|beauceron|briard"))
+        }
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
         OPTIONAL {
@@ -54,8 +66,16 @@ prompts:
     text: A toy dog breed
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
-        ?item wdt:P31 wd:Q39367 ;
-              wdt:P279* wd:Q38923 .
+        ?item wdt:P31 wd:Q39367 .
+        {
+          ?item wdt:P279* wd:Q2991480 .
+        } UNION {
+          ?item wdt:P279* wd:Q38914 .
+        } UNION {
+          ?item rdfs:label ?enLabel .
+          FILTER(LANG(?enLabel) = "en")
+          FILTER(REGEX(LCASE(?enLabel), "chihuahua|pomeranian|papillon|pekingese|maltese|havanese|bichon|affenpinscher|griffon|yorkshire terrier|chinese crested|cavalier|toy terrier|miniature pinscher|\\bpug\\b"))
+        }
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
         OPTIONAL {
@@ -71,8 +91,16 @@ prompts:
     text: A working dog breed
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
-        ?item wdt:P31 wd:Q39367 ;
-              wdt:P279* wd:Q39274 .
+        ?item wdt:P31 wd:Q39367 .
+        {
+          ?item wdt:P279* wd:Q1806324 .
+        } UNION {
+          ?item wdt:P279* wd:Q38920 .
+        } UNION {
+          ?item rdfs:label ?enLabel .
+          FILTER(LANG(?enLabel) = "en")
+          FILTER(REGEX(LCASE(?enLabel), "mastiff|rottweiler|dobermann|doberman|\\bboxer\\b|husky|malamute|newfoundland|bernard|leonberger|cane corso|dogue|akita|samoyed|great dane|pyrenees|komondor|kuvasz|bernese|schnauzer"))
+        }
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
         OPTIONAL {

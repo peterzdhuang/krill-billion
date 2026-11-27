@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# The committed packs/core-v1.json comes from `make packbuild`.
 """Hand-build packs/core-v1.json when a full live packbuild is too slow."""
 
 from __future__ import annotations

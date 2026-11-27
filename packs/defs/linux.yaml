@@ -38,10 +38,9 @@ prompts:
     text: An RPM-based Linux distribution
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
-        VALUES ?item {
-          wd:Q58676 wd:Q58576 wd:Q28010 wd:Q215518 wd:Q1295558 wd:Q80737
-          wd:Q11241 wd:Q207783 wd:Q131382 wd:Q48263 wd:Q26876 wd:Q16471
-        }
+        VALUES ?root { wd:Q48267 wd:Q215273 wd:Q16691 wd:Q207542 wd:Q1129541 wd:Q104102686 }
+        ?item wdt:P31/wdt:P279* wd:Q131669 ;
+              wdt:P144* ?root .
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
         OPTIONAL {
@@ -57,11 +56,8 @@ prompts:
     text: An Arch-based Linux distribution
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
-        VALUES ?item {
-          wd:Q80737 wd:Q216794 wd:Q15275324 wd:Q21041353 wd:Q17147124
-          wd:Q25345924 wd:Q28975100 wd:Q17047990 wd:Q21041347 wd:Q28975096
-          wd:Q21041344 wd:Q28975104
-        }
+        ?item wdt:P31/wdt:P279* wd:Q131669 ;
+              wdt:P144* wd:Q185576 .
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
         OPTIONAL {
@@ -78,9 +74,8 @@ prompts:
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
         VALUES ?item {
-          wd:Q94 wd:Q478762 wd:Q152294 wd:Q21041353 wd:Q16972991
-          wd:Q4042997 wd:Q16972790 wd:Q4042174 wd:Q21041347 wd:Q28975100
-          wd:Q4042995 wd:Q21041344
+          wd:Q94 wd:Q2595413 wd:Q81229 wd:Q609306 wd:Q28059734
+          wd:Q99615161 wd:Q48774201 wd:Q550303 wd:Q305873
         }
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .

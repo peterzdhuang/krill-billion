@@ -2,14 +2,18 @@ package packbuild
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
+	"math"
 	"net/http"
 	"net/url"
 	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -23,10 +27,12 @@ var qidFromURI = regexp.MustCompile(`/(Q\d+)$`)
 
 // Member is one Wikidata entity with enwiki sitelink and English aliases.
 type Member struct {
-	ID      string
-	Label   string
-	Article string // enwiki title
-	Aliases []string
+	ID             string
+	Label          string
+	Article        string // enwiki title
+	Aliases        []string
+	Sitelinks      int  `json:"sitelinks,omitempty"`
+	SitelinksKnown bool `json:"sitelinks_known,omitempty"`
 }
 
 type sparqlResponse struct {
@@ -47,13 +53,15 @@ type WikidataClient struct {
 	Offline  bool
 	MinGap   time.Duration
 	lastAt   time.Time
+
+	sitelinks map[string]int
 }
 
 func (c *WikidataClient) Query(ctx context.Context, promptID, sparql string) ([]Member, error) {
-	cachePath := filepath.Join(c.CacheDir, "sparql", promptID+".json")
+	cachePath := filepath.Join(c.CacheDir, "sparql", sparqlCacheName(promptID, sparql))
 	if b, err := os.ReadFile(cachePath); err == nil {
 		var members []Member
-		if err := json.Unmarshal(b, &members); err == nil {
+		if err := json.Unmarshal(b, &members); err == nil && len(members) > 0 {
 			return members, nil
 		}
 	}
@@ -61,37 +69,30 @@ func (c *WikidataClient) Query(ctx context.Context, promptID, sparql string) ([]
 		return nil, fmt.Errorf("offline: no sparql cache for %s", promptID)
 	}
 
-	if err := c.wait(ctx); err != nil {
+	parsed, err := c.fetchBindingsRetry(ctx, sparql)
+	if err != nil {
 		return nil, err
 	}
-
-	var lastErr error
-	for attempt := 0; attempt < 5; attempt++ {
-		if attempt > 0 {
-			backoff := time.Duration(attempt*attempt) * time.Second
-			select {
-			case <-ctx.Done():
-				return nil, ctx.Err()
-			case <-time.After(backoff):
-			}
-		}
-		members, err := c.fetchSPARQL(ctx, sparql)
-		if err == nil {
-			if err := os.MkdirAll(filepath.Dir(cachePath), 0o755); err != nil {
-				return nil, err
-			}
-			b, err := json.MarshalIndent(members, "", "  ")
-			if err != nil {
-				return nil, err
-			}
-			if err := os.WriteFile(cachePath, b, 0o644); err != nil {
-				return nil, err
-			}
-			return members, nil
-		}
-		lastErr = err
+	members := membersFromBindings(parsed)
+	if len(members) == 0 {
+		return nil, fmt.Errorf("wikidata returned no rows")
 	}
-	return nil, lastErr
+	if err := os.MkdirAll(filepath.Dir(cachePath), 0o755); err != nil {
+		return nil, err
+	}
+	b, err := json.MarshalIndent(members, "", "  ")
+	if err != nil {
+		return nil, err
+	}
+	if err := os.WriteFile(cachePath, b, 0o644); err != nil {
+		return nil, err
+	}
+	return members, nil
+}
+
+func sparqlCacheName(promptID, sparql string) string {
+	sum := sha256.Sum256([]byte(strings.TrimSpace(sparql)))
+	return promptID + "-" + hex.EncodeToString(sum[:6]) + ".json"
 }
 
 func (c *WikidataClient) wait(ctx context.Context) error {
@@ -117,7 +118,31 @@ func (c *WikidataClient) wait(ctx context.Context) error {
 	}
 }
 
-func (c *WikidataClient) fetchSPARQL(ctx context.Context, sparql string) ([]Member, error) {
+func (c *WikidataClient) fetchBindingsRetry(ctx context.Context, sparql string) (*sparqlResponse, error) {
+	var lastErr error
+	for attempt := 0; attempt < 5; attempt++ {
+		if attempt > 0 {
+			backoff := time.Duration(attempt*attempt) * time.Second
+			fmt.Fprintf(os.Stderr, "  wikidata retry %d: %v\n", attempt, lastErr)
+			select {
+			case <-ctx.Done():
+				return nil, ctx.Err()
+			case <-time.After(backoff):
+			}
+		}
+		if err := c.wait(ctx); err != nil {
+			return nil, err
+		}
+		parsed, err := c.fetchBindings(ctx, sparql)
+		if err == nil {
+			return parsed, nil
+		}
+		lastErr = err
+	}
+	return nil, lastErr
+}
+
+func (c *WikidataClient) fetchBindings(ctx context.Context, sparql string) (*sparqlResponse, error) {
 	u, err := url.Parse(wikidataEndpoint)
 	if err != nil {
 		return nil, err
@@ -155,7 +180,10 @@ func (c *WikidataClient) fetchSPARQL(ctx context.Context, sparql string) ([]Memb
 	if err := json.Unmarshal(body, &parsed); err != nil {
 		return nil, fmt.Errorf("decode sparql: %w", err)
 	}
+	return &parsed, nil
+}
 
+func membersFromBindings(parsed *sparqlResponse) []Member {
 	byID := make(map[string]*Member)
 	for _, b := range parsed.Results.Bindings {
 		itemURI := b["item"].Value
@@ -185,6 +213,12 @@ func (c *WikidataClient) fetchSPARQL(ctx context.Context, sparql string) ([]Memb
 				}
 			}
 		}
+		if sl, ok := b["sitelinks"]; ok {
+			if n, ok := parseIntLiteral(sl.Value); ok {
+				m.Sitelinks = n
+				m.SitelinksKnown = true
+			}
+		}
 	}
 
 	out := make([]Member, 0, len(byID))
@@ -192,7 +226,22 @@ func (c *WikidataClient) fetchSPARQL(ctx context.Context, sparql string) ([]Memb
 		m.Aliases = uniqueFold(m.Aliases)
 		out = append(out, *m)
 	}
-	return out, nil
+	return out
+}
+
+func parseIntLiteral(s string) (int, bool) {
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return 0, false
+	}
+	if i, err := strconv.Atoi(s); err == nil {
+		return i, true
+	}
+	f, err := strconv.ParseFloat(s, 64)
+	if err != nil || math.IsNaN(f) || math.IsInf(f, 0) {
+		return 0, false
+	}
+	return int(math.Round(f)), true
 }
 
 func extractQID(uri string) string {

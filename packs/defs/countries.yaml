@@ -2,6 +2,7 @@ prompts:
   - id: country
     category: Countries
     text: A country
+    check: restcountries
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
         ?item wdt:P31 wd:Q3624078 .
@@ -19,9 +20,10 @@ prompts:
   - id: landlocked-country
     category: Countries
     text: A landlocked country
+    check: restcountries
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
-        ?item wdt:P31 wd:Q123346 .
+        ?item wdt:P31 wd:Q123480 .
         FILTER NOT EXISTS { ?item wdt:P31 wd:Q3024240 }
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
@@ -36,6 +38,7 @@ prompts:
   - id: african-country
     category: Countries
     text: A country in Africa
+    check: restcountries
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
         ?item wdt:P31 wd:Q3624078 ;
@@ -54,6 +57,7 @@ prompts:
   - id: island-country
     category: Countries
     text: An island country
+    check: restcountries
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
         ?item wdt:P31 wd:Q112099 .
@@ -71,6 +75,7 @@ prompts:
   - id: european-country
     category: Countries
     text: A country in Europe
+    check: restcountries
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
         ?item wdt:P31 wd:Q3624078 ;

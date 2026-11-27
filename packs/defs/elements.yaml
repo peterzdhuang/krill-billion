@@ -37,7 +37,7 @@ prompts:
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
         ?item wdt:P31 wd:Q11344 ;
-              wdt:P279* wd:Q19560 .
+              wdt:P279* wd:Q19569 .
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
         OPTIONAL {
@@ -54,7 +54,7 @@ prompts:
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
         ?item wdt:P31 wd:Q11344 ;
-              wdt:P279* wd:Q19612 .
+              wdt:P279* wd:Q19605 .
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
         OPTIONAL {
@@ -71,7 +71,7 @@ prompts:
     sparql: |
       SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
         ?item wdt:P31 wd:Q11344 ;
-              wdt:P279* wd:Q19573 .
+              wdt:P279* wd:Q19557 .
         ?article schema:about ?item ;
                  schema:isPartOf <https://en.wikipedia.org/> .
         OPTIONAL {
