@@ -82,9 +82,18 @@ body {
   box-shadow: 0 0 12px #e2e8f0;
   animation: kb-rung 0.7s ease-out 2;
 }
+@keyframes kb-phase-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.kb-phase { animation: kb-phase-in 0.35s ease-out; }
+.kb-badge-in { animation: kb-phase-in 0.45s ease-out; }
 @media (prefers-reduced-motion: reduce) {
-  .kb-flash, .kb-shake, .kb-shake-hard, .kb-gold, .kb-spark, .kb-rung {
+  .kb-flash, .kb-shake, .kb-shake-hard, .kb-gold, .kb-spark, .kb-rung,
+  .kb-phase, .kb-badge-in {
     animation: none;
+  }
+  .kb-flash, .kb-shake, .kb-shake-hard, .kb-gold, .kb-spark, .kb-rung {
     opacity: 0;
   }
 }

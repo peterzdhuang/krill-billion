@@ -46,7 +46,7 @@ export function LobbyPanel({
         </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {seats.map((seat) => {
           const info = bySeat.get(seat);
           const empty = !info?.player_id;
@@ -87,7 +87,7 @@ export function LobbyPanel({
           <button
             type="button"
             onClick={onReady}
-            className="rounded border border-cyan-accent/40 px-5 py-2 text-xl text-cyan-glow"
+            className="min-h-11 rounded border border-cyan-accent/40 px-5 text-xl text-cyan-glow"
           >
             {you?.ready ? "UNREADY" : "READY UP"}
           </button>
@@ -97,7 +97,7 @@ export function LobbyPanel({
             type="button"
             disabled={!allReady}
             onClick={onStart}
-            className="rounded border border-amber-500/40 px-5 py-2 text-xl text-amber-200 disabled:opacity-40"
+            className="min-h-11 rounded border border-amber-500/40 px-5 text-xl text-amber-200 disabled:opacity-40"
           >
             START MATCH
           </button>

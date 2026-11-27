@@ -136,7 +136,7 @@ export function MatchScreen({
         <button
           type="button"
           onClick={onRematch}
-          className="rounded border border-cyan-accent/40 px-6 py-2 text-2xl text-cyan-glow"
+          className="min-h-11 rounded border border-cyan-accent/40 px-6 text-2xl text-cyan-glow"
         >
           REMATCH / LOBBY
         </button>
@@ -183,7 +183,7 @@ export function MatchScreen({
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <HPBlock label="SIDE A" hp={hpA} mult={multA} highlight={mySide === 0} />
         <HPBlock label="SIDE B" hp={hpB} mult={multB} highlight={mySide === 1} />
       </div>
@@ -202,7 +202,7 @@ export function MatchScreen({
       </div>
 
       {room?.phase === "answering" && (
-        <div className="space-y-3">
+        <div className="kb-phase space-y-3">
           <div
             className={`flex items-center gap-2 rounded border bg-[#02060d] px-3 py-3 text-2xl ${
               fieldError ? "border-rose-500/70" : "border-cyan-900/60"
@@ -224,7 +224,7 @@ export function MatchScreen({
               <span className="inline-block h-5 w-2 animate-pulse bg-cyan-glow/80" />
             )}
           </div>
-          <div className="flex items-center justify-between rounded bg-[#050a14] px-2 py-1 text-lg text-slate-400">
+          <div className="flex flex-wrap items-center justify-between gap-2 rounded bg-[#050a14] px-2 py-1 text-lg text-slate-400">
             <span>
               {locked
                 ? "LOCKED — waiting for opponent"
@@ -236,7 +236,7 @@ export function MatchScreen({
               type="button"
               disabled={locked}
               onClick={lockAnswer}
-              className="rounded border border-cyan-accent/40 px-4 py-1 text-cyan-glow disabled:opacity-40"
+              className="min-h-11 rounded border border-cyan-accent/40 px-4 text-cyan-glow disabled:opacity-40"
             >
               LOCK (Enter)
             </button>
@@ -250,7 +250,7 @@ export function MatchScreen({
       )}
 
       {room?.phase === "reveal" && result && (
-        <div className="space-y-4 rounded border border-slate-800/80 bg-[#02060d] p-4">
+        <div className="kb-phase space-y-4 rounded border border-slate-800/80 bg-[#02060d] p-4">
           <p className="text-sm tracking-widest text-cyan-accent/50">
             REVEAL LOG
           </p>
@@ -262,7 +262,7 @@ export function MatchScreen({
           {motion.niche && (
             <p className="text-2xl tracking-widest text-amber-100">NICHE</p>
           )}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="kb-badge-in flex flex-wrap items-center gap-3">
             {result.sides
               .filter((a) => a.valid && a.tier)
               .map((a) => (
@@ -281,7 +281,7 @@ export function MatchScreen({
           <p className="text-2xl text-amber-200">
             {result.tie
               ? "TIE — both multipliers +0.5"
-              : `DAMAGE ${result.damage} → side ${result.winner === 0 ? "B" : "A"}`}
+              : `HIT ${result.damage} on side ${result.winner === 0 ? "B" : "A"}`}
           </p>
         </div>
       )}

@@ -142,7 +142,7 @@ export default function Home() {
             type="button"
             disabled={pending}
             onClick={createLobby}
-            className="w-full rounded border border-cyan-accent/40 bg-gradient-to-b from-cyan-900/50 to-slate-950/80 py-3 text-2xl tracking-wide text-cyan-glow transition hover:border-cyan-glow/70 hover:shadow-[0_0_20px_rgba(45,212,191,0.2)] disabled:opacity-50"
+            className="min-h-11 w-full rounded border border-cyan-accent/40 bg-gradient-to-b from-cyan-900/50 to-slate-950/80 py-3 text-2xl tracking-wide text-cyan-glow transition hover:border-cyan-glow/70 hover:shadow-[0_0_20px_rgba(45,212,191,0.2)] disabled:opacity-50"
           >
             {pending ? "SPINNING UP LOBBY…" : "CREATE LOBBY"}
           </button>

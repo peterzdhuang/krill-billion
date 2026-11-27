@@ -146,7 +146,7 @@ export function RoundTimer({
     <div
       role="timer"
       aria-label={`${whole} ${whole === 1 ? "second" : "seconds"} remaining`}
-      className={`relative mx-auto mt-3 h-44 w-44 sm:h-48 sm:w-48 ${tone} ${
+      className={`relative mx-auto mt-3 h-32 w-32 sm:h-48 sm:w-48 ${tone} ${
         critical ? "motion-safe:animate-pulse" : ""
       }`}
     >
@@ -176,7 +176,7 @@ export function RoundTimer({
         )}
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="font-mono text-7xl leading-none sm:text-8xl">{whole}</span>
+        <span className="font-mono text-6xl leading-none sm:text-8xl">{whole}</span>
       </div>
     </div>
   );
