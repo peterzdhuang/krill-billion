@@ -108,7 +108,7 @@ export function MatchScreen({
     return (
       <>
       <ClimbingScene round={sceneRound} result={sceneResult} />
-      <div className="relative z-10 mx-auto max-w-2xl space-y-6 rounded bg-[#050a14]/90 px-4 py-6 text-center">
+      <div className="relative z-10 mx-auto max-w-2xl space-y-6 rounded bg-[#050a14] px-4 py-6 text-center">
         <div className="flex items-center justify-end gap-2">
           <KrillionMark name="krillion" size={32} />
           <MuteToggle />
@@ -179,7 +179,7 @@ export function MatchScreen({
         <HPBlock label="SIDE B" hp={hpB} mult={multB} highlight={mySide === 1} />
       </div>
 
-      <div className="rounded bg-[#050a14]/90 px-3 py-2 text-center">
+      <div className="rounded bg-[#050a14] px-3 py-2 text-center">
         <p className="text-sm tracking-[0.3em] text-cyan-accent/40">
           ROUND {room?.round ?? round?.round ?? 0}
           {secs !== null ? ` · ${secs}s` : ""}
@@ -215,7 +215,7 @@ export function MatchScreen({
               <span className="inline-block h-5 w-2 animate-pulse bg-cyan-glow/80" />
             )}
           </div>
-          <div className="flex items-center justify-between rounded bg-[#050a14]/90 px-2 py-1 text-lg text-slate-400">
+          <div className="flex items-center justify-between rounded bg-[#050a14] px-2 py-1 text-lg text-slate-400">
             <span>
               {locked
                 ? "LOCKED — waiting for opponent"
