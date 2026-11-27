@@ -103,6 +103,7 @@ export type SideAnswerData = {
   tier: string;
   score: number;
   valid: boolean;
+  streak: number;
 };
 
 export type RoundResultData = {

@@ -8,6 +8,7 @@ import { MuteToggle } from "@/components/MuteToggle";
 import { RoundTimer } from "@/components/RoundTimer";
 import { TierBadge } from "@/components/TierBadge";
 import { playSfx } from "@/lib/audio";
+import { hitMotion, useReducedMotion } from "@/lib/hit";
 import { useMatchSfx } from "@/lib/useMatchSfx";
 import type {
   MatchEndData,
@@ -75,6 +76,14 @@ export function MatchScreen({
     matchEnd,
     yourSeat,
   });
+  const reduceMotion = useReducedMotion();
+  const motion = hitMotion(result, room?.phase, mySide);
+  const hudShake =
+    !reduceMotion && motion.shake
+      ? motion.hard
+        ? "kb-shake-hard"
+        : "kb-shake"
+      : "";
 
   const lockAnswer = () => {
     if (locked) return;
@@ -138,8 +147,19 @@ export function MatchScreen({
 
   return (
     <>
-    <ClimbingScene round={sceneRound} result={sceneResult} />
-    <div className="relative z-10 mx-auto w-full max-w-3xl space-y-6">
+    <ClimbingScene
+      round={sceneRound}
+      result={sceneResult}
+      spark={!reduceMotion && motion.spark}
+      rung={!reduceMotion && motion.rung}
+    />
+    {!reduceMotion && motion.flash && (
+      <div className="kb-flash pointer-events-none fixed inset-0 z-40 bg-white" />
+    )}
+    {!reduceMotion && motion.gold && (
+      <div className="kb-gold pointer-events-none fixed inset-0 z-40" />
+    )}
+    <div className={`relative z-10 mx-auto w-full max-w-3xl space-y-6 ${hudShake}`}>
       <div className="relative z-30 flex items-center justify-end gap-2">
         <KrillionMark name="krillion" size={32} />
         <MuteToggle />
@@ -239,6 +259,9 @@ export function MatchScreen({
               {line}
             </div>
           ))}
+          {motion.niche && (
+            <p className="text-2xl tracking-widest text-amber-100">NICHE</p>
+          )}
           <div className="flex flex-wrap items-center gap-3">
             {result.sides
               .filter((a) => a.valid && a.tier)

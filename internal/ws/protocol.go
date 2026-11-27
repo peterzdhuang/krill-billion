@@ -130,6 +130,7 @@ type SideAnswerData struct {
 	Tier         string `json:"tier"`
 	Score        int    `json:"score"`
 	Valid        bool   `json:"valid"`
+	Streak       int    `json:"streak"`
 }
 
 type RoundResultData struct {

@@ -32,6 +32,7 @@ type Engine struct {
 	lastDraftAt  map[string]time.Time
 	hp           [2]int
 	mult         [2]float64
+	streak       [2]int
 	recap        []RoundOutcome
 	ended        bool
 	end          MatchEnd
@@ -267,6 +268,11 @@ func (e *Engine) resolveAnswering() {
 		sides[i] = sa
 		scores[i] = sa.Score
 	}
+
+	nextStreak := NextStreak(e.streak, sides[0], sides[1])
+	e.streak = nextStreak
+	sides[0].Streak = nextStreak[0]
+	sides[1].Streak = nextStreak[1]
 
 	var out RoundOutcome
 	out.Round = e.round

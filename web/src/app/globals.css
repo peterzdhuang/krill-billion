@@ -36,6 +36,59 @@ body {
   }
 }
 
+@keyframes kb-flash {
+  0% { opacity: 0.55; }
+  100% { opacity: 0; }
+}
+@keyframes kb-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+@keyframes kb-shake-hard {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-12px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-8px); }
+  80% { transform: translateX(6px); }
+}
+@keyframes kb-gold {
+  0% { opacity: 0.7; }
+  100% { opacity: 0; }
+}
+@keyframes kb-spark {
+  0% { opacity: 1; transform: scale(0.4); }
+  100% { opacity: 0; transform: scale(1.8); }
+}
+@keyframes kb-rung {
+  0%, 100% { opacity: 0; }
+  40% { opacity: 1; }
+}
+.kb-flash { animation: kb-flash 0.45s ease-out forwards; }
+.kb-shake { animation: kb-shake 0.35s ease-in-out 2; }
+.kb-shake-hard { animation: kb-shake-hard 0.5s ease-in-out 2; }
+.kb-gold {
+  background: radial-gradient(circle at 50% 40%, rgba(253, 224, 71, 0.85), transparent 55%);
+  animation: kb-gold 0.8s ease-out forwards;
+}
+.kb-spark {
+  border-radius: 9999px;
+  background: #fde68a;
+  box-shadow: 0 0 18px #fde68a;
+  animation: kb-spark 0.55s ease-out forwards;
+}
+.kb-rung {
+  background: #e2e8f0;
+  box-shadow: 0 0 12px #e2e8f0;
+  animation: kb-rung 0.7s ease-out 2;
+}
+@media (prefers-reduced-motion: reduce) {
+  .kb-flash, .kb-shake, .kb-shake-hard, .kb-gold, .kb-spark, .kb-rung {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 ::selection {
   background: rgba(45, 212, 191, 0.35);
 }

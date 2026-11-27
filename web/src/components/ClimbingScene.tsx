@@ -121,9 +121,13 @@ function Climber() {
 export function ClimbingScene({
   round,
   result,
+  spark = false,
+  rung = false,
 }: {
   round: number;
   result: RoundResultData | null;
+  spark?: boolean;
+  rung?: boolean;
 }) {
   const progress = climberProgress(round, result);
   const windows = WINDOW_COLS * WINDOW_ROWS;
@@ -182,7 +186,9 @@ export function ClimbingScene({
           style={{ bottom: `${(8 + progress * 70).toFixed(2)}%` }}
         >
           <Climber />
+          {spark && <div className="kb-spark absolute -left-2 top-0 h-8 w-16" />}
         </div>
+        {rung && <div className="kb-rung absolute inset-x-2 bottom-[36%] h-1.5" />}
       </div>
 
       <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#140e0a] to-transparent" />
