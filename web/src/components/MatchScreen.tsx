@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { ClimbingScene } from "@/components/ClimbingScene";
 import { DepthMeter } from "@/components/DepthMeter";
 import { KrillionMark } from "@/components/KrillionMark";
 import { MuteToggle } from "@/components/MuteToggle";
+import { RoundTimer } from "@/components/RoundTimer";
 import { TierBadge } from "@/components/TierBadge";
 import { playSfx } from "@/lib/audio";
 import { useMatchSfx } from "@/lib/useMatchSfx";
@@ -19,17 +20,6 @@ import type {
 function sideOf(seat?: string | null): 0 | 1 | null {
   if (!seat) return null;
   return seat.startsWith("A") ? 0 : 1;
-}
-
-function useCountdown(deadlineTs?: number) {
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    if (!deadlineTs) return;
-    const id = setInterval(() => setNow(Date.now()), 200);
-    return () => clearInterval(id);
-  }, [deadlineTs]);
-  if (!deadlineTs) return null;
-  return Math.max(0, Math.ceil((deadlineTs - now) / 1000));
 }
 
 export function MatchScreen({
@@ -59,7 +49,6 @@ export function MatchScreen({
   onLock: () => void;
   onRematch: () => void;
 }) {
-  const secs = useCountdown(round?.deadline_ts);
   const mySide = sideOf(yourSeat);
   const paused = room?.phase === "paused";
 
@@ -182,8 +171,8 @@ export function MatchScreen({
       <div className="rounded bg-[#050a14] px-3 py-2 text-center">
         <p className="text-sm tracking-[0.3em] text-cyan-accent/40">
           ROUND {room?.round ?? round?.round ?? 0}
-          {secs !== null ? ` · ${secs}s` : ""}
         </p>
+        <RoundTimer deadlineTs={round?.deadline_ts} phase={room?.phase} />
         <h2 className="mt-2 text-4xl text-cyan-glow sm:text-5xl">
           {round?.prompt.text ?? "Waiting for prompt…"}
         </h2>
