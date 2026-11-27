@@ -1,0 +1,52 @@
+prompts:
+  - id: gemstone
+    category: Gemstones
+    text: A gemstone
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P279* wd:Q83437 .
+        FILTER(?item != wd:Q83437)
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: precious-stone
+    category: Gemstones
+    text: A precious stone
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P279* wd:Q4990682 .
+        FILTER(?item != wd:Q4990682)
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: quartz-gemstone
+    category: Gemstones
+    text: A quartz gemstone
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P279* wd:Q83437 ;
+              wdt:P279* wd:Q43010 .
+        FILTER(?item != wd:Q83437 && ?item != wd:Q43010)
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article

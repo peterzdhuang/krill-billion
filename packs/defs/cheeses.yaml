@@ -1,0 +1,68 @@
+prompts:
+  - id: cheese
+    category: Cheeses
+    text: A cheese
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P279* wd:Q10943 .
+        FILTER(?item != wd:Q10943)
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: french-cheese
+    category: Cheeses
+    text: A French cheese
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P279* wd:Q2223649 .
+        FILTER(?item != wd:Q2223649)
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: italian-cheese
+    category: Cheeses
+    text: An Italian cheese
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P279* wd:Q17315191 .
+        FILTER(?item != wd:Q17315191)
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: blue-cheese
+    category: Cheeses
+    text: A blue cheese
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P279* wd:Q746471 .
+        FILTER(?item != wd:Q746471)
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article

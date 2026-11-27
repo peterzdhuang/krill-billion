@@ -60,7 +60,7 @@ func TestCorePackLoads(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Load: %v", err)
 	}
-	if store.PromptCount() < 52 {
+	if store.PromptCount() < 86 {
 		t.Fatalf("prompts = %d, want sample plus core", store.PromptCount())
 	}
 
@@ -75,8 +75,21 @@ func TestCorePackLoads(t *testing.T) {
 	if pack.PackID != "core-v1" {
 		t.Fatalf("pack_id = %q", pack.PackID)
 	}
-	if len(pack.Prompts) != 50 {
-		t.Fatalf("prompts = %d, want 50", len(pack.Prompts))
+	if len(pack.Prompts) != 84 {
+		t.Fatalf("prompts = %d, want 84", len(pack.Prompts))
+	}
+	byCat := map[string]int{}
+	for _, p := range pack.Prompts {
+		byCat[p.Category]++
+	}
+	for _, cat := range []string{
+		"Cat breeds", "Currencies", "Constellations", "US states",
+		"Musical instruments", "Video game consoles", "Greek deities",
+		"Gemstones", "Cheeses", "Car manufacturers",
+	} {
+		if byCat[cat] < 3 {
+			t.Fatalf("category %q has %d prompts", cat, byCat[cat])
+		}
 	}
 	attr := strings.Join(pack.Attribution, "\n")
 	for _, want := range []string{"Wikidata (CC0)", "Wikimedia Pageviews API", "REST Countries", "PokeAPI"} {

@@ -1,0 +1,59 @@
+prompts:
+  - id: home-console
+    category: Video game consoles
+    text: A home video game console
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        { ?item wdt:P31 wd:Q17589470 . }
+        UNION
+        { ?item wdt:P279 wd:Q17589470 . }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: handheld-console
+    category: Video game consoles
+    text: A handheld game console
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        { ?item wdt:P31 wd:Q941818 . }
+        UNION
+        { ?item wdt:P279 wd:Q941818 . }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: nintendo-console
+    category: Video game consoles
+    text: A Nintendo console
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P176 wd:Q8093 .
+        {
+          ?item wdt:P31|wdt:P279 wd:Q8076 .
+        } UNION {
+          ?item wdt:P31|wdt:P279 wd:Q17589470 .
+        } UNION {
+          ?item wdt:P31|wdt:P279 wd:Q941818 .
+        }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
