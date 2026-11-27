@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { ClimbingScene } from "@/components/ClimbingScene";
 import { DepthMeter } from "@/components/DepthMeter";
 import { KrillionMark } from "@/components/KrillionMark";
@@ -54,6 +54,16 @@ export function MatchScreen({
   onLock: () => void;
   onRematch: () => void;
 }) {
+  const draftRef = useRef(draft);
+  const lockedRef = useRef(locked);
+  const suggestionRef = useRef(suggestion);
+  const onAcceptRef = useRef(onAcceptSuggestion);
+  const onLockRef = useRef(onLock);
+  draftRef.current = draft;
+  lockedRef.current = locked;
+  suggestionRef.current = suggestion;
+  onAcceptRef.current = onAcceptSuggestion;
+  onLockRef.current = onLock;
   const mySide = sideOf(yourSeat);
   const paused = room?.phase === "paused";
 
@@ -205,7 +215,19 @@ export function MatchScreen({
         <p className="text-sm tracking-[0.3em] text-cyan-accent/40">
           ROUND {room?.round ?? round?.round ?? 0}
         </p>
-        <RoundTimer deadlineTs={round?.deadline_ts} phase={room?.phase} />
+        <RoundTimer
+          deadlineTs={round?.deadline_ts}
+          phase={room?.phase}
+          onTimeout={() => {
+            if (lockedRef.current) return;
+            const text = draftRef.current.trim();
+            const sug = suggestionRef.current.trim();
+            if (!text && !sug) return;
+            if (sug && sug !== draftRef.current) onAcceptRef.current();
+            playSfx("submit");
+            onLockRef.current();
+          }}
+        />
         <h2 className="mt-2 text-4xl text-cyan-glow sm:text-5xl">
           {round?.prompt.text ?? "Waiting for prompt…"}
         </h2>
