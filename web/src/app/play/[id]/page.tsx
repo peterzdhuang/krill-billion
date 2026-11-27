@@ -223,7 +223,7 @@ export default function PlayPage() {
   }
 
   return (
-    <main className="relative min-h-screen px-6 py-10">
+    <main className="relative isolate min-h-screen px-6 py-10">
       <div className="mb-8 flex items-center justify-between text-sm tracking-widest text-cyan-accent/40">
         <span>
           KRILL BILLION

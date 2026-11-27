@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { ClimbingScene } from "@/components/ClimbingScene";
 import { DepthMeter } from "@/components/DepthMeter";
 import { KrillionMark } from "@/components/KrillionMark";
 import { MuteToggle } from "@/components/MuteToggle";
@@ -92,13 +93,22 @@ export function MatchScreen({
     onLock();
   };
 
+  const sceneResult =
+    result ??
+    (matchEnd?.recap && matchEnd.recap.length > 0
+      ? matchEnd.recap[matchEnd.recap.length - 1]
+      : null);
+  const sceneRound = sceneResult?.round ?? round?.round ?? room?.round ?? 1;
+
   if (matchEnd) {
     const youWin =
       !matchEnd.draw &&
       mySide !== null &&
       matchEnd.winner === mySide;
     return (
-      <div className="mx-auto max-w-2xl space-y-6 text-center">
+      <>
+      <ClimbingScene round={sceneRound} result={sceneResult} />
+      <div className="relative z-10 mx-auto max-w-2xl space-y-6 rounded bg-[#050a14] px-4 py-6 text-center">
         <div className="flex items-center justify-end gap-2">
           <KrillionMark name="krillion" size={32} />
           <MuteToggle />
@@ -133,11 +143,14 @@ export function MatchScreen({
           REMATCH / LOBBY
         </button>
       </div>
+      </>
     );
   }
 
   return (
-    <div className="relative mx-auto w-full max-w-3xl space-y-6">
+    <>
+    <ClimbingScene round={sceneRound} result={sceneResult} />
+    <div className="relative z-10 mx-auto w-full max-w-3xl space-y-6">
       <div className="relative z-30 flex items-center justify-end gap-2">
         <KrillionMark name="krillion" size={32} />
         <MuteToggle />
@@ -166,7 +179,7 @@ export function MatchScreen({
         <HPBlock label="SIDE B" hp={hpB} mult={multB} highlight={mySide === 1} />
       </div>
 
-      <div className="text-center">
+      <div className="rounded bg-[#050a14] px-3 py-2 text-center">
         <p className="text-sm tracking-[0.3em] text-cyan-accent/40">
           ROUND {room?.round ?? round?.round ?? 0}
           {secs !== null ? ` · ${secs}s` : ""}
@@ -182,7 +195,7 @@ export function MatchScreen({
       {room?.phase === "answering" && (
         <div className="space-y-3">
           <div
-            className={`flex items-center gap-2 rounded border bg-[#02060d]/80 px-3 py-3 text-2xl ${
+            className={`flex items-center gap-2 rounded border bg-[#02060d] px-3 py-3 text-2xl ${
               fieldError ? "border-rose-500/70" : "border-cyan-900/60"
             }`}
           >
@@ -202,7 +215,7 @@ export function MatchScreen({
               <span className="inline-block h-5 w-2 animate-pulse bg-cyan-glow/80" />
             )}
           </div>
-          <div className="flex items-center justify-between text-lg text-slate-400">
+          <div className="flex items-center justify-between rounded bg-[#050a14] px-2 py-1 text-lg text-slate-400">
             <span>
               {locked
                 ? "LOCKED — waiting for opponent"
@@ -228,7 +241,7 @@ export function MatchScreen({
       )}
 
       {room?.phase === "reveal" && result && (
-        <div className="space-y-4 rounded border border-slate-800/80 bg-[#02060d]/70 p-4">
+        <div className="space-y-4 rounded border border-slate-800/80 bg-[#02060d] p-4">
           <p className="text-sm tracking-widest text-cyan-accent/50">
             REVEAL LOG
           </p>
@@ -261,6 +274,7 @@ export function MatchScreen({
         </div>
       )}
     </div>
+    </>
   );
 }
 
@@ -278,8 +292,8 @@ function HPBlock({
   const pct = Math.max(0, Math.min(100, (hp / 10000) * 100));
   return (
     <div
-      className={`rounded border px-3 py-3 ${
-        highlight ? "border-cyan-accent/50 bg-cyan-950/20" : "border-slate-800"
+      className={`rounded border bg-[#070d16] px-3 py-3 ${
+        highlight ? "border-cyan-accent/50" : "border-slate-800"
       }`}
     >
       <div className="mb-1 flex justify-between text-lg">
