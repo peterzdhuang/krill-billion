@@ -88,9 +88,45 @@ body {
 }
 .kb-phase { animation: kb-phase-in 0.35s ease-out; }
 .kb-badge-in { animation: kb-phase-in 0.45s ease-out; }
+
+@keyframes kb-bubble {
+  0% {
+    transform: translate3d(0, 110vh, 0) scale(0.7);
+    opacity: 0;
+  }
+  12% { opacity: 0.55; }
+  100% {
+    transform: translate3d(var(--kb-drift, 0px), -10vh, 0) scale(1.1);
+    opacity: 0;
+  }
+}
+.kb-bubble {
+  bottom: 0;
+  animation: kb-bubble 9s linear infinite;
+}
+
+@keyframes kb-sway {
+  0%, 100% { transform: translateX(0) rotate(-2deg); }
+  50% { transform: translateX(6px) rotate(2deg); }
+}
+.kb-sway { animation: kb-sway 3.6s ease-in-out infinite; }
+
+@keyframes kb-aura {
+  0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.95; transform: translate(-50%, -50%) scale(1.08); }
+}
+.kb-aura { animation: kb-aura 2.4s ease-in-out infinite; }
+
+@keyframes kb-mark-pop {
+  0% { transform: scale(0.85); filter: brightness(1); }
+  40% { transform: scale(1.12); filter: brightness(1.35); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+.kb-mark-pop { animation: kb-mark-pop 0.55s ease-out; }
+
 @media (prefers-reduced-motion: reduce) {
   .kb-flash, .kb-shake, .kb-shake-hard, .kb-gold, .kb-spark, .kb-rung,
-  .kb-phase, .kb-badge-in {
+  .kb-phase, .kb-badge-in, .kb-bubble, .kb-sway, .kb-aura, .kb-mark-pop {
     animation: none;
   }
   .kb-flash, .kb-shake, .kb-shake-hard, .kb-gold, .kb-spark, .kb-rung {

@@ -1,6 +1,7 @@
 "use client";
 
 import type { TierName } from "@/lib/protocol";
+import { KrillionMark } from "@/components/KrillionMark";
 
 const TIER_STYLES: Record<
   TierName,
@@ -67,10 +68,16 @@ export function TierBadge({
   className?: string;
 }) {
   const s = TIER_STYLES[tier] ?? TIER_STYLES.Intern;
+  const showAura =
+    tier === "Principal" ||
+    tier === "Distinguished" ||
+    tier === "CTO" ||
+    tier === "Jeffy B";
   return (
     <span
-      className={`inline-flex items-center rounded px-2 py-0.5 text-base tracking-wide bg-gradient-to-r ${s.bg} ${s.glow} ${s.text} ${className}`}
+      className={`kb-badge-in inline-flex items-center gap-2 rounded px-2 py-1 text-base tracking-wide bg-gradient-to-r ${s.bg} ${s.glow} ${s.text} ${className}`}
     >
+      <KrillionMark tier={tier} size={28} aura={showAura} />
       {tier === "Jeffy B" ? "★ JEFFY B ★" : tier}
     </span>
   );

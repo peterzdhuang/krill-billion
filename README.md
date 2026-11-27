@@ -6,7 +6,7 @@ Stack: Go backend (WebSocket, in-memory lobbies/matches, JSON question packs) + 
 
 ## Sound and marks
 
-Locks, rejects, reveals, and match-end stingers are synthesized in the browser with the Web Audio API, following the sound design of [Krillion](https://krillion.io). The mark and tier sprites in `web/public/krillion/` (`krillion.png`, `schooler.png`, `rare.png`) are Krillion images, used with permission. Mute persists in `localStorage` under `kb-muted` (`"1"` is muted; absent or `"0"` leaves sound on).
+Locks, rejects, reveals, and match-end stingers are synthesized in the browser with the Web Audio API, following the sound design of [Krillion](https://krillion.io). Visuals pull Krillion assets directly (used with permission): tier marks and gold variants under `web/public/krillion/tiers/`, buddy auras in `web/public/krillion/fx/`, descent background `web/public/krillion/bg/water-bg.webp`, and party puffers in `web/public/krillion/party/`. Mute persists in `localStorage` under `kb-muted` (`"1"` is muted; absent or `"0"` leaves sound on).
 
 ## Prerequisites
 

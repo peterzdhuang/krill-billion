@@ -191,35 +191,39 @@ function arp(
 function emit(ac: AudioContext, out: GainNode, name: SfxName) {
   switch (name) {
     case "submit":
-      tone(ac, out, { f0: 1150, dur: 0.16, a: 0.003, peak: 0.16 });
+      // Soft bubble lock — same silhouette as Krillion's submit ping.
+      tone(ac, out, { f0: 1180, dur: 0.12, a: 0.002, peak: 0.14 });
+      tone(ac, out, { type: "sine", f0: 1560, dur: 0.1, peak: 0.08, delay: 0.04 });
+      noise(ac, out, { dur: 0.08, lp: 2200, hp: 900, peak: 0.04 });
       break;
     case "reject":
       noise(ac, out, { dur: 0.22, lp: 420, peak: 0.2 });
       tone(ac, out, { f0: 150, f1: 62, dur: 0.36, peak: 0.22, lp: 700 });
       break;
     case "tick":
-      tone(ac, out, { f0: 880, dur: 0.07, peak: 0.16 });
-      tone(ac, out, { f0: 880, dur: 0.05, peak: 0.06, delay: 0.12 });
+      tone(ac, out, { f0: 920, dur: 0.055, peak: 0.14 });
+      tone(ac, out, { f0: 920, dur: 0.04, peak: 0.05, delay: 0.11 });
       break;
     case "land_small":
       tone(ac, out, { f0: 140, f1: 70, dur: 0.25, peak: 0.28, lp: 600 });
-      noise(ac, out, { dur: 0.14, lp: 500, peak: 0.1 });
+      noise(ac, out, { dur: 0.16, lp: 700, hp: 200, peak: 0.09 });
       break;
     case "land_big":
-      tone(ac, out, { f0: 80, f1: 45, dur: 0.6, peak: 0.38 });
-      noise(ac, out, { dur: 0.7, lp: 900, sweepTo: 200, peak: 0.18, delay: 0.02 });
-      tone(ac, out, { type: "triangle", f0: 523, dur: 0.4, peak: 0.09, delay: 0.15 });
+      tone(ac, out, { f0: 72, f1: 38, dur: 0.7, peak: 0.4 });
+      noise(ac, out, { dur: 0.85, lp: 1100, sweepTo: 180, peak: 0.2, delay: 0.02 });
+      tone(ac, out, { type: "triangle", f0: 523, dur: 0.45, peak: 0.1, delay: 0.16 });
+      noise(ac, out, { dur: 0.3, lp: 2800, hp: 1400, peak: 0.05, delay: 0.25 });
       break;
     case "begin":
-      noise(ac, out, { dur: 1.1, lp: 2000, sweepTo: 240, peak: 0.15 });
-      tone(ac, out, { f0: 110, f1: 48, dur: 1.2, peak: 0.32 });
-      tone(ac, out, { type: "triangle", f0: 784, dur: 0.5, peak: 0.12, lp: 3000 });
-      tone(ac, out, { type: "triangle", f0: 523, dur: 0.75, peak: 0.12, lp: 3000, delay: 0.22 });
+      noise(ac, out, { dur: 1.25, lp: 2400, sweepTo: 220, peak: 0.16 });
+      tone(ac, out, { f0: 98, f1: 42, dur: 1.3, peak: 0.34 });
+      tone(ac, out, { type: "triangle", f0: 784, dur: 0.55, peak: 0.12, lp: 3000 });
+      tone(ac, out, { type: "triangle", f0: 523, dur: 0.8, peak: 0.12, lp: 3000, delay: 0.24 });
       break;
     case "krillion":
-      tone(ac, out, { f0: 60, f1: 40, dur: 1.2, peak: 0.34 });
-      arp(ac, out, [784, 988, 1175, 1568], { step: 0.13, dur: 0.7, peak: 0.15, lp: 3000 });
-      noise(ac, out, { dur: 1.4, lp: 2500, hp: 1200, peak: 0.05, delay: 0.3 });
+      tone(ac, out, { f0: 55, f1: 36, dur: 1.35, peak: 0.36 });
+      arp(ac, out, [784, 988, 1175, 1568, 1976], { step: 0.12, dur: 0.75, peak: 0.15, lp: 3200 });
+      noise(ac, out, { dur: 1.5, lp: 2600, hp: 1100, peak: 0.06, delay: 0.28 });
       break;
     case "stinger":
       tone(ac, out, { f0: 90, f1: 50, dur: 0.7, peak: 0.3 });
