@@ -44,6 +44,7 @@ export default function PlayPage() {
   const [locked, setLocked] = useState(false);
   const [opponentLocked, setOpponentLocked] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [answerError, setAnswerError] = useState<string | null>(null);
   const [inMatch, setInMatch] = useState(false);
 
   useEffect(() => {
@@ -90,6 +91,7 @@ export default function PlayPage() {
           setDraft("");
           setLocked(false);
           setOpponentLocked(false);
+          setAnswerError(null);
           setInMatch(true);
           setRoom((r) =>
             r
@@ -135,6 +137,11 @@ export default function PlayPage() {
         }
         case "error": {
           const d = env.data as ErrorData;
+          if (d.code === "not_in_bank") {
+            setAnswerError(d.message || "not in this category");
+            setLocked(false);
+            break;
+          }
           setToast(`${d.code}: ${d.message}`);
           break;
         }
@@ -169,6 +176,7 @@ export default function PlayPage() {
 
   const onDraftChange = (text: string) => {
     setDraft(text);
+    setAnswerError(null);
     if (!locked) sendDraft(text);
   };
 
@@ -254,11 +262,9 @@ export default function PlayPage() {
           draft={draft}
           locked={locked}
           opponentLocked={opponentLocked}
+          fieldError={answerError}
           onDraft={onDraftChange}
-          onLock={() => {
-            setLocked(true);
-            send({ type: "lock", data: {} });
-          }}
+          onLock={() => send({ type: "lock", data: {} })}
           onRematch={() => {
             setInMatch(false);
             setMatchEnd(null);

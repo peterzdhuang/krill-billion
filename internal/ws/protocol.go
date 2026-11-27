@@ -72,15 +72,15 @@ type SeatState struct {
 }
 
 type LobbyStateData struct {
-	Seats           []SeatState `json:"seats"`
-	Mode            string      `json:"mode"`
-	Link            string      `json:"link"`
-	Host            string      `json:"host"`
-	HostPlayerID    string      `json:"host_player_id,omitempty"`
-	Started         bool        `json:"started"`
-	PlayerID        string      `json:"player_id,omitempty"`
-	ReconnectToken  string      `json:"reconnect_token,omitempty"`
-	YourSeat        string      `json:"your_seat,omitempty"`
+	Seats          []SeatState `json:"seats"`
+	Mode           string      `json:"mode"`
+	Link           string      `json:"link"`
+	Host           string      `json:"host"`
+	HostPlayerID   string      `json:"host_player_id,omitempty"`
+	Started        bool        `json:"started"`
+	PlayerID       string      `json:"player_id,omitempty"`
+	ReconnectToken string      `json:"reconnect_token,omitempty"`
+	YourSeat       string      `json:"your_seat,omitempty"`
 }
 
 type RoomPlayer struct {
@@ -133,15 +133,15 @@ type SideAnswerData struct {
 }
 
 type RoundResultData struct {
-	Round       int              `json:"round"`
-	SuddenDeath bool             `json:"sudden_death"`
+	Round       int               `json:"round"`
+	SuddenDeath bool              `json:"sudden_death"`
 	Sides       [2]SideAnswerData `json:"sides"`
-	Damage      int              `json:"damage"`
-	Gap         int              `json:"gap"`
-	HP          [2]int           `json:"hp"`
-	Multipliers [2]float64       `json:"multipliers"`
-	Winner      int              `json:"winner"`
-	Tie         bool             `json:"tie"`
+	Damage      int               `json:"damage"`
+	Gap         int               `json:"gap"`
+	HP          [2]int            `json:"hp"`
+	Multipliers [2]float64        `json:"multipliers"`
+	Winner      int               `json:"winner"`
+	Tie         bool              `json:"tie"`
 }
 
 type MatchEndData struct {
@@ -158,10 +158,11 @@ type ErrorData struct {
 
 // Error codes
 const (
-	ErrSeatTaken      = "seat_taken"
-	ErrNotHost        = "not_host"
-	ErrNotReady       = "not_ready"
-	ErrBadPhase       = "bad_phase"
+	ErrSeatTaken       = "seat_taken"
+	ErrNotHost         = "not_host"
+	ErrNotReady        = "not_ready"
+	ErrBadPhase        = "bad_phase"
 	ErrDuplicateAnswer = "duplicate_answer"
-	ErrRateLimited    = "rate_limited"
+	ErrRateLimited     = "rate_limited"
+	ErrNotInBank       = "not_in_bank"
 )

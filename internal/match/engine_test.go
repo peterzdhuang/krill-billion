@@ -59,9 +59,21 @@ func itoa(n int) string {
 }
 
 type recordingEvents struct {
-	ends   []MatchEnd
-	rounds int
+	ends     []MatchEnd
+	results  []RoundOutcome
+	errors   []string
+	rounds   int
 	maxRound int
+}
+
+// selectiveStore matches any non-empty guess except "xyz".
+type selectiveStore struct{ tieStore }
+
+func (s *selectiveStore) Match(promptID, guess string) (string, bool) {
+	if guess == "" || guess == "xyz" {
+		return "", false
+	}
+	return "e1", true
 }
 
 func (r *recordingEvents) OnRoundStart(round int, prompt data.Prompt, deadlineMs int64, suddenDeath bool) {
@@ -70,12 +82,12 @@ func (r *recordingEvents) OnRoundStart(round int, prompt data.Prompt, deadlineMs
 		r.maxRound = round
 	}
 }
-func (r *recordingEvents) OnLocked(seat string)                          {}
-func (r *recordingEvents) OnTeammateDraft(seat, text string)             {}
-func (r *recordingEvents) OnRoundResult(out RoundOutcome)                {}
-func (r *recordingEvents) OnMatchEnd(end MatchEnd)                       { r.ends = append(r.ends, end) }
-func (r *recordingEvents) OnRoomState()                                  {}
-func (r *recordingEvents) OnError(playerID, code, message string)        {}
+func (r *recordingEvents) OnLocked(seat string)                   {}
+func (r *recordingEvents) OnTeammateDraft(seat, text string)      {}
+func (r *recordingEvents) OnRoundResult(out RoundOutcome)         { r.results = append(r.results, out) }
+func (r *recordingEvents) OnMatchEnd(end MatchEnd)                { r.ends = append(r.ends, end) }
+func (r *recordingEvents) OnRoomState()                           {}
+func (r *recordingEvents) OnError(playerID, code, message string) { r.errors = append(r.errors, code) }
 
 func TestCapEqualHPSuddenDeathDraw(t *testing.T) {
 	clock := NewFakeClock(time.Unix(0, 0).UTC())
@@ -130,5 +142,36 @@ func TestCapEqualHPSuddenDeathDraw(t *testing.T) {
 	}
 	if ev.maxRound > MaxScoredRounds+1 {
 		t.Fatalf("observed max round %d exceeds cap+1", ev.maxRound)
+	}
+}
+
+func TestLockRejectsUnknown(t *testing.T) {
+	clock := NewFakeClock(time.Unix(0, 0).UTC())
+	ev := &recordingEvents{}
+	eng := NewEngine(clock, &selectiveStore{}, ev)
+	eng.AddPlayer(Player{ID: "a", Seat: SeatA1, DisplayName: "A", Side: 0})
+	eng.AddPlayer(Player{ID: "b", Seat: SeatB1, DisplayName: "B", Side: 1})
+	eng.Start()
+
+	eng.OnDraft("a", "xyz")
+	eng.OnLock("a")
+	if eng.IsLocked(SeatA1) {
+		t.Fatal("xyz locked")
+	}
+	if len(ev.errors) != 1 || ev.errors[0] != "not_in_bank" {
+		t.Fatalf("errors = %v, want [not_in_bank]", ev.errors)
+	}
+	if eng.Phase() != PhaseAnswering {
+		t.Fatalf("phase = %s, want answering", eng.Phase())
+	}
+
+	clock.Advance(AnsweringDur)
+	if len(ev.results) != 1 {
+		t.Fatalf("results = %d, want 1", len(ev.results))
+	}
+	for _, side := range ev.results[0].Sides {
+		if side.Seat == SeatA1 && (side.Valid || side.Score != 0) {
+			t.Fatalf("timeout answer = %+v, want invalid score 0", side)
+		}
 	}
 }
