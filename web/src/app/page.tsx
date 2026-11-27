@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { ALL_TIERS, TierBadge } from "@/components/TierBadge";
 import { DepthMeter } from "@/components/DepthMeter";
+import { apiURL } from "@/lib/config";
 import type { Mode } from "@/lib/protocol";
 
 const NAME_KEY = "kb_display_name";
@@ -28,7 +29,7 @@ export default function Home() {
     setError(null);
     startTransition(async () => {
       try {
-        const res = await fetch("/api/lobbies", {
+        const res = await fetch(apiURL("/api/lobbies"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ mode, display_name: display }),

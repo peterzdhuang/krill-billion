@@ -1,0 +1,8 @@
+web/node_modules
+web/.next
+.git
+.github
+.packbuild-cache
+**/*_test.go
+*.md
+.cursor

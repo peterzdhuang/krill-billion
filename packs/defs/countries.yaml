@@ -1,0 +1,87 @@
+prompts:
+  - id: country
+    category: Countries
+    text: A country
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P31 wd:Q3624078 .
+        FILTER NOT EXISTS { ?item wdt:P31 wd:Q3024240 }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: landlocked-country
+    category: Countries
+    text: A landlocked country
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P31 wd:Q123346 .
+        FILTER NOT EXISTS { ?item wdt:P31 wd:Q3024240 }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: african-country
+    category: Countries
+    text: A country in Africa
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P31 wd:Q3624078 ;
+              wdt:P30 wd:Q15 .
+        FILTER NOT EXISTS { ?item wdt:P31 wd:Q3024240 }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: island-country
+    category: Countries
+    text: An island country
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P31 wd:Q112099 .
+        FILTER NOT EXISTS { ?item wdt:P31 wd:Q3024240 }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: european-country
+    category: Countries
+    text: A country in Europe
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P31 wd:Q3624078 ;
+              wdt:P30 wd:Q46 .
+        FILTER NOT EXISTS { ?item wdt:P31 wd:Q3024240 }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article

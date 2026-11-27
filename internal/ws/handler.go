@@ -4,14 +4,35 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/coder/websocket"
 	"github.com/peterzdhuang/krill-billion/internal/lobby"
 )
 
+func originPatterns(allowed string) []string {
+	allowed = strings.TrimSpace(allowed)
+	if allowed == "" || allowed == "*" {
+		// Local Next rewrite + broad allow for unset FRONTEND_ORIGIN.
+		return []string{"*"}
+	}
+	var out []string
+	for _, a := range strings.Split(allowed, ",") {
+		a = strings.TrimSpace(a)
+		if a != "" {
+			out = append(out, a)
+		}
+	}
+	if len(out) == 0 {
+		return []string{"*"}
+	}
+	return out
+}
+
 // Handler upgrades WebSocket connections and routes protocol messages.
 type Handler struct {
-	Registry *lobby.Registry
+	Registry      *lobby.Registry
+	AllowedOrigin string // FRONTEND_ORIGIN; empty allows local / same-origin
 }
 
 func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -27,7 +48,7 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	wsConn, err := websocket.Accept(w, r, &websocket.AcceptOptions{
-		InsecureSkipVerify: true, // same-origin via Next rewrite; allow local dev
+		OriginPatterns: originPatterns(h.AllowedOrigin),
 	})
 	if err != nil {
 		return

@@ -1,0 +1,93 @@
+prompts:
+  - id: programming-language
+    category: Programming languages
+    text: A programming language
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P31/wdt:P279* wd:Q9143 .
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+      LIMIT 400
+
+  - id: compiles-to-js
+    category: Programming languages
+    text: A language that compiles to JavaScript
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        VALUES ?item {
+          wd:Q28865 wd:Q349387 wd:Q3770685 wd:Q1321919 wd:Q188822 wd:Q1334586
+          wd:Q4035747 wd:Q15241004 wd:Q105599023 wd:Q51798 wd:Q726239 wd:Q2005
+        }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: systems-language
+    category: Programming languages
+    text: A systems programming language
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        VALUES ?item {
+          wd:Q15777 wd:Q2407 wd:Q163233 wd:Q37227 wd:Q161053 wd:Q132874
+          wd:Q188822 wd:Q5112206 wd:Q426829 wd:Q2005 wd:Q337562 wd:Q829355
+        }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: scripting-language
+    category: Programming languages
+    text: A scripting language
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        VALUES ?item {
+          wd:Q28865 wd:Q59 wd:Q161053 wd:Q2005 wd:Q42478 wd:Q51798
+          wd:Q37227 wd:Q131914 wd:Q849146 wd:Q46440 wd:Q2370 wd:Q132874
+        }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: functional-language
+    category: Programming languages
+    text: A functional programming language
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        VALUES ?item {
+          wd:Q34010 wd:Q188822 wd:Q132874 wd:Q1132275 wd:Q849146 wd:Q37227
+          wd:Q5112206 wd:Q1201807 wd:Q2370 wd:Q2005 wd:Q726239 wd:Q163233
+        }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article

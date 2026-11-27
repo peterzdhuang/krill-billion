@@ -1,19 +1,59 @@
-/** Mirrored from internal/ws/protocol.go — keep in sync. */
+/** Mirrored from internal/ws/protocol.go — keep in sync with web/lib/protocol.ts. */
 
-export type Mode = "1v1" | "2v2";
+export type ClientMessageType =
+  | "join"
+  | "claim_seat"
+  | "ready"
+  | "start"
+  | "set_mode"
+  | "draft"
+  | "lock"
+  | "ping";
+
+export type ServerMessageType =
+  | "lobby_state"
+  | "room_state"
+  | "round_start"
+  | "teammate_draft"
+  | "locked"
+  | "round_result"
+  | "match_end"
+  | "error"
+  | "pong";
+
+export type Envelope<T = unknown> = {
+  type: ClientMessageType | ServerMessageType | string;
+  data: T;
+};
+
+export type ClientMessage =
+  | { type: "join"; data: JoinData }
+  | { type: "claim_seat"; data: ClaimSeatData }
+  | { type: "ready"; data: ReadyData }
+  | { type: "start"; data: StartData }
+  | { type: "set_mode"; data: SetModeData }
+  | { type: "draft"; data: DraftData }
+  | { type: "lock"; data: LockData }
+  | { type: "ping"; data: PingData };
+
+export type JoinData = {
+  lobby_id: string;
+  display_name: string;
+  seat?: string;
+  reconnect_token?: string;
+  host_token?: string;
+};
+
+export type ClaimSeatData = { seat: string };
+export type ReadyData = Record<string, never>;
+export type StartData = Record<string, never>;
+export type SetModeData = { mode: "1v1" | "2v2" };
+export type DraftData = { text: string };
+export type LockData = Record<string, never>;
+export type PingData = Record<string, never>;
+
 export type Seat = "A1" | "A2" | "B1" | "B2";
-export type Phase = "lobby" | "answering" | "reveal" | "paused" | "ended";
-export type MatchEndReason = "ko" | "forfeit" | "cap" | "draw";
-export type ErrorCode =
-  | "seat_taken"
-  | "not_host"
-  | "not_ready"
-  | "bad_phase"
-  | "duplicate_answer"
-  | "rate_limited"
-  | "not_found"
-  | "bad_request";
-
+export type Mode = "1v1" | "2v2";
 export type TierName =
   | "Intern"
   | "Junior"
@@ -24,138 +64,89 @@ export type TierName =
   | "CTO"
   | "Jeffy B";
 
-export interface Envelope<T = unknown> {
-  type: string;
-  data: T;
-}
-
-// —— Client → Server ——
-
-export interface JoinMsg {
-  lobby_id: string;
-  display_name: string;
-  seat?: Seat;
-  reconnect_token?: string;
-}
-
-export interface ClaimSeatMsg {
-  seat: Seat;
-}
-
-export interface DraftMsg {
-  text: string;
-}
-
-export type ClientMessage =
-  | { type: "join"; data: JoinMsg }
-  | { type: "claim_seat"; data: ClaimSeatMsg }
-  | { type: "ready"; data: Record<string, never> }
-  | { type: "start"; data: Record<string, never> }
-  | { type: "draft"; data: DraftMsg }
-  | { type: "lock"; data: Record<string, never> }
-  | { type: "ping"; data: Record<string, never> };
-
-// —— Server → Client ——
-
-export interface SeatInfo {
-  seat: Seat;
+export type SeatState = {
+  seat: string;
   player_id?: string;
   display_name?: string;
   ready: boolean;
-  empty: boolean;
-}
-
-export interface LobbyStateMsg {
-  lobby_id: string;
-  seats: SeatInfo[];
-  mode: Mode;
-  link: string;
-  host_player_id: string;
-  you_are_host?: boolean;
-  your_seat?: Seat | null;
-  your_player_id?: string;
-}
-
-export interface PlayerPublic {
-  seat: Seat;
-  display_name: string;
-  player_id: string;
   connected: boolean;
-}
+};
 
-export interface RoomStateMsg {
-  players: PlayerPublic[];
-  hp: { A: number; B: number };
-  multipliers: { A: number; B: number };
-  phase: Phase;
-  clock_ms?: number;
+export type LobbyStateData = {
+  seats: SeatState[];
+  mode: string;
+  link: string;
+  host: string;
+  host_player_id?: string;
+  started: boolean;
+  player_id?: string;
+  reconnect_token?: string;
+  your_seat?: string;
+};
+
+export type RoomPlayer = {
+  player_id: string;
+  display_name: string;
+  seat: string;
+  connected: boolean;
+};
+
+export type RoomStateData = {
+  players: RoomPlayer[];
+  hp: [number, number];
+  multipliers: [number, number];
+  phase: string;
+  clock: number;
   round: number;
-  match_deadline_ts?: number;
-  pause_until_ts?: number;
-  paused_for_seat?: Seat;
-}
+  sudden_death: boolean;
+};
 
-export interface RoundStartMsg {
-  prompt: { id: string; text: string; category: string };
+export type PromptInfo = {
+  id: string;
+  text: string;
+  category: string;
+};
+
+export type RoundStartData = {
+  prompt: PromptInfo;
   deadline_ts: number;
   round: number;
-  sudden_death?: boolean;
-}
+  sudden_death: boolean;
+};
 
-export interface TeammateDraftMsg {
-  seat: Seat;
+export type TeammateDraftData = { seat: string; text: string };
+export type LockedData = { seat: string };
+
+export type SideAnswerData = {
+  seat: string;
   text: string;
-}
-
-export interface LockedMsg {
-  seat: Seat;
-}
-
-export interface AnswerReveal {
-  seat: Seat;
-  text: string;
-  matched: boolean;
-  label?: string;
-  rarity?: number;
-  tier?: TierName;
+  matched_label: string;
+  rarity: number;
+  tier: string;
   score: number;
-  entry_id?: string;
-}
+  valid: boolean;
+};
 
-export interface RoundResultMsg {
+export type RoundResultData = {
   round: number;
-  answers: AnswerReveal[];
+  sudden_death: boolean;
+  sides: [SideAnswerData, SideAnswerData];
+  damage: number;
   gap: number;
-  damage: number;
-  winner_side?: "A" | "B" | null;
+  hp: [number, number];
+  multipliers: [number, number];
+  winner: number;
   tie: boolean;
-  hp: { A: number; B: number };
-  multipliers: { A: number; B: number };
-}
+};
 
-export interface RoundRecap {
-  round: number;
-  answers: AnswerReveal[];
-  damage: number;
-  winner_side?: "A" | "B" | null;
-}
-
-export interface MatchEndMsg {
-  winner_side?: "A" | "B" | null;
+export type MatchEndData = {
+  winner: 0 | 1 | null;
   draw: boolean;
-  reason: MatchEndReason;
-  recap: RoundRecap[];
-  hp: { A: number; B: number };
-}
+  reason: "ko" | "forfeit" | "cap" | "draw" | string;
+  recap: RoundResultData[];
+};
 
-export interface ErrorMsg {
-  code: ErrorCode | string;
+export type ErrorData = {
+  code: string;
   message: string;
-}
-
-export interface JoinAckMsg {
-  player_id: string;
-  reconnect_token: string;
-  seat?: Seat | null;
-  is_host: boolean;
-}
+};

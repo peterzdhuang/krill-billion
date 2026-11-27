@@ -7,16 +7,16 @@ import { MatchScreen } from "@/components/MatchScreen";
 import { Toast } from "@/components/Toast";
 import type {
   Envelope,
-  ErrorMsg,
-  JoinAckMsg,
-  LobbyStateMsg,
-  MatchEndMsg,
-  RoundResultMsg,
-  RoundStartMsg,
-  RoomStateMsg,
+  ErrorData,
+  LobbyStateData,
+  MatchEndData,
+  RoundResultData,
+  RoundStartData,
+  RoomStateData,
   Seat,
 } from "@/lib/protocol";
 import {
+  loadHostToken,
   loadReconnectToken,
   saveReconnect,
   useDraftThrottle,
@@ -34,12 +34,12 @@ export default function PlayPage() {
   const [joined, setJoined] = useState(false);
   const [playerId, setPlayerId] = useState<string | null>(null);
   const [isHost, setIsHost] = useState(false);
-  const [yourSeat, setYourSeat] = useState<Seat | null>(null);
-  const [lobby, setLobby] = useState<LobbyStateMsg | null>(null);
-  const [room, setRoom] = useState<RoomStateMsg | null>(null);
-  const [round, setRound] = useState<RoundStartMsg | null>(null);
-  const [result, setResult] = useState<RoundResultMsg | null>(null);
-  const [matchEnd, setMatchEnd] = useState<MatchEndMsg | null>(null);
+  const [yourSeat, setYourSeat] = useState<string | null>(null);
+  const [lobby, setLobby] = useState<LobbyStateData | null>(null);
+  const [room, setRoom] = useState<RoomStateData | null>(null);
+  const [round, setRound] = useState<RoundStartData | null>(null);
+  const [result, setResult] = useState<RoundResultData | null>(null);
+  const [matchEnd, setMatchEnd] = useState<MatchEndData | null>(null);
   const [draft, setDraft] = useState("");
   const [locked, setLocked] = useState(false);
   const [opponentLocked, setOpponentLocked] = useState(false);
@@ -57,31 +57,34 @@ export default function PlayPage() {
   const onMessage = useCallback(
     (env: Envelope) => {
       switch (env.type) {
-        case "join_ack": {
-          const d = env.data as JoinAckMsg;
-          setPlayerId(d.player_id);
-          setIsHost(d.is_host);
-          setYourSeat(d.seat ?? null);
-          saveReconnect(lobbyId, d.player_id, d.reconnect_token);
-          setJoined(true);
-          break;
-        }
         case "lobby_state": {
-          const d = env.data as LobbyStateMsg;
+          const d = env.data as LobbyStateData;
           setLobby(d);
-          if (d.your_seat !== undefined) setYourSeat(d.your_seat ?? null);
-          if (d.you_are_host !== undefined) setIsHost(!!d.you_are_host);
-          if (d.your_player_id) setPlayerId(d.your_player_id);
-          if (!inMatch) setMatchEnd(null);
+          if (d.player_id) {
+            setPlayerId(d.player_id);
+            setJoined(true);
+            if (d.reconnect_token) {
+              saveReconnect(lobbyId, d.player_id, d.reconnect_token);
+            }
+          }
+          if (d.your_seat) setYourSeat(d.your_seat);
+          if (d.host_player_id && d.player_id) {
+            setIsHost(d.host_player_id === d.player_id || d.host === d.player_id);
+          }
+          if (d.started) setInMatch(true);
+          if (!d.started) {
+            setInMatch(false);
+            setMatchEnd(null);
+          }
           break;
         }
         case "room_state": {
-          setRoom(env.data as RoomStateMsg);
+          setRoom(env.data as RoomStateData);
           setInMatch(true);
           break;
         }
         case "round_start": {
-          const d = env.data as RoundStartMsg;
+          const d = env.data as RoundStartData;
           setRound(d);
           setResult(null);
           setDraft("");
@@ -90,25 +93,27 @@ export default function PlayPage() {
           setInMatch(true);
           setRoom((r) =>
             r
-              ? { ...r, phase: "answering", round: d.round }
+              ? { ...r, phase: "answering", round: d.round, sudden_death: d.sudden_death }
               : {
                   players: [],
-                  hp: { A: 10000, B: 10000 },
-                  multipliers: { A: 1, B: 1 },
+                  hp: [10000, 10000],
+                  multipliers: [1, 1],
                   phase: "answering",
+                  clock: 600000,
                   round: d.round,
+                  sudden_death: !!d.sudden_death,
                 },
           );
           break;
         }
         case "locked": {
-          const d = env.data as { seat: Seat };
+          const d = env.data as { seat: string };
           if (d.seat === yourSeat) setLocked(true);
           else setOpponentLocked(true);
           break;
         }
         case "round_result": {
-          const d = env.data as RoundResultMsg;
+          const d = env.data as RoundResultData;
           setResult(d);
           setRoom((r) =>
             r
@@ -124,22 +129,20 @@ export default function PlayPage() {
           break;
         }
         case "match_end": {
-          setMatchEnd(env.data as MatchEndMsg);
+          setMatchEnd(env.data as MatchEndData);
           setRoom((r) => (r ? { ...r, phase: "ended" } : r));
           break;
         }
         case "error": {
-          const d = env.data as ErrorMsg;
+          const d = env.data as ErrorData;
           setToast(`${d.code}: ${d.message}`);
           break;
         }
-        case "pong":
-          break;
         default:
           break;
       }
     },
-    [inMatch, lobbyId, yourSeat],
+    [lobbyId, yourSeat],
   );
 
   const { connected, send } = useGameSocket(
@@ -150,12 +153,14 @@ export default function PlayPage() {
   useEffect(() => {
     if (!connected || !nameReady || joined) return;
     const token = loadReconnectToken(lobbyId) ?? undefined;
+    const hostToken = loadHostToken(lobbyId) ?? undefined;
     send({
       type: "join",
       data: {
         lobby_id: lobbyId,
         display_name: name.trim(),
         reconnect_token: token,
+        host_token: hostToken,
       },
     });
   }, [connected, nameReady, joined, lobbyId, name, send]);
@@ -222,7 +227,7 @@ export default function PlayPage() {
           state={lobby}
           yourSeat={yourSeat}
           isHost={isHost}
-          onClaim={(seat) => send({ type: "claim_seat", data: { seat } })}
+          onClaim={(seat: Seat) => send({ type: "claim_seat", data: { seat } })}
           onReady={() => send({ type: "ready", data: {} })}
           onStart={() => send({ type: "start", data: {} })}
           onCopyLink={() => {

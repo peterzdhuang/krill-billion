@@ -1,0 +1,3580 @@
+{
+  "pack_id": "core-v1",
+  "version": 1,
+  "built_at": "2026-11-27T05:40:47Z",
+  "attribution": [
+    "Wikidata (CC0)",
+    "Wikimedia Pageviews API"
+  ],
+  "prompts": [
+    {
+      "id": "alkali-metal",
+      "category": "Chemical elements",
+      "text": "An alkali metal",
+      "entries": [
+        {
+          "id": "Q658",
+          "label": "Sodium",
+          "aliases": [
+            "Na"
+          ],
+          "rarity": 5
+        },
+        {
+          "id": "Q703",
+          "label": "Potassium",
+          "aliases": [
+            "K"
+          ],
+          "rarity": 8
+        },
+        {
+          "id": "Q568",
+          "label": "Lithium",
+          "aliases": [
+            "Li"
+          ],
+          "rarity": 10
+        },
+        {
+          "id": "Q556",
+          "label": "Hydrogen",
+          "aliases": [
+            "H"
+          ],
+          "rarity": 20
+        },
+        {
+          "id": "Q1108",
+          "label": "Caesium",
+          "aliases": [
+            "Cesium",
+            "Cs"
+          ],
+          "rarity": 45
+        },
+        {
+          "id": "Q753",
+          "label": "Rubidium",
+          "aliases": [
+            "Rb"
+          ],
+          "rarity": 55
+        },
+        {
+          "id": "Q1126",
+          "label": "Francium",
+          "aliases": [
+            "Fr"
+          ],
+          "rarity": 95
+        }
+      ]
+    },
+    {
+      "id": "chemical-element",
+      "category": "Chemical elements",
+      "text": "A chemical element",
+      "entries": [
+        {
+          "id": "Q556",
+          "label": "Hydrogen",
+          "aliases": [
+            "H"
+          ],
+          "rarity": 2
+        },
+        {
+          "id": "Q629",
+          "label": "Oxygen",
+          "aliases": [
+            "O"
+          ],
+          "rarity": 5
+        },
+        {
+          "id": "Q623",
+          "label": "Carbon",
+          "aliases": [
+            "C"
+          ],
+          "rarity": 8
+        },
+        {
+          "id": "Q677",
+          "label": "Iron",
+          "aliases": [
+            "Fe"
+          ],
+          "rarity": 12
+        },
+        {
+          "id": "Q897",
+          "label": "Gold",
+          "aliases": [
+            "Au"
+          ],
+          "rarity": 15
+        },
+        {
+          "id": "Q1098",
+          "label": "Uranium",
+          "aliases": [
+            "U"
+          ],
+          "rarity": 35
+        },
+        {
+          "id": "Q1122",
+          "label": "Technetium",
+          "aliases": [
+            "Tc"
+          ],
+          "rarity": 72
+        },
+        {
+          "id": "Q1128",
+          "label": "Promethium",
+          "aliases": [
+            "Pm"
+          ],
+          "rarity": 85
+        },
+        {
+          "id": "Q1307",
+          "label": "Oganesson",
+          "aliases": [
+            "Og"
+          ],
+          "rarity": 95
+        },
+        {
+          "id": "Q1275",
+          "label": "Tennessine",
+          "aliases": [
+            "Ts"
+          ],
+          "rarity": 98
+        }
+      ]
+    },
+    {
+      "id": "halogen",
+      "category": "Chemical elements",
+      "text": "A halogen",
+      "entries": [
+        {
+          "id": "Q688",
+          "label": "Chlorine",
+          "aliases": [
+            "Cl"
+          ],
+          "rarity": 5
+        },
+        {
+          "id": "Q650",
+          "label": "Fluorine",
+          "aliases": [
+            "F"
+          ],
+          "rarity": 15
+        },
+        {
+          "id": "Q1107",
+          "label": "Iodine",
+          "aliases": [
+            "I"
+          ],
+          "rarity": 25
+        },
+        {
+          "id": "Q740",
+          "label": "Bromine",
+          "aliases": [
+            "Br"
+          ],
+          "rarity": 30
+        },
+        {
+          "id": "Q1134",
+          "label": "Astatine",
+          "aliases": [
+            "At"
+          ],
+          "rarity": 85
+        },
+        {
+          "id": "Q1306",
+          "label": "Tennessine",
+          "aliases": [
+            "Ts"
+          ],
+          "rarity": 100
+        }
+      ]
+    },
+    {
+      "id": "lanthanide",
+      "category": "Chemical elements",
+      "text": "A lanthanide",
+      "entries": [
+        {
+          "id": "Q1385",
+          "label": "Lanthanum",
+          "aliases": [
+            "La"
+          ],
+          "rarity": 10
+        },
+        {
+          "id": "Q1386",
+          "label": "Cerium",
+          "aliases": [
+            "Ce"
+          ],
+          "rarity": 18
+        },
+        {
+          "id": "Q1388",
+          "label": "Neodymium",
+          "aliases": [
+            "Nd"
+          ],
+          "rarity": 25
+        },
+        {
+          "id": "Q1391",
+          "label": "Europium",
+          "aliases": [
+            "Eu"
+          ],
+          "rarity": 40
+        },
+        {
+          "id": "Q1396",
+          "label": "Gadolinium",
+          "aliases": [
+            "Gd"
+          ],
+          "rarity": 48
+        },
+        {
+          "id": "Q1403",
+          "label": "Terbium",
+          "aliases": [
+            "Tb"
+          ],
+          "rarity": 60
+        },
+        {
+          "id": "Q1407",
+          "label": "Dysprosium",
+          "aliases": [
+            "Dy"
+          ],
+          "rarity": 65
+        },
+        {
+          "id": "Q1412",
+          "label": "Holmium",
+          "aliases": [
+            "Ho"
+          ],
+          "rarity": 75
+        },
+        {
+          "id": "Q1420",
+          "label": "Lutetium",
+          "aliases": [
+            "Lu"
+          ],
+          "rarity": 85
+        },
+        {
+          "id": "Q1418",
+          "label": "Thulium",
+          "aliases": [
+            "Tm"
+          ],
+          "rarity": 90
+        }
+      ]
+    },
+    {
+      "id": "noble-gas",
+      "category": "Chemical elements",
+      "text": "A noble gas",
+      "entries": [
+        {
+          "id": "Q560",
+          "label": "Helium",
+          "aliases": [
+            "He"
+          ],
+          "rarity": 0
+        },
+        {
+          "id": "Q654",
+          "label": "Neon",
+          "aliases": [
+            "Ne"
+          ],
+          "rarity": 20
+        },
+        {
+          "id": "Q696",
+          "label": "Argon",
+          "aliases": [
+            "Ar"
+          ],
+          "rarity": 35
+        },
+        {
+          "id": "Q888",
+          "label": "Krypton",
+          "aliases": [
+            "Kr"
+          ],
+          "rarity": 55
+        },
+        {
+          "id": "Q1106",
+          "label": "Xenon",
+          "aliases": [
+            "Xe"
+          ],
+          "rarity": 70
+        },
+        {
+          "id": "Q1133",
+          "label": "Radon",
+          "aliases": [
+            "Rn"
+          ],
+          "rarity": 85
+        },
+        {
+          "id": "Q1307",
+          "label": "Oganesson",
+          "aliases": [
+            "Og"
+          ],
+          "rarity": 100
+        }
+      ]
+    },
+    {
+      "id": "african-country",
+      "category": "Countries",
+      "text": "A country in Africa",
+      "entries": [
+        {
+          "id": "Q258",
+          "label": "South Africa",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q1033",
+          "label": "Nigeria",
+          "aliases": [],
+          "rarity": 10
+        },
+        {
+          "id": "Q1028",
+          "label": "Morocco",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "Q1016",
+          "label": "Egypt",
+          "aliases": [],
+          "rarity": 18
+        },
+        {
+          "id": "Q1049",
+          "label": "Senegal",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "Q1009",
+          "label": "Cameroon",
+          "aliases": [],
+          "rarity": 42
+        },
+        {
+          "id": "Q1005",
+          "label": "The Gambia",
+          "aliases": [
+            "Gambia"
+          ],
+          "rarity": 70
+        },
+        {
+          "id": "Q912",
+          "label": "Mali",
+          "aliases": [],
+          "rarity": 75
+        },
+        {
+          "id": "Q962",
+          "label": "Benin",
+          "aliases": [],
+          "rarity": 82
+        },
+        {
+          "id": "Q971",
+          "label": "Republic of the Congo",
+          "aliases": [
+            "Congo-Brazzaville"
+          ],
+          "rarity": 90
+        }
+      ]
+    },
+    {
+      "id": "country",
+      "category": "Countries",
+      "text": "A country",
+      "entries": [
+        {
+          "id": "Q30",
+          "label": "United States",
+          "aliases": [
+            "USA",
+            "US",
+            "America"
+          ],
+          "rarity": 0
+        },
+        {
+          "id": "Q145",
+          "label": "United Kingdom",
+          "aliases": [
+            "UK",
+            "Britain",
+            "Great Britain"
+          ],
+          "rarity": 2
+        },
+        {
+          "id": "Q142",
+          "label": "France",
+          "aliases": [],
+          "rarity": 4
+        },
+        {
+          "id": "Q183",
+          "label": "Germany",
+          "aliases": [],
+          "rarity": 6
+        },
+        {
+          "id": "Q17",
+          "label": "Japan",
+          "aliases": [],
+          "rarity": 8
+        },
+        {
+          "id": "Q155",
+          "label": "Brazil",
+          "aliases": [],
+          "rarity": 12
+        },
+        {
+          "id": "Q408",
+          "label": "Australia",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "Q668",
+          "label": "India",
+          "aliases": [],
+          "rarity": 18
+        },
+        {
+          "id": "Q159",
+          "label": "Russia",
+          "aliases": [],
+          "rarity": 22
+        },
+        {
+          "id": "Q148",
+          "label": "China",
+          "aliases": [
+            "PRC"
+          ],
+          "rarity": 25
+        },
+        {
+          "id": "Q889",
+          "label": "Afghanistan",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "Q1005",
+          "label": "The Gambia",
+          "aliases": [
+            "Gambia"
+          ],
+          "rarity": 72
+        },
+        {
+          "id": "Q23681",
+          "label": "Nauru",
+          "aliases": [],
+          "rarity": 92
+        },
+        {
+          "id": "Q695",
+          "label": "Palau",
+          "aliases": [],
+          "rarity": 95
+        }
+      ]
+    },
+    {
+      "id": "european-country",
+      "category": "Countries",
+      "text": "A country in Europe",
+      "entries": [
+        {
+          "id": "Q142",
+          "label": "France",
+          "aliases": [],
+          "rarity": 3
+        },
+        {
+          "id": "Q183",
+          "label": "Germany",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q145",
+          "label": "United Kingdom",
+          "aliases": [
+            "UK",
+            "Britain"
+          ],
+          "rarity": 7
+        },
+        {
+          "id": "Q38",
+          "label": "Italy",
+          "aliases": [],
+          "rarity": 10
+        },
+        {
+          "id": "Q29",
+          "label": "Spain",
+          "aliases": [],
+          "rarity": 12
+        },
+        {
+          "id": "Q55",
+          "label": "Netherlands",
+          "aliases": [
+            "Holland"
+          ],
+          "rarity": 20
+        },
+        {
+          "id": "Q224",
+          "label": "Croatia",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "Q236",
+          "label": "Montenegro",
+          "aliases": [],
+          "rarity": 72
+        },
+        {
+          "id": "Q221",
+          "label": "North Macedonia",
+          "aliases": [
+            "Macedonia"
+          ],
+          "rarity": 85
+        },
+        {
+          "id": "Q233",
+          "label": "Malta",
+          "aliases": [],
+          "rarity": 90
+        }
+      ]
+    },
+    {
+      "id": "island-country",
+      "category": "Countries",
+      "text": "An island country",
+      "entries": [
+        {
+          "id": "Q17",
+          "label": "Japan",
+          "aliases": [],
+          "rarity": 4
+        },
+        {
+          "id": "Q664",
+          "label": "New Zealand",
+          "aliases": [],
+          "rarity": 12
+        },
+        {
+          "id": "Q334",
+          "label": "Singapore",
+          "aliases": [],
+          "rarity": 18
+        },
+        {
+          "id": "Q252",
+          "label": "Indonesia",
+          "aliases": [],
+          "rarity": 22
+        },
+        {
+          "id": "Q233",
+          "label": "Malta",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q23681",
+          "label": "Nauru",
+          "aliases": [],
+          "rarity": 78
+        },
+        {
+          "id": "Q695",
+          "label": "Palau",
+          "aliases": [],
+          "rarity": 85
+        },
+        {
+          "id": "Q678",
+          "label": "Tonga",
+          "aliases": [],
+          "rarity": 90
+        },
+        {
+          "id": "Q697",
+          "label": "Tuvalu",
+          "aliases": [],
+          "rarity": 95
+        }
+      ]
+    },
+    {
+      "id": "landlocked-country",
+      "category": "Countries",
+      "text": "A landlocked country",
+      "entries": [
+        {
+          "id": "Q39",
+          "label": "Switzerland",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q40",
+          "label": "Austria",
+          "aliases": [],
+          "rarity": 10
+        },
+        {
+          "id": "Q28",
+          "label": "Hungary",
+          "aliases": [],
+          "rarity": 18
+        },
+        {
+          "id": "Q213",
+          "label": "Czech Republic",
+          "aliases": [
+            "Czechia"
+          ],
+          "rarity": 22
+        },
+        {
+          "id": "Q889",
+          "label": "Afghanistan",
+          "aliases": [],
+          "rarity": 32
+        },
+        {
+          "id": "Q750",
+          "label": "Bolivia",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q965",
+          "label": "Burkina Faso",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q1036",
+          "label": "Uganda",
+          "aliases": [],
+          "rarity": 62
+        },
+        {
+          "id": "Q917",
+          "label": "Bhutan",
+          "aliases": [],
+          "rarity": 78
+        },
+        {
+          "id": "Q819",
+          "label": "Laos",
+          "aliases": [
+            "Lao PDR"
+          ],
+          "rarity": 88
+        }
+      ]
+    },
+    {
+      "id": "dog-breed",
+      "category": "Dog breeds",
+      "text": "A dog breed",
+      "entries": [
+        {
+          "id": "Q38904",
+          "label": "Labrador Retriever",
+          "aliases": [
+            "Labrador",
+            "Lab"
+          ],
+          "rarity": 3
+        },
+        {
+          "id": "Q38690",
+          "label": "Golden Retriever",
+          "aliases": [
+            "Golden"
+          ],
+          "rarity": 5
+        },
+        {
+          "id": "Q38604",
+          "label": "German Shepherd",
+          "aliases": [
+            "Alsatian"
+          ],
+          "rarity": 7
+        },
+        {
+          "id": "Q38404",
+          "label": "Bulldog",
+          "aliases": [
+            "English Bulldog"
+          ],
+          "rarity": 12
+        },
+        {
+          "id": "Q37983",
+          "label": "Poodle",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "Q38386",
+          "label": "Beagle",
+          "aliases": [],
+          "rarity": 18
+        },
+        {
+          "id": "Q38602",
+          "label": "Dachshund",
+          "aliases": [
+            "Wiener dog",
+            "Sausage dog"
+          ],
+          "rarity": 28
+        },
+        {
+          "id": "Q39107",
+          "label": "Shiba Inu",
+          "aliases": [
+            "Shiba"
+          ],
+          "rarity": 40
+        },
+        {
+          "id": "Q38870",
+          "label": "Basenji",
+          "aliases": [],
+          "rarity": 78
+        },
+        {
+          "id": "Q39052",
+          "label": "Xoloitzcuintle",
+          "aliases": [
+            "Xolo",
+            "Mexican Hairless"
+          ],
+          "rarity": 92
+        }
+      ]
+    },
+    {
+      "id": "herding-dog",
+      "category": "Dog breeds",
+      "text": "A herding dog breed",
+      "entries": [
+        {
+          "id": "Q38604",
+          "label": "German Shepherd",
+          "aliases": [
+            "Alsatian"
+          ],
+          "rarity": 5
+        },
+        {
+          "id": "Q38163",
+          "label": "Border Collie",
+          "aliases": [],
+          "rarity": 10
+        },
+        {
+          "id": "Q38888",
+          "label": "Australian Shepherd",
+          "aliases": [
+            "Aussie"
+          ],
+          "rarity": 18
+        },
+        {
+          "id": "Q38194",
+          "label": "Rough Collie",
+          "aliases": [
+            "Collie"
+          ],
+          "rarity": 25
+        },
+        {
+          "id": "Q38920",
+          "label": "Pembroke Welsh Corgi",
+          "aliases": [
+            "Corgi"
+          ],
+          "rarity": 28
+        },
+        {
+          "id": "Q38220",
+          "label": "Shetland Sheepdog",
+          "aliases": [
+            "Sheltie"
+          ],
+          "rarity": 35
+        },
+        {
+          "id": "Q39120",
+          "label": "Belgian Malinois",
+          "aliases": [
+            "Malinois"
+          ],
+          "rarity": 45
+        },
+        {
+          "id": "Q39200",
+          "label": "Bernese Mountain Dog",
+          "aliases": [],
+          "rarity": 48
+        },
+        {
+          "id": "Q39010",
+          "label": "Old English Sheepdog",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q39210",
+          "label": "Bearded Collie",
+          "aliases": [],
+          "rarity": 70
+        },
+        {
+          "id": "Q39310",
+          "label": "Puli",
+          "aliases": [],
+          "rarity": 88
+        }
+      ]
+    },
+    {
+      "id": "terrier",
+      "category": "Dog breeds",
+      "text": "A terrier",
+      "entries": [
+        {
+          "id": "Q38180",
+          "label": "Yorkshire Terrier",
+          "aliases": [
+            "Yorkie"
+          ],
+          "rarity": 5
+        },
+        {
+          "id": "Q38278",
+          "label": "Bull Terrier",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "Q38315",
+          "label": "Scottish Terrier",
+          "aliases": [
+            "Scottie"
+          ],
+          "rarity": 25
+        },
+        {
+          "id": "Q38348",
+          "label": "Airedale Terrier",
+          "aliases": [
+            "Airedale"
+          ],
+          "rarity": 35
+        },
+        {
+          "id": "Q38440",
+          "label": "Fox Terrier",
+          "aliases": [],
+          "rarity": 42
+        },
+        {
+          "id": "Q38372",
+          "label": "Cairn Terrier",
+          "aliases": [],
+          "rarity": 48
+        },
+        {
+          "id": "Q38412",
+          "label": "Border Terrier",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q38510",
+          "label": "Bedlington Terrier",
+          "aliases": [],
+          "rarity": 72
+        },
+        {
+          "id": "Q38555",
+          "label": "Skye Terrier",
+          "aliases": [],
+          "rarity": 85
+        },
+        {
+          "id": "Q38620",
+          "label": "Cesky Terrier",
+          "aliases": [],
+          "rarity": 95
+        }
+      ]
+    },
+    {
+      "id": "toy-dog",
+      "category": "Dog breeds",
+      "text": "A toy dog breed",
+      "entries": [
+        {
+          "id": "Q37990",
+          "label": "Chihuahua",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q38020",
+          "label": "Pomeranian",
+          "aliases": [],
+          "rarity": 12
+        },
+        {
+          "id": "Q38180",
+          "label": "Yorkshire Terrier",
+          "aliases": [
+            "Yorkie"
+          ],
+          "rarity": 15
+        },
+        {
+          "id": "Q38210",
+          "label": "Pug",
+          "aliases": [],
+          "rarity": 18
+        },
+        {
+          "id": "Q38250",
+          "label": "Maltese",
+          "aliases": [],
+          "rarity": 30
+        },
+        {
+          "id": "Q38300",
+          "label": "Shih Tzu",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "Q38350",
+          "label": "Papillon",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q38400",
+          "label": "Japanese Chin",
+          "aliases": [],
+          "rarity": 72
+        },
+        {
+          "id": "Q38450",
+          "label": "English Toy Spaniel",
+          "aliases": [
+            "King Charles Spaniel"
+          ],
+          "rarity": 80
+        },
+        {
+          "id": "Q38500",
+          "label": "Affenpinscher",
+          "aliases": [],
+          "rarity": 92
+        }
+      ]
+    },
+    {
+      "id": "working-dog",
+      "category": "Dog breeds",
+      "text": "A working dog breed",
+      "entries": [
+        {
+          "id": "Q38800",
+          "label": "Rottweiler",
+          "aliases": [],
+          "rarity": 8
+        },
+        {
+          "id": "Q38850",
+          "label": "Dobermann",
+          "aliases": [
+            "Doberman",
+            "Doberman Pinscher"
+          ],
+          "rarity": 12
+        },
+        {
+          "id": "Q38900",
+          "label": "Boxer",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "Q39000",
+          "label": "Siberian Husky",
+          "aliases": [
+            "Husky"
+          ],
+          "rarity": 18
+        },
+        {
+          "id": "Q38950",
+          "label": "Great Dane",
+          "aliases": [],
+          "rarity": 22
+        },
+        {
+          "id": "Q39100",
+          "label": "Saint Bernard",
+          "aliases": [
+            "St. Bernard"
+          ],
+          "rarity": 35
+        },
+        {
+          "id": "Q39050",
+          "label": "Alaskan Malamute",
+          "aliases": [
+            "Malamute"
+          ],
+          "rarity": 40
+        },
+        {
+          "id": "Q39200",
+          "label": "Bernese Mountain Dog",
+          "aliases": [],
+          "rarity": 48
+        },
+        {
+          "id": "Q39150",
+          "label": "Newfoundland",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q39250",
+          "label": "Komondor",
+          "aliases": [],
+          "rarity": 90
+        }
+      ]
+    },
+    {
+      "id": "arch-based",
+      "category": "Linux distributions",
+      "text": "An Arch-based Linux distribution",
+      "entries": [
+        {
+          "id": "Q80737",
+          "label": "Arch Linux",
+          "aliases": [
+            "Arch"
+          ],
+          "rarity": 5
+        },
+        {
+          "id": "Q216794",
+          "label": "Manjaro",
+          "aliases": [],
+          "rarity": 10
+        },
+        {
+          "id": "Q15275324",
+          "label": "EndeavourOS",
+          "aliases": [],
+          "rarity": 30
+        },
+        {
+          "id": "Q21041353",
+          "label": "Garuda Linux",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q17147124",
+          "label": "Artix Linux",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q25345924",
+          "label": "ArcoLinux",
+          "aliases": [],
+          "rarity": 65
+        },
+        {
+          "id": "Q28975100",
+          "label": "ArchBang",
+          "aliases": [],
+          "rarity": 75
+        },
+        {
+          "id": "Q17047990",
+          "label": "Chakra",
+          "aliases": [],
+          "rarity": 85
+        },
+        {
+          "id": "Q21041347",
+          "label": "Hyperbola",
+          "aliases": [],
+          "rarity": 90
+        },
+        {
+          "id": "Q28975096",
+          "label": "Parabola",
+          "aliases": [],
+          "rarity": 92
+        }
+      ]
+    },
+    {
+      "id": "debian-based",
+      "category": "Linux distributions",
+      "text": "A Debian-based distro",
+      "entries": [
+        {
+          "id": "Q215518",
+          "label": "Ubuntu",
+          "aliases": [],
+          "rarity": 2
+        },
+        {
+          "id": "Q7715973",
+          "label": "Debian",
+          "aliases": [],
+          "rarity": 8
+        },
+        {
+          "id": "Q26876",
+          "label": "Linux Mint",
+          "aliases": [
+            "Mint"
+          ],
+          "rarity": 15
+        },
+        {
+          "id": "Q21041353",
+          "label": "Kali Linux",
+          "aliases": [
+            "Kali"
+          ],
+          "rarity": 25
+        },
+        {
+          "id": "Q1295558",
+          "label": "Pop!_OS",
+          "aliases": [
+            "Pop OS"
+          ],
+          "rarity": 35
+        },
+        {
+          "id": "Q15275324",
+          "label": "elementary OS",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "Q28975100",
+          "label": "Zorin OS",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q21041347",
+          "label": "MX Linux",
+          "aliases": [],
+          "rarity": 60
+        },
+        {
+          "id": "Q17147124",
+          "label": "Devuan",
+          "aliases": [],
+          "rarity": 80
+        },
+        {
+          "id": "Q21041344",
+          "label": "AntiX",
+          "aliases": [],
+          "rarity": 90
+        }
+      ]
+    },
+    {
+      "id": "linux-distro",
+      "category": "Linux distributions",
+      "text": "A Linux distribution",
+      "entries": [
+        {
+          "id": "Q215518",
+          "label": "Ubuntu",
+          "aliases": [],
+          "rarity": 2
+        },
+        {
+          "id": "Q7715973",
+          "label": "Debian",
+          "aliases": [],
+          "rarity": 10
+        },
+        {
+          "id": "Q58676",
+          "label": "Fedora",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "Q26876",
+          "label": "Linux Mint",
+          "aliases": [
+            "Mint"
+          ],
+          "rarity": 18
+        },
+        {
+          "id": "Q80737",
+          "label": "Arch Linux",
+          "aliases": [
+            "Arch"
+          ],
+          "rarity": 20
+        },
+        {
+          "id": "Q11241",
+          "label": "openSUSE",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "Q216794",
+          "label": "Manjaro",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q16471",
+          "label": "Gentoo",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q131382",
+          "label": "Slackware",
+          "aliases": [],
+          "rarity": 75
+        },
+        {
+          "id": "Q48263",
+          "label": "Void Linux",
+          "aliases": [],
+          "rarity": 90
+        }
+      ]
+    },
+    {
+      "id": "mobile-linux",
+      "category": "Linux distributions",
+      "text": "A mobile Linux distribution",
+      "entries": [
+        {
+          "id": "Q94",
+          "label": "Android",
+          "aliases": [],
+          "rarity": 2
+        },
+        {
+          "id": "Q152294",
+          "label": "Tizen",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "Q478762",
+          "label": "Firefox OS",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q16972991",
+          "label": "Ubuntu Touch",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "Q4042997",
+          "label": "Sailfish OS",
+          "aliases": [],
+          "rarity": 50
+        },
+        {
+          "id": "Q21041353",
+          "label": "postmarketOS",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q16972790",
+          "label": "Plasma Mobile",
+          "aliases": [],
+          "rarity": 65
+        },
+        {
+          "id": "Q21041347",
+          "label": "Maemo",
+          "aliases": [],
+          "rarity": 70
+        },
+        {
+          "id": "Q28975100",
+          "label": "Mobian",
+          "aliases": [],
+          "rarity": 75
+        },
+        {
+          "id": "Q4042174",
+          "label": "Mer",
+          "aliases": [],
+          "rarity": 80
+        }
+      ]
+    },
+    {
+      "id": "rpm-distro",
+      "category": "Linux distributions",
+      "text": "An RPM-based Linux distribution",
+      "entries": [
+        {
+          "id": "Q58676",
+          "label": "Fedora",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q28010",
+          "label": "Red Hat Enterprise Linux",
+          "aliases": [
+            "RHEL"
+          ],
+          "rarity": 10
+        },
+        {
+          "id": "Q11241",
+          "label": "openSUSE",
+          "aliases": [],
+          "rarity": 20
+        },
+        {
+          "id": "Q207783",
+          "label": "CentOS",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "Q48263",
+          "label": "Rocky Linux",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q16471",
+          "label": "AlmaLinux",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "Q26876",
+          "label": "Oracle Linux",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q131382",
+          "label": "Mageia",
+          "aliases": [],
+          "rarity": 60
+        },
+        {
+          "id": "Q80737",
+          "label": "PCLinuxOS",
+          "aliases": [],
+          "rarity": 70
+        },
+        {
+          "id": "Q215518",
+          "label": "ClearOS",
+          "aliases": [],
+          "rarity": 85
+        }
+      ]
+    },
+    {
+      "id": "african-capital",
+      "category": "National capitals",
+      "text": "An African capital",
+      "entries": [
+        {
+          "id": "Q85",
+          "label": "Cairo",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q34647",
+          "label": "Pretoria",
+          "aliases": [],
+          "rarity": 18
+        },
+        {
+          "id": "Q3659",
+          "label": "Nairobi",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "Q1960",
+          "label": "Accra",
+          "aliases": [],
+          "rarity": 30
+        },
+        {
+          "id": "Q3718",
+          "label": "Addis Ababa",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q3739",
+          "label": "Luanda",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q3832",
+          "label": "Lilongwe",
+          "aliases": [],
+          "rarity": 75
+        },
+        {
+          "id": "Q3777",
+          "label": "Gaborone",
+          "aliases": [],
+          "rarity": 82
+        },
+        {
+          "id": "Q3905",
+          "label": "Mbabane",
+          "aliases": [],
+          "rarity": 90
+        },
+        {
+          "id": "Q3932",
+          "label": "Moroni",
+          "aliases": [],
+          "rarity": 95
+        }
+      ]
+    },
+    {
+      "id": "asian-capital",
+      "category": "National capitals",
+      "text": "A capital in Asia",
+      "entries": [
+        {
+          "id": "Q1490",
+          "label": "Tokyo",
+          "aliases": [],
+          "rarity": 3
+        },
+        {
+          "id": "Q956",
+          "label": "Beijing",
+          "aliases": [],
+          "rarity": 8
+        },
+        {
+          "id": "Q987",
+          "label": "New Delhi",
+          "aliases": [],
+          "rarity": 12
+        },
+        {
+          "id": "Q1865",
+          "label": "Kuala Lumpur",
+          "aliases": [],
+          "rarity": 28
+        },
+        {
+          "id": "Q1863",
+          "label": "Islamabad",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q1858",
+          "label": "Hanoi",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "Q23430",
+          "label": "Ulaanbaatar",
+          "aliases": [],
+          "rarity": 72
+        },
+        {
+          "id": "Q200342",
+          "label": "Naypyidaw",
+          "aliases": [],
+          "rarity": 85
+        },
+        {
+          "id": "Q3820",
+          "label": "Thimphu",
+          "aliases": [],
+          "rarity": 92
+        },
+        {
+          "id": "Q927",
+          "label": "Dili",
+          "aliases": [],
+          "rarity": 96
+        }
+      ]
+    },
+    {
+      "id": "european-capital",
+      "category": "National capitals",
+      "text": "A European capital",
+      "entries": [
+        {
+          "id": "Q84",
+          "label": "London",
+          "aliases": [],
+          "rarity": 2
+        },
+        {
+          "id": "Q90",
+          "label": "Paris",
+          "aliases": [],
+          "rarity": 4
+        },
+        {
+          "id": "Q64",
+          "label": "Berlin",
+          "aliases": [],
+          "rarity": 8
+        },
+        {
+          "id": "Q220",
+          "label": "Rome",
+          "aliases": [],
+          "rarity": 12
+        },
+        {
+          "id": "Q2807",
+          "label": "Madrid",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "Q1741",
+          "label": "Vienna",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "Q19660",
+          "label": "Bucharest",
+          "aliases": [],
+          "rarity": 50
+        },
+        {
+          "id": "Q1773",
+          "label": "Riga",
+          "aliases": [],
+          "rarity": 70
+        },
+        {
+          "id": "Q1770",
+          "label": "Tallinn",
+          "aliases": [],
+          "rarity": 78
+        },
+        {
+          "id": "Q3901",
+          "label": "Podgorica",
+          "aliases": [],
+          "rarity": 92
+        }
+      ]
+    },
+    {
+      "id": "national-capital",
+      "category": "National capitals",
+      "text": "A national capital",
+      "entries": [
+        {
+          "id": "Q84",
+          "label": "London",
+          "aliases": [],
+          "rarity": 2
+        },
+        {
+          "id": "Q90",
+          "label": "Paris",
+          "aliases": [],
+          "rarity": 4
+        },
+        {
+          "id": "Q64",
+          "label": "Berlin",
+          "aliases": [],
+          "rarity": 8
+        },
+        {
+          "id": "Q649",
+          "label": "Moscow",
+          "aliases": [],
+          "rarity": 12
+        },
+        {
+          "id": "Q1486",
+          "label": "Buenos Aires",
+          "aliases": [],
+          "rarity": 22
+        },
+        {
+          "id": "Q19660",
+          "label": "Bucharest",
+          "aliases": [],
+          "rarity": 48
+        },
+        {
+          "id": "Q1863",
+          "label": "Islamabad",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q3881",
+          "label": "Paramaribo",
+          "aliases": [],
+          "rarity": 82
+        },
+        {
+          "id": "Q9270",
+          "label": "Suva",
+          "aliases": [],
+          "rarity": 90
+        },
+        {
+          "id": "Q131694",
+          "label": "Ngerulmud",
+          "aliases": [],
+          "rarity": 98
+        }
+      ]
+    },
+    {
+      "id": "south-american-capital",
+      "category": "National capitals",
+      "text": "A South American capital",
+      "entries": [
+        {
+          "id": "Q1486",
+          "label": "Buenos Aires",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q2844",
+          "label": "Brasília",
+          "aliases": [
+            "Brasilia"
+          ],
+          "rarity": 10
+        },
+        {
+          "id": "Q2887",
+          "label": "Santiago",
+          "aliases": [],
+          "rarity": 18
+        },
+        {
+          "id": "Q3630",
+          "label": "Lima",
+          "aliases": [],
+          "rarity": 22
+        },
+        {
+          "id": "Q34863",
+          "label": "Bogotá",
+          "aliases": [
+            "Bogota"
+          ],
+          "rarity": 28
+        },
+        {
+          "id": "Q3551",
+          "label": "Caracas",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q3624",
+          "label": "Montevideo",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q2907",
+          "label": "Asunción",
+          "aliases": [
+            "Asuncion"
+          ],
+          "rarity": 65
+        },
+        {
+          "id": "Q3915",
+          "label": "Georgetown",
+          "aliases": [],
+          "rarity": 80
+        },
+        {
+          "id": "Q3881",
+          "label": "Paramaribo",
+          "aliases": [],
+          "rarity": 88
+        }
+      ]
+    },
+    {
+      "id": "dwarf-planet",
+      "category": "Planets and moons",
+      "text": "A dwarf planet",
+      "entries": [
+        {
+          "id": "Q339",
+          "label": "Pluto",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q596",
+          "label": "Ceres",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "Q14928",
+          "label": "Eris",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q10757",
+          "label": "Haumea",
+          "aliases": [],
+          "rarity": 60
+        },
+        {
+          "id": "Q10756",
+          "label": "Makemake",
+          "aliases": [],
+          "rarity": 70
+        },
+        {
+          "id": "Q133811",
+          "label": "Gonggong",
+          "aliases": [],
+          "rarity": 85
+        },
+        {
+          "id": "Q10755",
+          "label": "Quaoar",
+          "aliases": [],
+          "rarity": 90
+        },
+        {
+          "id": "Q10754",
+          "label": "Sedna",
+          "aliases": [],
+          "rarity": 95
+        }
+      ]
+    },
+    {
+      "id": "jupiter-moon",
+      "category": "Planets and moons",
+      "text": "A moon of Jupiter",
+      "entries": [
+        {
+          "id": "Q31691",
+          "label": "Ganymede",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q7547",
+          "label": "Europa",
+          "aliases": [],
+          "rarity": 10
+        },
+        {
+          "id": "Q3123",
+          "label": "Io",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "Q31693",
+          "label": "Callisto",
+          "aliases": [],
+          "rarity": 20
+        },
+        {
+          "id": "Q16060",
+          "label": "Amalthea",
+          "aliases": [],
+          "rarity": 60
+        },
+        {
+          "id": "Q16061",
+          "label": "Himalia",
+          "aliases": [],
+          "rarity": 70
+        },
+        {
+          "id": "Q16062",
+          "label": "Elara",
+          "aliases": [],
+          "rarity": 80
+        },
+        {
+          "id": "Q16063",
+          "label": "Pasiphae",
+          "aliases": [],
+          "rarity": 88
+        },
+        {
+          "id": "Q16064",
+          "label": "Sinope",
+          "aliases": [],
+          "rarity": 92
+        },
+        {
+          "id": "Q16065",
+          "label": "Lysithea",
+          "aliases": [],
+          "rarity": 95
+        }
+      ]
+    },
+    {
+      "id": "saturn-moon",
+      "category": "Planets and moons",
+      "text": "A moon of Saturn",
+      "entries": [
+        {
+          "id": "Q15034",
+          "label": "Titan",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q17754",
+          "label": "Enceladus",
+          "aliases": [],
+          "rarity": 20
+        },
+        {
+          "id": "Q15037",
+          "label": "Iapetus",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q15045",
+          "label": "Rhea",
+          "aliases": [],
+          "rarity": 50
+        },
+        {
+          "id": "Q15040",
+          "label": "Dione",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q15050",
+          "label": "Tethys",
+          "aliases": [],
+          "rarity": 60
+        },
+        {
+          "id": "Q17766",
+          "label": "Mimas",
+          "aliases": [],
+          "rarity": 70
+        },
+        {
+          "id": "Q19440",
+          "label": "Hyperion",
+          "aliases": [],
+          "rarity": 75
+        },
+        {
+          "id": "Q17958",
+          "label": "Phoebe",
+          "aliases": [],
+          "rarity": 85
+        },
+        {
+          "id": "Q17758",
+          "label": "Janus",
+          "aliases": [],
+          "rarity": 95
+        }
+      ]
+    },
+    {
+      "id": "solar-body",
+      "category": "Planets and moons",
+      "text": "A planet or moon in the Solar System",
+      "entries": [
+        {
+          "id": "Q2",
+          "label": "Earth",
+          "aliases": [],
+          "rarity": 0
+        },
+        {
+          "id": "Q405",
+          "label": "Moon",
+          "aliases": [
+            "Luna"
+          ],
+          "rarity": 5
+        },
+        {
+          "id": "Q111",
+          "label": "Mars",
+          "aliases": [],
+          "rarity": 10
+        },
+        {
+          "id": "Q193",
+          "label": "Saturn",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "Q7547",
+          "label": "Europa",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "Q15034",
+          "label": "Titan",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q31691",
+          "label": "Ganymede",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "Q17754",
+          "label": "Enceladus",
+          "aliases": [],
+          "rarity": 70
+        },
+        {
+          "id": "Q15037",
+          "label": "Iapetus",
+          "aliases": [],
+          "rarity": 85
+        },
+        {
+          "id": "Q19440",
+          "label": "Hyperion",
+          "aliases": [],
+          "rarity": 95
+        }
+      ]
+    },
+    {
+      "id": "solar-planet",
+      "category": "Planets and moons",
+      "text": "A planet in the Solar System",
+      "entries": [
+        {
+          "id": "Q2",
+          "label": "Earth",
+          "aliases": [],
+          "rarity": 0
+        },
+        {
+          "id": "Q111",
+          "label": "Mars",
+          "aliases": [],
+          "rarity": 14
+        },
+        {
+          "id": "Q319",
+          "label": "Jupiter",
+          "aliases": [],
+          "rarity": 28
+        },
+        {
+          "id": "Q313",
+          "label": "Mercury",
+          "aliases": [],
+          "rarity": 42
+        },
+        {
+          "id": "Q308",
+          "label": "Venus",
+          "aliases": [],
+          "rarity": 50
+        },
+        {
+          "id": "Q193",
+          "label": "Saturn",
+          "aliases": [],
+          "rarity": 57
+        },
+        {
+          "id": "Q324",
+          "label": "Uranus",
+          "aliases": [],
+          "rarity": 78
+        },
+        {
+          "id": "Q332",
+          "label": "Neptune",
+          "aliases": [],
+          "rarity": 85
+        }
+      ]
+    },
+    {
+      "id": "fire-pokemon",
+      "category": "Pokemon",
+      "text": "A Fire-type Pokémon",
+      "entries": [
+        {
+          "id": "Q12079",
+          "label": "Charizard",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q12300",
+          "label": "Charmander",
+          "aliases": [],
+          "rarity": 10
+        },
+        {
+          "id": "Q12310",
+          "label": "Arcanine",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "Q12320",
+          "label": "Flareon",
+          "aliases": [],
+          "rarity": 30
+        },
+        {
+          "id": "Q12330",
+          "label": "Ninetales",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "Q12350",
+          "label": "Blaziken",
+          "aliases": [],
+          "rarity": 38
+        },
+        {
+          "id": "Q12340",
+          "label": "Infernape",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q12360",
+          "label": "Cinderace",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "Q12380",
+          "label": "Torkoal",
+          "aliases": [],
+          "rarity": 75
+        },
+        {
+          "id": "Q12370",
+          "label": "Numel",
+          "aliases": [],
+          "rarity": 80
+        }
+      ]
+    },
+    {
+      "id": "legendary-pokemon",
+      "category": "Pokemon",
+      "text": "A legendary Pokémon",
+      "entries": [
+        {
+          "id": "Q12085",
+          "label": "Mewtwo",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q12440",
+          "label": "Rayquaza",
+          "aliases": [],
+          "rarity": 20
+        },
+        {
+          "id": "Q12410",
+          "label": "Zapdos",
+          "aliases": [],
+          "rarity": 22
+        },
+        {
+          "id": "Q12400",
+          "label": "Articuno",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "Q12420",
+          "label": "Moltres",
+          "aliases": [],
+          "rarity": 28
+        },
+        {
+          "id": "Q12430",
+          "label": "Lugia",
+          "aliases": [],
+          "rarity": 30
+        },
+        {
+          "id": "Q12450",
+          "label": "Dialga",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "Q12460",
+          "label": "Giratina",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q12470",
+          "label": "Zygarde",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q12480",
+          "label": "Eternatus",
+          "aliases": [],
+          "rarity": 60
+        }
+      ]
+    },
+    {
+      "id": "pokemon-gen1",
+      "category": "Pokemon",
+      "text": "A Pokémon introduced in Generation I",
+      "entries": [
+        {
+          "id": "Q1998243",
+          "label": "Pikachu",
+          "aliases": [],
+          "rarity": 2
+        },
+        {
+          "id": "Q12079",
+          "label": "Charizard",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q12085",
+          "label": "Mewtwo",
+          "aliases": [],
+          "rarity": 8
+        },
+        {
+          "id": "Q12090",
+          "label": "Bulbasaur",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "Q12095",
+          "label": "Squirtle",
+          "aliases": [],
+          "rarity": 18
+        },
+        {
+          "id": "Q12100",
+          "label": "Gyarados",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "Q12105",
+          "label": "Snorlax",
+          "aliases": [],
+          "rarity": 30
+        },
+        {
+          "id": "Q12110",
+          "label": "Dragonite",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "Q12120",
+          "label": "Magikarp",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q12150",
+          "label": "Aerodactyl",
+          "aliases": [],
+          "rarity": 70
+        },
+        {
+          "id": "Q12130",
+          "label": "Kabuto",
+          "aliases": [],
+          "rarity": 75
+        },
+        {
+          "id": "Q12140",
+          "label": "Omastar",
+          "aliases": [],
+          "rarity": 80
+        }
+      ]
+    },
+    {
+      "id": "starter-pokemon",
+      "category": "Pokemon",
+      "text": "A starter Pokémon",
+      "entries": [
+        {
+          "id": "Q12300",
+          "label": "Charmander",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q12090",
+          "label": "Bulbasaur",
+          "aliases": [],
+          "rarity": 10
+        },
+        {
+          "id": "Q12095",
+          "label": "Squirtle",
+          "aliases": [],
+          "rarity": 12
+        },
+        {
+          "id": "Q12510",
+          "label": "Cyndaquil",
+          "aliases": [],
+          "rarity": 38
+        },
+        {
+          "id": "Q12500",
+          "label": "Chikorita",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q12520",
+          "label": "Totodile",
+          "aliases": [],
+          "rarity": 42
+        },
+        {
+          "id": "Q12530",
+          "label": "Treecko",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "Q12540",
+          "label": "Torchic",
+          "aliases": [],
+          "rarity": 48
+        },
+        {
+          "id": "Q12550",
+          "label": "Mudkip",
+          "aliases": [],
+          "rarity": 50
+        },
+        {
+          "id": "Q12560",
+          "label": "Rowlet",
+          "aliases": [],
+          "rarity": 55
+        }
+      ]
+    },
+    {
+      "id": "water-pokemon",
+      "category": "Pokemon",
+      "text": "A Water-type Pokémon",
+      "entries": [
+        {
+          "id": "Q12095",
+          "label": "Squirtle",
+          "aliases": [],
+          "rarity": 8
+        },
+        {
+          "id": "Q12100",
+          "label": "Gyarados",
+          "aliases": [],
+          "rarity": 12
+        },
+        {
+          "id": "Q12200",
+          "label": "Blastoise",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "Q12240",
+          "label": "Greninja",
+          "aliases": [],
+          "rarity": 18
+        },
+        {
+          "id": "Q12120",
+          "label": "Magikarp",
+          "aliases": [],
+          "rarity": 20
+        },
+        {
+          "id": "Q12230",
+          "label": "Psyduck",
+          "aliases": [],
+          "rarity": 22
+        },
+        {
+          "id": "Q12210",
+          "label": "Vaporeon",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "Q12220",
+          "label": "Lapras",
+          "aliases": [],
+          "rarity": 30
+        },
+        {
+          "id": "Q12260",
+          "label": "Feebas",
+          "aliases": [],
+          "rarity": 75
+        },
+        {
+          "id": "Q12250",
+          "label": "Wishiwashi",
+          "aliases": [],
+          "rarity": 80
+        }
+      ]
+    },
+    {
+      "id": "compiles-to-js",
+      "category": "Programming languages",
+      "text": "A language that compiles to JavaScript",
+      "entries": [
+        {
+          "id": "Q349387",
+          "label": "TypeScript",
+          "aliases": [
+            "TS"
+          ],
+          "rarity": 5
+        },
+        {
+          "id": "Q2005",
+          "label": "JavaScript",
+          "aliases": [
+            "JS"
+          ],
+          "rarity": 10
+        },
+        {
+          "id": "Q3770685",
+          "label": "Dart",
+          "aliases": [],
+          "rarity": 20
+        },
+        {
+          "id": "Q1321919",
+          "label": "CoffeeScript",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "Q188822",
+          "label": "Elm",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q51798",
+          "label": "ClojureScript",
+          "aliases": [],
+          "rarity": 60
+        },
+        {
+          "id": "Q4035747",
+          "label": "PureScript",
+          "aliases": [],
+          "rarity": 70
+        },
+        {
+          "id": "Q15241004",
+          "label": "Reason",
+          "aliases": [
+            "ReasonML"
+          ],
+          "rarity": 75
+        },
+        {
+          "id": "Q726239",
+          "label": "Scala.js",
+          "aliases": [],
+          "rarity": 80
+        },
+        {
+          "id": "Q105599023",
+          "label": "ReScript",
+          "aliases": [],
+          "rarity": 85
+        }
+      ]
+    },
+    {
+      "id": "functional-language",
+      "category": "Programming languages",
+      "text": "A functional programming language",
+      "entries": [
+        {
+          "id": "Q2370",
+          "label": "Haskell",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "Q726239",
+          "label": "Scala",
+          "aliases": [],
+          "rarity": 20
+        },
+        {
+          "id": "Q51798",
+          "label": "Clojure",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "Q163233",
+          "label": "Elixir",
+          "aliases": [],
+          "rarity": 30
+        },
+        {
+          "id": "Q132874",
+          "label": "Erlang",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "Q188822",
+          "label": "Elm",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q849146",
+          "label": "OCaml",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "Q1132275",
+          "label": "F#",
+          "aliases": [
+            "F Sharp"
+          ],
+          "rarity": 50
+        },
+        {
+          "id": "Q34010",
+          "label": "Scheme",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q1201807",
+          "label": "Racket",
+          "aliases": [],
+          "rarity": 60
+        }
+      ]
+    },
+    {
+      "id": "programming-language",
+      "category": "Programming languages",
+      "text": "A programming language",
+      "entries": [
+        {
+          "id": "Q28865",
+          "label": "Python",
+          "aliases": [],
+          "rarity": 2
+        },
+        {
+          "id": "Q2005",
+          "label": "JavaScript",
+          "aliases": [
+            "JS",
+            "ECMAScript"
+          ],
+          "rarity": 5
+        },
+        {
+          "id": "Q251",
+          "label": "Java",
+          "aliases": [],
+          "rarity": 8
+        },
+        {
+          "id": "Q15777",
+          "label": "C",
+          "aliases": [],
+          "rarity": 12
+        },
+        {
+          "id": "Q2407",
+          "label": "C++",
+          "aliases": [
+            "Cpp"
+          ],
+          "rarity": 15
+        },
+        {
+          "id": "Q37227",
+          "label": "Go",
+          "aliases": [
+            "Golang"
+          ],
+          "rarity": 25
+        },
+        {
+          "id": "Q161053",
+          "label": "Rust",
+          "aliases": [],
+          "rarity": 30
+        },
+        {
+          "id": "Q2370",
+          "label": "Haskell",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q132874",
+          "label": "Erlang",
+          "aliases": [],
+          "rarity": 75
+        },
+        {
+          "id": "Q849146",
+          "label": "OCaml",
+          "aliases": [],
+          "rarity": 88
+        }
+      ]
+    },
+    {
+      "id": "scripting-language",
+      "category": "Programming languages",
+      "text": "A scripting language",
+      "entries": [
+        {
+          "id": "Q28865",
+          "label": "Python",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q2005",
+          "label": "JavaScript",
+          "aliases": [
+            "JS"
+          ],
+          "rarity": 8
+        },
+        {
+          "id": "Q59",
+          "label": "PHP",
+          "aliases": [],
+          "rarity": 12
+        },
+        {
+          "id": "Q42478",
+          "label": "Ruby",
+          "aliases": [],
+          "rarity": 20
+        },
+        {
+          "id": "Q131914",
+          "label": "Bash",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "Q209067",
+          "label": "Lua",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "Q42470",
+          "label": "Perl",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "Q51798",
+          "label": "PowerShell",
+          "aliases": [],
+          "rarity": 50
+        },
+        {
+          "id": "Q46440",
+          "label": "Tcl",
+          "aliases": [],
+          "rarity": 75
+        },
+        {
+          "id": "Q1201807",
+          "label": "Racket",
+          "aliases": [],
+          "rarity": 85
+        }
+      ]
+    },
+    {
+      "id": "systems-language",
+      "category": "Programming languages",
+      "text": "A systems programming language",
+      "entries": [
+        {
+          "id": "Q15777",
+          "label": "C",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q2407",
+          "label": "C++",
+          "aliases": [],
+          "rarity": 10
+        },
+        {
+          "id": "Q161053",
+          "label": "Rust",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "Q37227",
+          "label": "Go",
+          "aliases": [
+            "Golang"
+          ],
+          "rarity": 20
+        },
+        {
+          "id": "Q337562",
+          "label": "Fortran",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "Q163233",
+          "label": "Zig",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q188822",
+          "label": "Nim",
+          "aliases": [],
+          "rarity": 65
+        },
+        {
+          "id": "Q5112206",
+          "label": "D",
+          "aliases": [],
+          "rarity": 70
+        },
+        {
+          "id": "Q426829",
+          "label": "Ada",
+          "aliases": [],
+          "rarity": 75
+        },
+        {
+          "id": "Q829355",
+          "label": "Oberon",
+          "aliases": [],
+          "rarity": 95
+        }
+      ]
+    },
+    {
+      "id": "album-beyonce",
+      "category": "Relationship prompts",
+      "text": "An album by Beyoncé",
+      "entries": [
+        {
+          "id": "Q194000",
+          "label": "Lemonade",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q194020",
+          "label": "Renaissance",
+          "aliases": [],
+          "rarity": 10
+        },
+        {
+          "id": "Q194010",
+          "label": "Beyoncé",
+          "aliases": [
+            "Beyonce"
+          ],
+          "rarity": 15
+        },
+        {
+          "id": "Q194030",
+          "label": "Cowboy Carter",
+          "aliases": [],
+          "rarity": 20
+        },
+        {
+          "id": "Q194060",
+          "label": "I Am... Sasha Fierce",
+          "aliases": [
+            "Sasha Fierce"
+          ],
+          "rarity": 30
+        },
+        {
+          "id": "Q194040",
+          "label": "Dangerously in Love",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "Q194050",
+          "label": "B'Day",
+          "aliases": [
+            "BDay"
+          ],
+          "rarity": 40
+        },
+        {
+          "id": "Q194070",
+          "label": "4",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q194090",
+          "label": "Homecoming: The Live Album",
+          "aliases": [
+            "Homecoming"
+          ],
+          "rarity": 60
+        },
+        {
+          "id": "Q194080",
+          "label": "The Gift",
+          "aliases": [],
+          "rarity": 70
+        }
+      ]
+    },
+    {
+      "id": "album-radiohead",
+      "category": "Relationship prompts",
+      "text": "An album by Radiohead",
+      "entries": [
+        {
+          "id": "Q191000",
+          "label": "OK Computer",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q191010",
+          "label": "Kid A",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "Q191020",
+          "label": "The Bends",
+          "aliases": [],
+          "rarity": 20
+        },
+        {
+          "id": "Q191030",
+          "label": "In Rainbows",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "Q191040",
+          "label": "Pablo Honey",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q191050",
+          "label": "Hail to the Thief",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "Q191060",
+          "label": "A Moon Shaped Pool",
+          "aliases": [],
+          "rarity": 50
+        },
+        {
+          "id": "Q191070",
+          "label": "Amnesiac",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q191080",
+          "label": "The King of Limbs",
+          "aliases": [],
+          "rarity": 70
+        },
+        {
+          "id": "Q191090",
+          "label": "I Might Be Wrong",
+          "aliases": [],
+          "rarity": 85
+        }
+      ]
+    },
+    {
+      "id": "car-mazda",
+      "category": "Relationship prompts",
+      "text": "A car model made by Mazda",
+      "entries": [
+        {
+          "id": "Q192000",
+          "label": "Mazda MX-5",
+          "aliases": [
+            "Miata",
+            "MX-5"
+          ],
+          "rarity": 5
+        },
+        {
+          "id": "Q192010",
+          "label": "Mazda3",
+          "aliases": [
+            "Mazda 3"
+          ],
+          "rarity": 15
+        },
+        {
+          "id": "Q192030",
+          "label": "Mazda CX-5",
+          "aliases": [
+            "CX-5"
+          ],
+          "rarity": 20
+        },
+        {
+          "id": "Q192020",
+          "label": "Mazda6",
+          "aliases": [
+            "Mazda 6"
+          ],
+          "rarity": 25
+        },
+        {
+          "id": "Q192040",
+          "label": "Mazda RX-7",
+          "aliases": [
+            "RX-7"
+          ],
+          "rarity": 30
+        },
+        {
+          "id": "Q192050",
+          "label": "Mazda RX-8",
+          "aliases": [
+            "RX-8"
+          ],
+          "rarity": 45
+        },
+        {
+          "id": "Q192080",
+          "label": "Mazda CX-30",
+          "aliases": [
+            "CX-30"
+          ],
+          "rarity": 50
+        },
+        {
+          "id": "Q192060",
+          "label": "Mazda CX-9",
+          "aliases": [
+            "CX-9"
+          ],
+          "rarity": 55
+        },
+        {
+          "id": "Q192070",
+          "label": "Mazda2",
+          "aliases": [
+            "Mazda 2",
+            "Demio"
+          ],
+          "rarity": 60
+        },
+        {
+          "id": "Q192090",
+          "label": "Mazda Cosmo",
+          "aliases": [],
+          "rarity": 90
+        }
+      ]
+    },
+    {
+      "id": "film-tilda-swinton",
+      "category": "Relationship prompts",
+      "text": "A film starring Tilda Swinton",
+      "entries": [
+        {
+          "id": "Q190050",
+          "label": "Doctor Strange",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q165324",
+          "label": "The Chronicles of Narnia: The Lion, the Witch and the Wardrobe",
+          "aliases": [
+            "Narnia"
+          ],
+          "rarity": 10
+        },
+        {
+          "id": "Q190110",
+          "label": "The Grand Budapest Hotel",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "Q190100",
+          "label": "Moonrise Kingdom",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "Q190080",
+          "label": "We Need to Talk About Kevin",
+          "aliases": [],
+          "rarity": 30
+        },
+        {
+          "id": "Q190120",
+          "label": "Suspiria",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q190090",
+          "label": "Only Lovers Left Alive",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "Q190130",
+          "label": "Michael Clayton",
+          "aliases": [],
+          "rarity": 50
+        },
+        {
+          "id": "Q190140",
+          "label": "I Am Love",
+          "aliases": [],
+          "rarity": 75
+        },
+        {
+          "id": "Q190150",
+          "label": "Julia",
+          "aliases": [],
+          "rarity": 90
+        }
+      ]
+    },
+    {
+      "id": "film-wes-anderson",
+      "category": "Relationship prompts",
+      "text": "A film directed by Wes Anderson",
+      "entries": [
+        {
+          "id": "Q190110",
+          "label": "The Grand Budapest Hotel",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q190100",
+          "label": "Moonrise Kingdom",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "Q193000",
+          "label": "The Royal Tenenbaums",
+          "aliases": [],
+          "rarity": 20
+        },
+        {
+          "id": "Q193010",
+          "label": "Fantastic Mr. Fox",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "Q193060",
+          "label": "The Life Aquatic with Steve Zissou",
+          "aliases": [
+            "The Life Aquatic"
+          ],
+          "rarity": 30
+        },
+        {
+          "id": "Q193020",
+          "label": "Isle of Dogs",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "Q193030",
+          "label": "The French Dispatch",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q193040",
+          "label": "Asteroid City",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "Q193050",
+          "label": "Rushmore",
+          "aliases": [],
+          "rarity": 50
+        },
+        {
+          "id": "Q193070",
+          "label": "Bottle Rocket",
+          "aliases": [],
+          "rarity": 75
+        }
+      ]
+    },
+    {
+      "id": "chip-company",
+      "category": "Tech companies",
+      "text": "A semiconductor company",
+      "entries": [
+        {
+          "id": "Q2013",
+          "label": "NVIDIA",
+          "aliases": [
+            "Nvidia"
+          ],
+          "rarity": 3
+        },
+        {
+          "id": "Q7414",
+          "label": "Intel",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "Q182477",
+          "label": "TSMC",
+          "aliases": [],
+          "rarity": 10
+        },
+        {
+          "id": "Q1477735",
+          "label": "AMD",
+          "aliases": [],
+          "rarity": 12
+        },
+        {
+          "id": "Q475080",
+          "label": "Qualcomm",
+          "aliases": [],
+          "rarity": 20
+        },
+        {
+          "id": "Q11467",
+          "label": "ARM Holdings",
+          "aliases": [
+            "Arm"
+          ],
+          "rarity": 28
+        },
+        {
+          "id": "Q209281",
+          "label": "Broadcom",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "Q48911",
+          "label": "Texas Instruments",
+          "aliases": [
+            "TI"
+          ],
+          "rarity": 40
+        },
+        {
+          "id": "Q855124",
+          "label": "ASML",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "Q485046",
+          "label": "Micron Technology",
+          "aliases": [
+            "Micron"
+          ],
+          "rarity": 50
+        }
+      ]
+    },
+    {
+      "id": "phone-company",
+      "category": "Tech companies",
+      "text": "A company that makes phones",
+      "entries": [
+        {
+          "id": "Q312",
+          "label": "Apple",
+          "aliases": [],
+          "rarity": 2
+        },
+        {
+          "id": "Q37033",
+          "label": "Samsung Electronics",
+          "aliases": [
+            "Samsung"
+          ],
+          "rarity": 5
+        },
+        {
+          "id": "Q95",
+          "label": "Google",
+          "aliases": [],
+          "rarity": 12
+        },
+        {
+          "id": "Q163261",
+          "label": "Sony",
+          "aliases": [],
+          "rarity": 20
+        },
+        {
+          "id": "Q27978",
+          "label": "Xiaomi",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "Q2013",
+          "label": "Huawei",
+          "aliases": [],
+          "rarity": 30
+        },
+        {
+          "id": "Q483551",
+          "label": "Nokia",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "Q308991",
+          "label": "Motorola",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "Q11422",
+          "label": "OnePlus",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "Q855124",
+          "label": "Nothing",
+          "aliases": [],
+          "rarity": 80
+        }
+      ]
+    },
+    {
+      "id": "social-network-company",
+      "category": "Tech companies",
+      "text": "A social network company",
+      "entries": [
+        {
+          "id": "Q380",
+          "label": "Meta Platforms",
+          "aliases": [
+            "Meta",
+            "Facebook"
+          ],
+          "rarity": 5
+        },
+        {
+          "id": "Q191824",
+          "label": "TikTok",
+          "aliases": [
+            "ByteDance"
+          ],
+          "rarity": 8
+        },
+        {
+          "id": "Q355",
+          "label": "Twitter",
+          "aliases": [
+            "X"
+          ],
+          "rarity": 10
+        },
+        {
+          "id": "Q14001",
+          "label": "LinkedIn",
+          "aliases": [],
+          "rarity": 18
+        },
+        {
+          "id": "Q179200",
+          "label": "Reddit",
+          "aliases": [],
+          "rarity": 20
+        },
+        {
+          "id": "Q1630305",
+          "label": "Snap",
+          "aliases": [
+            "Snapchat"
+          ],
+          "rarity": 25
+        },
+        {
+          "id": "Q308962",
+          "label": "Discord",
+          "aliases": [],
+          "rarity": 30
+        },
+        {
+          "id": "Q246065",
+          "label": "Pinterest",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "Q8092",
+          "label": "Tumblr",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q4830453",
+          "label": "BeReal",
+          "aliases": [],
+          "rarity": 75
+        }
+      ]
+    },
+    {
+      "id": "streaming-company",
+      "category": "Tech companies",
+      "text": "A streaming / media tech company",
+      "entries": [
+        {
+          "id": "Q907311",
+          "label": "Netflix",
+          "aliases": [],
+          "rarity": 3
+        },
+        {
+          "id": "Q3884",
+          "label": "Amazon",
+          "aliases": [],
+          "rarity": 8
+        },
+        {
+          "id": "Q163261",
+          "label": "Disney",
+          "aliases": [],
+          "rarity": 10
+        },
+        {
+          "id": "Q95",
+          "label": "Google",
+          "aliases": [],
+          "rarity": 12
+        },
+        {
+          "id": "Q2283",
+          "label": "Microsoft",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "Q8092",
+          "label": "Spotify",
+          "aliases": [],
+          "rarity": 18
+        },
+        {
+          "id": "Q246065",
+          "label": "Twitch",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "Q179200",
+          "label": "Hulu",
+          "aliases": [],
+          "rarity": 30
+        },
+        {
+          "id": "Q483551",
+          "label": "Roku",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "Q191824",
+          "label": "Crunchyroll",
+          "aliases": [],
+          "rarity": 60
+        }
+      ]
+    },
+    {
+      "id": "tech-company",
+      "category": "Tech companies",
+      "text": "A tech company",
+      "entries": [
+        {
+          "id": "Q312",
+          "label": "Apple",
+          "aliases": [],
+          "rarity": 2
+        },
+        {
+          "id": "Q2283",
+          "label": "Microsoft",
+          "aliases": [],
+          "rarity": 4
+        },
+        {
+          "id": "Q95",
+          "label": "Google",
+          "aliases": [],
+          "rarity": 6
+        },
+        {
+          "id": "Q3884",
+          "label": "Amazon",
+          "aliases": [],
+          "rarity": 8
+        },
+        {
+          "id": "Q380",
+          "label": "Meta Platforms",
+          "aliases": [
+            "Meta",
+            "Facebook"
+          ],
+          "rarity": 12
+        },
+        {
+          "id": "Q2013",
+          "label": "NVIDIA",
+          "aliases": [
+            "Nvidia"
+          ],
+          "rarity": 15
+        },
+        {
+          "id": "Q37033",
+          "label": "Samsung Electronics",
+          "aliases": [
+            "Samsung"
+          ],
+          "rarity": 18
+        },
+        {
+          "id": "Q7414",
+          "label": "Intel",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "Q163261",
+          "label": "Sony",
+          "aliases": [],
+          "rarity": 30
+        },
+        {
+          "id": "Q20800404",
+          "label": "OpenAI",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "Q1630305",
+          "label": "Palantir",
+          "aliases": [],
+          "rarity": 70
+        },
+        {
+          "id": "Q855124",
+          "label": "ASML",
+          "aliases": [],
+          "rarity": 75
+        }
+      ]
+    }
+  ]
+}

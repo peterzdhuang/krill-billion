@@ -1,14 +1,21 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { wsURL } from "./config";
 import type { ClientMessage, Envelope } from "./protocol";
 
 const TOKEN_KEY = (lobbyId: string) => `kb_reconnect_${lobbyId}`;
 const PLAYER_KEY = (lobbyId: string) => `kb_player_${lobbyId}`;
+const HOST_KEY = (lobbyId: string) => `kb_host_${lobbyId}`;
 
 export function loadReconnectToken(lobbyId: string): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem(TOKEN_KEY(lobbyId));
+}
+
+export function loadHostToken(lobbyId: string): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(HOST_KEY(lobbyId));
 }
 
 export function saveReconnect(lobbyId: string, playerId: string, token: string) {
@@ -44,8 +51,7 @@ export function useGameSocket(lobbyId: string | null, onMessage: Handler) {
     let timer: ReturnType<typeof setTimeout> | undefined;
 
     const connect = () => {
-      const proto = window.location.protocol === "https:" ? "wss" : "ws";
-      const url = `${proto}://${window.location.host}/ws?lobby=${encodeURIComponent(lobbyId)}`;
+      const url = wsURL(lobbyId);
       const ws = new WebSocket(url);
       wsRef.current = ws;
 

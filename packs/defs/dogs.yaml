@@ -1,0 +1,84 @@
+prompts:
+  - id: dog-breed
+    category: Dog breeds
+    text: A dog breed
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P31 wd:Q39367 .
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: terrier
+    category: Dog breeds
+    text: A terrier
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P31 wd:Q39367 ;
+              wdt:P279* wd:Q39376 .
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: herding-dog
+    category: Dog breeds
+    text: A herding dog breed
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P31 wd:Q39367 ;
+              wdt:P279* wd:Q1477746 .
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: toy-dog
+    category: Dog breeds
+    text: A toy dog breed
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P31 wd:Q39367 ;
+              wdt:P279* wd:Q38923 .
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: working-dog
+    category: Dog breeds
+    text: A working dog breed
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?item wdt:P31 wd:Q39367 ;
+              wdt:P279* wd:Q39274 .
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article

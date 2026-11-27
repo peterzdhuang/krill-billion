@@ -4,17 +4,16 @@ import { useEffect, useMemo, useState } from "react";
 import { DepthMeter } from "@/components/DepthMeter";
 import { TierBadge } from "@/components/TierBadge";
 import type {
-  MatchEndMsg,
-  RoundResultMsg,
-  RoundStartMsg,
-  RoomStateMsg,
-  Seat,
+  MatchEndData,
+  RoundResultData,
+  RoundStartData,
+  RoomStateData,
   TierName,
 } from "@/lib/protocol";
 
-function sideOf(seat?: Seat | null): "A" | "B" | null {
+function sideOf(seat?: string | null): 0 | 1 | null {
   if (!seat) return null;
-  return seat.startsWith("A") ? "A" : "B";
+  return seat.startsWith("A") ? 0 : 1;
 }
 
 function useCountdown(deadlineTs?: number) {
@@ -41,11 +40,11 @@ export function MatchScreen({
   onLock,
   onRematch,
 }: {
-  room: RoomStateMsg | null;
-  round: RoundStartMsg | null;
-  result: RoundResultMsg | null;
-  matchEnd: MatchEndMsg | null;
-  yourSeat?: Seat | null;
+  room: RoomStateData | null;
+  round: RoundStartData | null;
+  result: RoundResultData | null;
+  matchEnd: MatchEndData | null;
+  yourSeat?: string | null;
   draft: string;
   locked: boolean;
   opponentLocked: boolean;
@@ -57,45 +56,45 @@ export function MatchScreen({
   const mySide = sideOf(yourSeat);
   const paused = room?.phase === "paused";
 
-  const hpA = room?.hp.A ?? 10000;
-  const hpB = room?.hp.B ?? 10000;
-  const multA = room?.multipliers.A ?? 1;
-  const multB = room?.multipliers.B ?? 1;
+  const hpA = room?.hp?.[0] ?? 10000;
+  const hpB = room?.hp?.[1] ?? 10000;
+  const multA = room?.multipliers?.[0] ?? 1;
+  const multB = room?.multipliers?.[1] ?? 1;
 
   const revealLines = useMemo(() => {
     if (!result) return [];
-    return result.answers.map((a) => {
-      const short = (a.entry_id ?? a.seat).slice(-6).toLowerCase();
-      if (!a.matched) {
+    return result.sides.map((a) => {
+      const short = a.seat.toLowerCase();
+      if (!a.valid) {
         return `${short}  ${a.text || "(empty)"}  rarity —  not in bank  0`;
       }
-      return `${short}  ${a.label}  rarity ${a.rarity}  ${a.tier}  ${a.score}`;
+      return `${short}  ${a.matched_label}  rarity ${a.rarity}  ${a.tier}  ${a.score}`;
     });
   }, [result]);
 
   if (matchEnd) {
+    const youWin =
+      !matchEnd.draw &&
+      mySide !== null &&
+      matchEnd.winner === mySide;
     return (
       <div className="mx-auto max-w-2xl space-y-6 text-center">
         <p className="text-sm tracking-[0.35em] text-cyan-accent/50">
-          MATCH END // {matchEnd.reason.toUpperCase()}
+          MATCH END // {String(matchEnd.reason).toUpperCase()}
         </p>
         <h2 className="text-5xl text-cyan-glow">
-          {matchEnd.draw
-            ? "DRAW"
-            : matchEnd.winner_side === mySide
-              ? "YOU WIN"
-              : "YOU LOSE"}
+          {matchEnd.draw ? "DRAW" : youWin ? "YOU WIN" : "YOU LOSE"}
         </h2>
         <p className="text-xl text-slate-400">
-          HP A {matchEnd.hp.A} · B {matchEnd.hp.B}
+          HP A {matchEnd.recap?.length ? hpA : hpA} · B {hpB}
         </p>
         <div className="max-h-64 space-y-2 overflow-y-auto text-left font-mono text-lg text-slate-300">
-          {matchEnd.recap.map((r) => (
+          {(matchEnd.recap ?? []).map((r) => (
             <div key={r.round} className="border-b border-slate-800/80 pb-2">
               <div className="text-cyan-accent/50">round {r.round}</div>
-              {r.answers.map((a) => (
+              {r.sides?.map((a) => (
                 <div key={a.seat}>
-                  {a.seat}: {a.matched ? a.label : "miss"} ({a.score})
+                  {a.seat}: {a.valid ? a.matched_label : "miss"} ({a.score})
                 </div>
               ))}
               <div>damage {r.damage}</div>
@@ -128,25 +127,15 @@ export function MatchScreen({
         </div>
       )}
 
-      {round?.sudden_death && (
+      {(round?.sudden_death || room?.sudden_death) && (
         <div className="rounded border border-rose-500/50 bg-rose-950/40 py-2 text-center text-2xl text-rose-200">
           SUDDEN DEATH — MULTIPLIERS FROZEN
         </div>
       )}
 
       <div className="grid grid-cols-2 gap-4">
-        <HPBlock
-          label="SIDE A"
-          hp={hpA}
-          mult={multA}
-          highlight={mySide === "A"}
-        />
-        <HPBlock
-          label="SIDE B"
-          hp={hpB}
-          mult={multB}
-          highlight={mySide === "B"}
-        />
+        <HPBlock label="SIDE A" hp={hpA} mult={multA} highlight={mySide === 0} />
+        <HPBlock label="SIDE B" hp={hpB} mult={multB} highlight={mySide === 1} />
       </div>
 
       <div className="text-center">
@@ -212,17 +201,17 @@ export function MatchScreen({
             </div>
           ))}
           <div className="flex flex-wrap items-center gap-3">
-            {result.answers
-              .filter((a) => a.matched && a.tier)
+            {result.sides
+              .filter((a) => a.valid && a.tier)
               .map((a) => (
                 <TierBadge key={a.seat} tier={a.tier as TierName} />
               ))}
           </div>
-          {result.answers.find((a) => a.matched)?.rarity !== undefined && (
+          {result.sides.find((a) => a.valid) && (
             <DepthMeter
               rarity={
-                result.answers.find((a) => a.seat === yourSeat)?.rarity ??
-                result.answers.find((a) => a.matched)?.rarity ??
+                result.sides.find((a) => a.seat === yourSeat)?.rarity ??
+                result.sides.find((a) => a.valid)?.rarity ??
                 0
               }
             />
@@ -230,7 +219,7 @@ export function MatchScreen({
           <p className="text-2xl text-amber-200">
             {result.tie
               ? "TIE — both multipliers +0.5"
-              : `DAMAGE ${result.damage} → side ${result.winner_side === "A" ? "B" : "A"}`}
+              : `DAMAGE ${result.damage} → side ${result.winner === 0 ? "B" : "A"}`}
           </p>
         </div>
       )}

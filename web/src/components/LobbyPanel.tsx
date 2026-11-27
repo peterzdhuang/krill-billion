@@ -1,6 +1,6 @@
 "use client";
 
-import type { LobbyStateMsg, Mode, Seat } from "@/lib/protocol";
+import type { LobbyStateData, Mode, Seat } from "@/lib/protocol";
 
 const SEATS_1V1: Seat[] = ["A1", "B1"];
 const SEATS_2V2: Seat[] = ["A1", "A2", "B1", "B2"];
@@ -14,8 +14,8 @@ export function LobbyPanel({
   onStart,
   onCopyLink,
 }: {
-  state: LobbyStateMsg;
-  yourSeat?: Seat | null;
+  state: LobbyStateData;
+  yourSeat?: string | null;
   isHost: boolean;
   onClaim: (seat: Seat) => void;
   onReady: () => void;
@@ -25,18 +25,17 @@ export function LobbyPanel({
   const seats = state.mode === "2v2" ? SEATS_2V2 : SEATS_1V1;
   const bySeat = new Map(state.seats.map((s) => [s.seat, s]));
   const you = yourSeat ? bySeat.get(yourSeat) : undefined;
-  const allReady =
-    seats.every((id) => {
-      const s = bySeat.get(id);
-      return s && !s.empty && s.ready;
-    });
+  const allReady = seats.every((id) => {
+    const s = bySeat.get(id);
+    return s && s.player_id && s.ready;
+  });
 
   return (
     <div className="mx-auto w-full max-w-2xl space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-sm tracking-[0.3em] text-cyan-accent/50">LOBBY</p>
-          <p className="text-3xl text-cyan-glow">{state.lobby_id}</p>
+          <p className="text-3xl text-cyan-glow">{state.link.replace("/play/", "")}</p>
         </div>
         <button
           type="button"
@@ -47,12 +46,10 @@ export function LobbyPanel({
         </button>
       </div>
 
-      <div
-        className={`grid gap-3 ${state.mode === "2v2" ? "grid-cols-2" : "grid-cols-2"}`}
-      >
+      <div className="grid grid-cols-2 gap-3">
         {seats.map((seat) => {
           const info = bySeat.get(seat);
-          const empty = !info || info.empty;
+          const empty = !info?.player_id;
           const mine = yourSeat === seat;
           return (
             <button
@@ -77,6 +74,7 @@ export function LobbyPanel({
               {!empty && (
                 <div className="mt-2 text-lg text-cyan-accent/70">
                   {info?.ready ? "READY" : "NOT READY"}
+                  {info?.connected === false ? " · OFFLINE" : ""}
                 </div>
               )}
             </button>
