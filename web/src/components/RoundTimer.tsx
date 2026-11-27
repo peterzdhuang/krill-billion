@@ -37,19 +37,25 @@ function useRemaining(deadlineTs?: number): number | null {
 export function RoundTimer({
   deadlineTs,
   phase,
+  onTimeout,
 }: {
   deadlineTs?: number;
   phase?: string;
+  /** Fired once when the answering countdown reaches zero. */
+  onTimeout?: () => void;
 }) {
   const remaining = useRemaining(deadlineTs);
   const answering = phase === "answering";
   const lastTickedWhole = useRef<number | null>(null);
   const followUp = useRef<number | null>(null);
   const followUpDone = useRef(false);
+  const timedOut = useRef(false);
   const phaseRef = useRef(phase);
+  const onTimeoutRef = useRef(onTimeout);
   const shownWhole = useRef(0);
   const clockGen = useRef(0);
   phaseRef.current = phase;
+  onTimeoutRef.current = onTimeout;
   if (remaining !== null) shownWhole.current = Math.ceil(remaining);
 
   const seenDeadline = useRef(deadlineTs);
@@ -58,7 +64,15 @@ export function RoundTimer({
     clockGen.current += 1;
     lastTickedWhole.current = null;
     followUpDone.current = false;
+    timedOut.current = false;
   }
+
+  useEffect(() => {
+    if (!answering || remaining === null || remaining > 0) return;
+    if (timedOut.current) return;
+    timedOut.current = true;
+    onTimeoutRef.current?.();
+  }, [answering, remaining]);
 
   useEffect(() => {
     const cancelFollowUp = () => {
