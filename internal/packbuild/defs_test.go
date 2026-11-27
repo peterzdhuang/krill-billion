@@ -16,8 +16,8 @@ func TestLoadRealDefs(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(defs) != 50 {
-		t.Fatalf("defs = %d, want 50", len(defs))
+	if len(defs) != 84 {
+		t.Fatalf("defs = %d, want 84", len(defs))
 	}
 	seen := map[string]struct{}{}
 	var countries, pokemon int
