@@ -16,9 +16,22 @@ body {
 }
 
 body {
-  background: radial-gradient(ellipse at top, #0a1628 0%, #050a14 55%, #02060d 100%);
+  background:
+    radial-gradient(ellipse at top, #0a1628 0%, #050a14 55%, #02060d 100%),
+    #050a14;
   color: #e2e8f0;
   min-height: 100vh;
+}
+
+@keyframes caret-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
 
 ::selection {
