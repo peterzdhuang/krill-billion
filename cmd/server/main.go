@@ -1,14 +1,16 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
-	"github.com/peterzdhuang/krill-billion/internal/data"
 	"github.com/peterzdhuang/krill-billion/internal/lobby"
 	"github.com/peterzdhuang/krill-billion/internal/match"
+	"github.com/peterzdhuang/krill-billion/internal/supabank"
 	"github.com/peterzdhuang/krill-billion/internal/ws"
 )
 
@@ -17,11 +19,16 @@ func main() {
 	if packsDir == "" {
 		packsDir = "./packs"
 	}
-	store, err := data.Load(packsDir)
+	ctx, cancel := context.WithTimeout(context.Background(), 45*time.Second)
+	store, source, err := supabank.LoadStore(ctx, packsDir)
+	cancel()
 	if err != nil {
 		log.Fatalf("load packs: %v", err)
 	}
-	log.Printf("loaded %d prompts from %d packs", store.PromptCount(), store.PackCount())
+	if source == "json-fallback" {
+		log.Printf("supabase answer bank is empty; using JSON packs in %s", packsDir)
+	}
+	log.Printf("loaded %d prompts from %d packs (%s)", store.PromptCount(), store.PackCount(), source)
 
 	frontendOrigin := strings.TrimSpace(os.Getenv("FRONTEND_ORIGIN"))
 	reg := lobby.NewRegistry(store, match.RealClock{})

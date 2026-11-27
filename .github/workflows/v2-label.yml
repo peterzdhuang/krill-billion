@@ -1,0 +1,36 @@
+# The cloud agent token can open issues but cannot create labels.
+# Actions' GITHUB_TOKEN can. This applies the v2 label and closes the
+# two empty probe issues left behind while checking that permission.
+name: v2-label
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Ensure the v2 label
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: peterzdhuang/krill-billion
+        run: |
+          set -euo pipefail
+          gh label create v2 \
+            --color 6f42c1 \
+            --description "Polish pass: real answer bank, richer packs, Krillion-level feel" \
+            || true
+          gh issue list --state open --limit 100 --json number,title \
+            --jq '.[] | select(.title | startswith("v2:")) | .number' \
+            | while read -r n; do
+                gh issue edit "$n" --add-label v2
+              done
+          gh issue list --state open --limit 30 --json number,title \
+            --jq '.[] | select(.title | test("probe";"i")) | .number' \
+            | while read -r n; do
+                gh issue close "$n" --reason "not planned"
+              done

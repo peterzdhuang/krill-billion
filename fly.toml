@@ -10,6 +10,9 @@ primary_region = "sjc"
 [env]
   PACKS_DIR = "/app/packs"
   # Set FRONTEND_ORIGIN via `fly secrets set FRONTEND_ORIGIN=https://your-app.vercel.app`
+  # Optional answer bank (unset → packs/*.json):
+  # fly secrets set SUPABASE_URL=https://<ref>.supabase.co SUPABASE_DB_URL=postgresql://...
+  # or SUPABASE_SERVICE_ROLE_KEY instead of SUPABASE_DB_URL. Run db/migrations/001_answer_bank.sql first.
 
 [http_service]
   internal_port = 8080

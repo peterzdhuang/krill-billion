@@ -11,6 +11,7 @@ import (
 	"syscall"
 
 	"github.com/peterzdhuang/krill-billion/internal/packbuild"
+	"github.com/peterzdhuang/krill-billion/internal/supabank"
 )
 
 func main() {
@@ -39,4 +40,16 @@ func main() {
 		os.Exit(1)
 	}
 	fmt.Fprintf(os.Stderr, "wrote %s (%d prompts)\n", *out, len(pack.Prompts))
+
+	cfg, ok := supabank.FromEnv()
+	if !ok {
+		fmt.Fprintf(os.Stderr, "supabase not configured; skipped upsert\n")
+		return
+	}
+	fmt.Fprintf(os.Stderr, "upserting %d prompts to supabase (%s)\n", len(pack.Prompts), cfg.Mode())
+	if err := supabank.Upsert(ctx, cfg, pack); err != nil {
+		fmt.Fprintf(os.Stderr, "packbuild: supabase upsert: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Fprintf(os.Stderr, "supabase upsert ok\n")
 }

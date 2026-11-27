@@ -39,11 +39,6 @@ func Load(dir string) (*Store, error) {
 		return nil, fmt.Errorf("read pack dir %q: %w", dir, err)
 	}
 
-	s := &Store{
-		prompts: make(map[string]*indexedPrompt),
-	}
-	promptSeen := make(map[string]string) // prompt id -> pack id
-
 	var jsonFiles []string
 	for _, e := range entries {
 		if e.IsDir() || !strings.HasSuffix(strings.ToLower(e.Name()), ".json") {
@@ -53,18 +48,33 @@ func Load(dir string) (*Store, error) {
 	}
 	sort.Strings(jsonFiles)
 
+	packs := make([]Pack, 0, len(jsonFiles))
 	for _, name := range jsonFiles {
 		path := filepath.Join(dir, name)
 		pack, err := loadPackFile(path)
 		if err != nil {
 			return nil, err
 		}
+		packs = append(packs, pack)
+	}
+	return NewFromPacks(packs...)
+}
+
+// NewFromPacks validates packs and builds a Store. An empty list is an empty store.
+func NewFromPacks(packs ...Pack) (*Store, error) {
+	s := &Store{
+		prompts: make(map[string]*indexedPrompt),
+	}
+	promptSeen := make(map[string]string) // prompt id -> pack id
+	for _, pack := range packs {
+		if pack.PackID == "" {
+			return nil, fmt.Errorf("pack missing pack_id")
+		}
 		if err := s.indexPack(pack, promptSeen); err != nil {
-			return nil, fmt.Errorf("pack %q (%s): %w", pack.PackID, path, err)
+			return nil, fmt.Errorf("pack %q: %w", pack.PackID, err)
 		}
 		s.packs = append(s.packs, pack)
 	}
-
 	return s, nil
 }
 
