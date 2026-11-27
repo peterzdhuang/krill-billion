@@ -14,6 +14,7 @@ import type {
   RoundStartData,
   RoomStateData,
   Seat,
+  SuggestData,
 } from "@/lib/protocol";
 import { playSfx } from "@/lib/audio";
 import {
@@ -42,6 +43,7 @@ export default function PlayPage() {
   const [result, setResult] = useState<RoundResultData | null>(null);
   const [matchEnd, setMatchEnd] = useState<MatchEndData | null>(null);
   const [draft, setDraft] = useState("");
+  const [suggestion, setSuggestion] = useState("");
   const [locked, setLocked] = useState(false);
   const [opponentLocked, setOpponentLocked] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -90,6 +92,7 @@ export default function PlayPage() {
           setRound(d);
           setResult(null);
           setDraft("");
+          setSuggestion("");
           setLocked(false);
           setOpponentLocked(false);
           setAnswerError(null);
@@ -107,6 +110,11 @@ export default function PlayPage() {
                   sudden_death: !!d.sudden_death,
                 },
           );
+          break;
+        }
+        case "suggest": {
+          const d = env.data as SuggestData;
+          setSuggestion(d.label ?? "");
           break;
         }
         case "locked": {
@@ -174,12 +182,20 @@ export default function PlayPage() {
     });
   }, [connected, nameReady, joined, lobbyId, name, send]);
 
-  const sendDraft = useDraftThrottle(send);
+  const { draft: sendDraft, flushNow } = useDraftThrottle(send);
 
   const onDraftChange = (text: string) => {
     setDraft(text);
+    setSuggestion("");
     setAnswerError(null);
     if (!locked) sendDraft(text);
+  };
+
+  const onAcceptSuggestion = () => {
+    if (!suggestion || locked) return;
+    setDraft(suggestion);
+    setAnswerError(null);
+    flushNow(suggestion);
   };
 
   const submitName = () => {
@@ -262,11 +278,17 @@ export default function PlayPage() {
           matchEnd={matchEnd}
           yourSeat={yourSeat}
           draft={draft}
+          suggestion={suggestion}
           locked={locked}
           opponentLocked={opponentLocked}
           fieldError={answerError}
           onDraft={onDraftChange}
-          onLock={() => send({ type: "lock", data: {} })}
+          onAcceptSuggestion={onAcceptSuggestion}
+          onLock={() => {
+            // Flush any throttled draft; accept path already flushNow(suggestion).
+            flushNow();
+            send({ type: "lock", data: {} });
+          }}
           onRematch={() => {
             setInMatch(false);
             setMatchEnd(null);

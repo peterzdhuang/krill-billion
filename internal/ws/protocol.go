@@ -18,6 +18,7 @@ const (
 	TypeRoomState     = "room_state"
 	TypeRoundStart    = "round_start"
 	TypeTeammateDraft = "teammate_draft"
+	TypeSuggest       = "suggest"
 	TypeLocked        = "locked"
 	TypeRoundResult   = "round_result"
 	TypeMatchEnd      = "match_end"
@@ -116,6 +117,10 @@ type RoundStartData struct {
 type TeammateDraftData struct {
 	Seat string `json:"seat"`
 	Text string `json:"text"`
+}
+
+type SuggestData struct {
+	Label string `json:"label"`
 }
 
 type LockedData struct {

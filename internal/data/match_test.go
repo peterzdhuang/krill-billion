@@ -24,7 +24,7 @@ func TestMatch(t *testing.T) {
 			{ID: "city", Label: "City", Rarity: 10},
 			{ID: "test", Label: "test", Rarity: 15},
 			{ID: "cat", Label: "cat", Rarity: 30},
-			{ID: "afghan", Label: "Afghanistan", Rarity: 40},
+			{ID: "afghan", Label: "Afghanistan", Rarity: 40, Aliases: []string{"AF"}},
 			{ID: "cart", Label: "cart", Rarity: 50},
 			{ID: "bart", Label: "bart", Rarity: 20},
 		},
@@ -57,14 +57,14 @@ func TestMatch(t *testing.T) {
 			wantOK: true,
 		},
 		{
-			name:   "3-letter requires exact (no fuzzy)",
+			name:   "3-letter one-edit fuzzy",
 			guess:  "cot",
-			wantID: "",
-			wantOK: false,
+			wantID: "cat",
+			wantOK: true,
 		},
 		{
-			name:   "11+ chars with 3 typos matches",
-			guess:  "Xyghanistaa", // Afghanistan with 3 substitutions
+			name:   "11+ chars with typos matches",
+			guess:  "Xyghanistaa", // Afghanistan with substitutions
 			wantID: "afghan",
 			wantOK: true,
 		},
@@ -87,8 +87,20 @@ func TestMatch(t *testing.T) {
 			wantOK: true,
 		},
 		{
-			name:   "short label is exact only",
-			guess:  "catx",
+			name:   "prefix of label",
+			guess:  "afghanis",
+			wantID: "afghan",
+			wantOK: true,
+		},
+		{
+			name:   "alias exact",
+			guess:  "af",
+			wantID: "afghan",
+			wantOK: true,
+		},
+		{
+			name:   "short unrelated rejected",
+			guess:  "zz",
 			wantID: "",
 			wantOK: false,
 		},
@@ -106,5 +118,47 @@ func TestMatch(t *testing.T) {
 				t.Fatalf("Match(%q) = (%q, %v), want (%q, %v)", tt.guess, gotID, ok, tt.wantID, tt.wantOK)
 			}
 		})
+	}
+}
+
+func TestSuggest(t *testing.T) {
+	s := testStore(t, Prompt{
+		ID:   "p1",
+		Text: "test",
+		Entries: []Entry{
+			{ID: "afghan", Label: "Afghanistan", Rarity: 40, Aliases: []string{"AF"}},
+			{ID: "test", Label: "test", Rarity: 15},
+		},
+	})
+
+	label, ok := s.Suggest("p1", "afghanis")
+	if !ok || label != "Afghanistan" {
+		t.Fatalf("Suggest(prefix) = (%q, %v), want Afghanistan", label, ok)
+	}
+	label, ok = s.Suggest("p1", "tset")
+	if !ok || label != "test" {
+		t.Fatalf("Suggest(typo) = (%q, %v), want test", label, ok)
+	}
+	label, ok = s.Suggest("p1", "af")
+	if !ok || label != "Afghanistan" {
+		t.Fatalf("Suggest(alias) = (%q, %v), want Afghanistan", label, ok)
+	}
+	if _, ok := s.Suggest("p1", "zzz"); ok {
+		t.Fatal("Suggest(unrelated) should fail")
+	}
+	// Accepted suggestion must always Match.
+	for _, q := range []string{"afghanis", "tset", "af", "Afghanistaan"} {
+		sug, ok := s.Suggest("p1", q)
+		if !ok {
+			t.Fatalf("Suggest(%q) failed", q)
+		}
+		id, mok := s.Match("p1", sug)
+		if !mok {
+			t.Fatalf("Match(Suggest(%q)=%q) failed", q, sug)
+		}
+		id2, mok2 := s.Match("p1", q)
+		if !mok2 || id2 != id {
+			t.Fatalf("Match(%q) = (%q, %v), want same entry as suggestion %q (%q)", q, id2, mok2, sug, id)
+		}
 	}
 }

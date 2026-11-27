@@ -24,6 +24,7 @@ type stubPromptStore struct{}
 
 func (stubPromptStore) RandomPrompts(n int, exclude []string) []data.Prompt { return nil }
 func (stubPromptStore) Match(string, string) (string, bool)                 { return "", false }
+func (stubPromptStore) Suggest(string, string) (string, bool)               { return "", false }
 func (stubPromptStore) Entry(string, string) (data.Entry, bool)             { return data.Entry{}, false }
 
 func TestClaimSeatTaken(t *testing.T) {

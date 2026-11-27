@@ -92,7 +92,7 @@ export function useGameSocket(lobbyId: string | null, onMessage: Handler) {
   return { connected, send };
 }
 
-/** Throttle drafts to ~80ms. */
+/** Throttle drafts to ~80ms. Returns draft(text) and flushNow(text?) to send immediately. */
 export function useDraftThrottle(
   send: (msg: ClientMessage) => boolean,
   intervalMs = 80,
@@ -116,6 +116,7 @@ export function useDraftThrottle(
       const elapsed = now - lastSent.current;
       if (elapsed >= intervalMs) {
         lastSent.current = now;
+        pending.current = null;
         send({ type: "draft", data: { text } });
         return;
       }
@@ -127,6 +128,22 @@ export function useDraftThrottle(
     [flush, intervalMs, send],
   );
 
+  /** Send text (or pending) immediately — use before lock after accepting a suggestion. */
+  const flushNow = useCallback(
+    (text?: string) => {
+      if (timer.current) {
+        clearTimeout(timer.current);
+        timer.current = null;
+      }
+      const out = text ?? pending.current;
+      pending.current = null;
+      if (out === null) return;
+      lastSent.current = Date.now();
+      send({ type: "draft", data: { text: out } });
+    },
+    [send],
+  );
+
   useEffect(
     () => () => {
       if (timer.current) clearTimeout(timer.current);
@@ -134,5 +151,5 @@ export function useDraftThrottle(
     [],
   );
 
-  return draft;
+  return { draft, flushNow };
 }

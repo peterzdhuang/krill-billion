@@ -15,6 +15,7 @@ export type ServerMessageType =
   | "room_state"
   | "round_start"
   | "teammate_draft"
+  | "suggest"
   | "locked"
   | "round_result"
   | "match_end"
@@ -115,6 +116,7 @@ export type RoundStartData = {
 };
 
 export type TeammateDraftData = { seat: string; text: string };
+export type SuggestData = { label: string };
 export type LockedData = { seat: string };
 
 export type SideAnswerData = {
