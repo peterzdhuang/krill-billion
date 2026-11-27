@@ -37,12 +37,23 @@ export function useMatchSfx({
   useEffect(() => {
     if (!result || revealed.current === result) return;
     revealed.current = result;
+    const mySide = sideOf(yourSeat);
     const mine = yourSeat ? result.sides.find((a) => a.seat === yourSeat) : undefined;
-    if (mine && !mine.valid) {
-      playSfx("miss");
+    if (mine?.valid && mine.rarity >= 80) playSfx("flourish");
+    if (mine && !mine.valid) playSfx("miss");
+    if (
+      mySide === null ||
+      result.tie ||
+      result.winner === mySide ||
+      result.winner < 0
+    ) {
       return;
     }
-    playSfx(result.damage < 1500 ? "land_small" : "land_big");
+    const winner = result.sides[result.winner];
+    if (winner?.tier === "Jeffy B") playSfx("krillion");
+    else if (winner?.tier === "Distinguished" || winner?.tier === "CTO") {
+      playSfx("stinger");
+    }
   }, [result, yourSeat]);
 
   useEffect(() => {

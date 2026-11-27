@@ -14,6 +14,8 @@ export type SfxName =
   | "land_big"
   | "begin"
   | "krillion"
+  | "stinger"
+  | "flourish"
   | "miss";
 
 type MuteListener = (muted: boolean) => void;
@@ -218,6 +220,13 @@ function emit(ac: AudioContext, out: GainNode, name: SfxName) {
       tone(ac, out, { f0: 60, f1: 40, dur: 1.2, peak: 0.34 });
       arp(ac, out, [784, 988, 1175, 1568], { step: 0.13, dur: 0.7, peak: 0.15, lp: 3000 });
       noise(ac, out, { dur: 1.4, lp: 2500, hp: 1200, peak: 0.05, delay: 0.3 });
+      break;
+    case "stinger":
+      tone(ac, out, { f0: 90, f1: 50, dur: 0.7, peak: 0.3 });
+      arp(ac, out, [659, 880, 1175], { step: 0.1, dur: 0.4, peak: 0.14, lp: 2800 });
+      break;
+    case "flourish":
+      arp(ac, out, [1046, 1318, 1568], { step: 0.07, dur: 0.28, peak: 0.12, lp: 3200 });
       break;
     case "miss":
       tone(ac, out, { f0: 220, f1: 52, dur: 0.7, peak: 0.24 });
