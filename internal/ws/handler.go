@@ -4,29 +4,40 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/coder/websocket"
 	"github.com/peterzdhuang/krill-billion/internal/lobby"
 )
 
-func originPatterns(allowed string) []string {
+// originHosts extracts host[:port] patterns for coder/websocket OriginPatterns.
+// FRONTEND_ORIGIN may be a full URL (https://app.vercel.app) or a bare host.
+func originHosts(allowed string) (hosts []string, insecure bool) {
 	allowed = strings.TrimSpace(allowed)
 	if allowed == "" || allowed == "*" {
-		// Local Next rewrite + broad allow for unset FRONTEND_ORIGIN.
-		return []string{"*"}
+		return nil, true
 	}
-	var out []string
 	for _, a := range strings.Split(allowed, ",") {
 		a = strings.TrimSpace(a)
-		if a != "" {
-			out = append(out, a)
+		if a == "" {
+			continue
 		}
+		if a == "*" {
+			return nil, true
+		}
+		if strings.Contains(a, "://") {
+			if u, err := url.Parse(a); err == nil && u.Host != "" {
+				hosts = append(hosts, u.Host)
+				continue
+			}
+		}
+		hosts = append(hosts, a)
 	}
-	if len(out) == 0 {
-		return []string{"*"}
+	if len(hosts) == 0 {
+		return nil, true
 	}
-	return out
+	return hosts, false
 }
 
 // Handler upgrades WebSocket connections and routes protocol messages.
@@ -47,8 +58,10 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	hosts, insecure := originHosts(h.AllowedOrigin)
 	wsConn, err := websocket.Accept(w, r, &websocket.AcceptOptions{
-		OriginPatterns: originPatterns(h.AllowedOrigin),
+		InsecureSkipVerify: insecure,
+		OriginPatterns:     hosts,
 	})
 	if err != nil {
 		return
