@@ -1,0 +1,195 @@
+# Broad closed categories modeled on Krillion-style prompts (niche answers welcome).
+# Static lists ship without a Wikidata rebuild; expand via packbuild later if desired.
+prompts:
+  - id: band
+    category: Music
+    text: A band
+    entries:
+      - { label: The Beatles, aliases: [Beatles], rarity: 1 }
+      - { label: The Rolling Stones, aliases: [Rolling Stones], rarity: 3 }
+      - { label: Queen, rarity: 2 }
+      - { label: Led Zeppelin, rarity: 4 }
+      - { label: Pink Floyd, rarity: 5 }
+      - { label: Nirvana, rarity: 6 }
+      - { label: Metallica, rarity: 7 }
+      - { label: Radiohead, rarity: 10 }
+      - { label: Arcade Fire, rarity: 28 }
+      - { label: Talking Heads, rarity: 22 }
+      - { label: Joy Division, rarity: 30 }
+      - { label: The Cure, rarity: 16 }
+      - { label: Depeche Mode, rarity: 18 }
+      - { label: Kraftwerk, rarity: 32 }
+      - { label: Can, rarity: 48 }
+      - { label: Neu!, aliases: [Neu], rarity: 55 }
+      - { label: Stereolab, rarity: 50 }
+      - { label: Broadcast, rarity: 52 }
+      - { label: Tortoise, rarity: 58 }
+      - { label: Slint, rarity: 60 }
+      - { label: Godspeed You! Black Emperor, aliases: [GYBE, Godspeed You Black Emperor], rarity: 45 }
+      - { label: Explosions in the Sky, rarity: 42 }
+      - { label: Mogwai, rarity: 44 }
+      - { label: My Bloody Valentine, rarity: 35 }
+      - { label: Slowdive, rarity: 40 }
+      - { label: Ride, rarity: 46 }
+      - { label: Pavement, rarity: 34 }
+      - { label: Sonic Youth, rarity: 26 }
+      - { label: Pixies, rarity: 20 }
+      - { label: The Velvet Underground, aliases: [Velvet Underground], rarity: 24 }
+      - { label: Can, rarity: 48 }
+      - { label: Black Sabbath, rarity: 12 }
+      - { label: Iron Maiden, rarity: 14 }
+      - { label: AC/DC, aliases: [ACDC], rarity: 8 }
+      - { label: U2, rarity: 9 }
+      - { label: Coldplay, rarity: 11 }
+      - { label: Imagine Dragons, rarity: 15 }
+      - { label: Foo Fighters, rarity: 13 }
+      - { label: Red Hot Chili Peppers, aliases: [RHCP], rarity: 12 }
+      - { label: The Strokes, rarity: 25 }
+      - { label: Arctic Monkeys, rarity: 17 }
+      - { label: Tame Impala, rarity: 27 }
+      - { label: King Gizzard & the Lizard Wizard, aliases: [King Gizzard], rarity: 38 }
+      - { label: Magma, rarity: 70 }
+      - { label: Gentle Giant, rarity: 65 }
+      - { label: Yes, rarity: 33 }
+      - { label: King Crimson, rarity: 36 }
+      - { label: Soft Machine, rarity: 62 }
+      - { label: Autechre, rarity: 54 }
+      - { label: Boards of Canada, rarity: 47 }
+      - { label: Aphex Twin, rarity: 29 }
+      - { label: Squarepusher, rarity: 56 }
+      - { label: Burial, rarity: 41 }
+      - { label: Massive Attack, rarity: 23 }
+      - { label: Portishead, rarity: 31 }
+      - { label: Björk, aliases: [Bjork], rarity: 21 }
+
+  - id: fruit
+    category: Food
+    text: A fruit
+    entries:
+      - { label: Apple, rarity: 1 }
+      - { label: Banana, rarity: 2 }
+      - { label: Orange, rarity: 3 }
+      - { label: Grape, rarity: 4 }
+      - { label: Strawberry, rarity: 5 }
+      - { label: Mango, rarity: 8 }
+      - { label: Pineapple, rarity: 10 }
+      - { label: Watermelon, rarity: 6 }
+      - { label: Peach, rarity: 9 }
+      - { label: Pear, rarity: 11 }
+      - { label: Cherry, rarity: 12 }
+      - { label: Blueberry, rarity: 14 }
+      - { label: Raspberry, rarity: 15 }
+      - { label: Blackberry, rarity: 16 }
+      - { label: Kiwi, aliases: [Kiwifruit], rarity: 18 }
+      - { label: Papaya, rarity: 22 }
+      - { label: Guava, rarity: 28 }
+      - { label: Durian, rarity: 35 }
+      - { label: Rambutan, rarity: 45 }
+      - { label: Lychee, aliases: [Litchi], rarity: 32 }
+      - { label: Longan, rarity: 50 }
+      - { label: Mangosteen, rarity: 48 }
+      - { label: Dragon fruit, aliases: [Pitaya, Pitahaya], rarity: 30 }
+      - { label: Passion fruit, aliases: [Passionfruit], rarity: 26 }
+      - { label: Starfruit, aliases: [Carambola], rarity: 40 }
+      - { label: Persimmon, rarity: 34 }
+      - { label: Fig, rarity: 24 }
+      - { label: Date, rarity: 27 }
+      - { label: Pomegranate, rarity: 20 }
+      - { label: Coconut, rarity: 17 }
+      - { label: Avocado, rarity: 13 }
+      - { label: Tomato, rarity: 7 }
+      - { label: Olive, rarity: 19 }
+      - { label: Lemon, rarity: 8 }
+      - { label: Lime, rarity: 12 }
+      - { label: Grapefruit, rarity: 21 }
+      - { label: Tangerine, aliases: [Mandarin], rarity: 23 }
+      - { label: Apricot, rarity: 25 }
+      - { label: Plum, rarity: 18 }
+      - { label: Nectarine, rarity: 29 }
+      - { label: Cranberry, rarity: 31 }
+      - { label: Gooseberry, rarity: 42 }
+      - { label: Currant, rarity: 44 }
+      - { label: Elderberry, rarity: 46 }
+      - { label: Mulberry, rarity: 43 }
+      - { label: Quince, rarity: 52 }
+      - { label: Medlar, rarity: 70 }
+      - { label: Loquat, rarity: 55 }
+      - { label: Jujube, aliases: [Chinese date], rarity: 58 }
+      - { label: Ackee, rarity: 65 }
+      - { label: Breadfruit, rarity: 60 }
+      - { label: Jackfruit, rarity: 38 }
+      - { label: Soursop, aliases: [Guanabana], rarity: 62 }
+      - { label: Cherimoya, rarity: 64 }
+      - { label: Sapote, rarity: 68 }
+      - { label: Feijoa, aliases: [Pineapple guava], rarity: 66 }
+      - { label: Tamarind, rarity: 47 }
+      - { label: Horned melon, aliases: [Kiwano], rarity: 72 }
+      - { label: Buddha's hand, aliases: [Buddha hand, Fingered citron], rarity: 75 }
+
+  - id: nba-player
+    category: NBA
+    text: An NBA player
+    entries:
+      - { label: LeBron James, aliases: [LeBron, King James], rarity: 1 }
+      - { label: Stephen Curry, aliases: [Steph Curry, Curry], rarity: 2 }
+      - { label: Kevin Durant, aliases: [KD], rarity: 3 }
+      - { label: Giannis Antetokounmpo, aliases: [Giannis, Greek Freak], rarity: 4 }
+      - { label: Nikola Jokic, aliases: [Jokic], rarity: 5 }
+      - { label: Luka Doncic, aliases: [Luka, Doncic], rarity: 6 }
+      - { label: Jayson Tatum, rarity: 8 }
+      - { label: Joel Embiid, rarity: 9 }
+      - { label: Anthony Edwards, aliases: [Ant], rarity: 10 }
+      - { label: Shai Gilgeous-Alexander, aliases: [SGA], rarity: 11 }
+      - { label: Michael Jordan, aliases: [MJ, Jordan], rarity: 1 }
+      - { label: Kobe Bryant, aliases: [Kobe, Black Mamba], rarity: 2 }
+      - { label: Magic Johnson, aliases: [Magic], rarity: 7 }
+      - { label: Larry Bird, rarity: 8 }
+      - { label: Tim Duncan, rarity: 12 }
+      - { label: Dirk Nowitzki, rarity: 14 }
+      - { label: Steve Nash, rarity: 16 }
+      - { label: Manu Ginobili, aliases: [Manu], rarity: 22 }
+      - { label: Tony Parker, rarity: 24 }
+      - { label: Pau Gasol, rarity: 26 }
+      - { label: Marc Gasol, rarity: 30 }
+      - { label: Drazen Petrovic, rarity: 45 }
+      - { label: Arvydas Sabonis, rarity: 42 }
+      - { label: Vlade Divac, rarity: 38 }
+      - { label: Peja Stojakovic, rarity: 40 }
+      - { label: Toni Kukoc, rarity: 44 }
+      - { label: Detlef Schrempf, rarity: 48 }
+      - { label: Rik Smits, rarity: 52 }
+      - { label: Mark Price, rarity: 50 }
+      - { label: Muggsy Bogues, rarity: 35 }
+      - { label: Manute Bol, rarity: 36 }
+      - { label: Gheorghe Muresan, rarity: 55 }
+      - { label: Spud Webb, rarity: 46 }
+      - { label: Nate Robinson, rarity: 34 }
+      - { label: JR Smith, aliases: [J.R. Smith], rarity: 28 }
+      - { label: Metta World Peace, aliases: [Ron Artest], rarity: 32 }
+      - { label: Raja Bell, rarity: 54 }
+      - { label: Robert Horry, rarity: 33 }
+      - { label: Brian Scalabrine, aliases: [White Mamba], rarity: 58 }
+      - { label: Darko Milicic, rarity: 60 }
+      - { label: Hasheem Thabeet, rarity: 65 }
+      - { label: Adam Morrison, rarity: 62 }
+      - { label: Kwame Brown, rarity: 56 }
+      - { label: Greg Oden, rarity: 53 }
+      - { label: Andrea Bargnani, rarity: 57 }
+      - { label: Yi Jianlian, rarity: 64 }
+      - { label: Wang Zhizhi, rarity: 70 }
+      - { label: Yao Ming, rarity: 15 }
+      - { label: Tracy McGrady, aliases: [T-Mac], rarity: 18 }
+      - { label: Vince Carter, aliases: [VC], rarity: 17 }
+      - { label: Allen Iverson, aliases: [AI, The Answer], rarity: 13 }
+      - { label: Ray Allen, rarity: 20 }
+      - { label: Paul Pierce, rarity: 21 }
+      - { label: Kevin Garnett, aliases: [KG], rarity: 19 }
+      - { label: Chris Paul, aliases: [CP3], rarity: 14 }
+      - { label: Russell Westbrook, aliases: [Westbrook, Brodie], rarity: 16 }
+      - { label: James Harden, aliases: [Harden, The Beard], rarity: 15 }
+      - { label: Kawhi Leonard, aliases: [Kawhi, The Klaw], rarity: 12 }
+      - { label: Jimmy Butler, rarity: 18 }
+      - { label: Bam Adebayo, rarity: 25 }
+      - { label: Tyrese Haliburton, rarity: 27 }
+      - { label: Paolo Banchero, rarity: 29 }
+      - { label: Victor Wembanyama, aliases: [Wemby], rarity: 10 }
