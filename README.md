@@ -29,9 +29,42 @@ FRONTEND_ORIGIN=http://localhost:3000 make server
 
 ## Packs
 
-Question packs live in `packs/*.json`. Main pack: `packs/core-v1.json` (hand-built for MVP; regenerate later via Wikidata when online). Sample: `packs/sample.json`.
+Question packs live in `packs/*.json`. Main pack: `packs/core-v1.json`. Sample: `packs/sample.json`.
 
 Prompt definitions for the builder are YAML under `packs/defs/`. A two-prompt acceptance fixture is in `packs/defs-sample/`.
+
+The server keeps one in-memory copy of the bank. On boot it loads that copy from Supabase when credentials are set, and from `packs/*.json` otherwise.
+
+### Supabase answer bank
+
+Apply `db/migrations/001_answer_bank.sql` in the Supabase SQL editor once. It creates categories, prompts, entities, aliases, and per-prompt rarity. Row level security is on and there are no anon policies.
+
+Then set both of these (never commit them):
+
+| Variable | What |
+| --- | --- |
+| `SUPABASE_URL` | Project URL, `https://<ref>.supabase.co` |
+| `SUPABASE_DB_URL` | Postgres connection string |
+
+If you do not have the database string, set `SUPABASE_SERVICE_ROLE_KEY` instead of `SUPABASE_DB_URL`. When both are set, the server uses Postgres. A URL with neither secret is ignored, and the JSON packs load.
+
+```bash
+# Fill Supabase from a built pack. Omitted prompts are left as they are.
+SUPABASE_URL=https://<ref>.supabase.co \
+SUPABASE_DB_URL='postgresql://...' \
+  make packbuild
+```
+
+Without those variables, `make packbuild` only writes JSON and logs that the upsert was skipped. If Supabase is configured but the bank has no prompts, the server logs that and uses the JSON packs. If it is configured and the query fails, the process exits.
+
+Fly (do not put the values in `fly.toml`):
+
+```bash
+flyctl secrets set \
+  SUPABASE_URL=https://<ref>.supabase.co \
+  SUPABASE_DB_URL='postgresql://...'
+# or SUPABASE_SERVICE_ROLE_KEY=... instead of SUPABASE_DB_URL
+```
 
 Rebuild packs:
 
