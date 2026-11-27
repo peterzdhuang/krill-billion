@@ -222,16 +222,18 @@ func (s *Store) EntryTier(promptID, entryID string) (Tier, bool) {
 
 // RandomPrompts returns up to n prompts whose ids are not in exclude.
 // Selection is without replacement within the returned slice.
-func (s *Store) RandomPrompts(n int, exclude map[string]struct{}) []Prompt {
+func (s *Store) RandomPrompts(n int, exclude []string) []Prompt {
 	if s == nil || n <= 0 {
 		return nil
 	}
+	skip := make(map[string]struct{}, len(exclude))
+	for _, id := range exclude {
+		skip[id] = struct{}{}
+	}
 	var pool []string
 	for _, id := range s.order {
-		if exclude != nil {
-			if _, skip := exclude[id]; skip {
-				continue
-			}
+		if _, ok := skip[id]; ok {
+			continue
 		}
 		pool = append(pool, id)
 	}
