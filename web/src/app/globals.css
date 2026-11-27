@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --abyss: #050a14;
+  --deep: #0a1628;
+  --midnavy: #0f2744;
+  --cyan-accent: #2dd4bf;
+  --cyan-glow: #5eead4;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: radial-gradient(ellipse at top, #0a1628 0%, #050a14 55%, #02060d 100%);
+  color: #e2e8f0;
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgba(45, 212, 191, 0.35);
+}

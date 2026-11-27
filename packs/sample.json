@@ -1,0 +1,45 @@
+{
+  "pack_id": "sample",
+  "version": 1,
+  "built_at": "2026-11-27T00:00:00Z",
+  "attribution": [
+    "Wikidata (CC0)",
+    "Wikimedia Pageviews API"
+  ],
+  "prompts": [
+    {
+      "id": "dog-breed",
+      "category": "Dog breeds",
+      "text": "A dog breed",
+      "entries": [
+        {"id": "Q38904", "label": "Labrador Retriever", "aliases": ["Labrador", "Lab"], "rarity": 3},
+        {"id": "Q38604", "label": "German Shepherd", "aliases": ["Alsatian"], "rarity": 5},
+        {"id": "Q38690", "label": "Golden Retriever", "aliases": ["Golden"], "rarity": 4},
+        {"id": "Q38386", "label": "Beagle", "aliases": [], "rarity": 12},
+        {"id": "Q38404", "label": "Bulldog", "aliases": ["English Bulldog"], "rarity": 15},
+        {"id": "Q37983", "label": "Poodle", "aliases": [], "rarity": 18},
+        {"id": "Q38582", "label": "Boxer", "aliases": [], "rarity": 28},
+        {"id": "Q38602", "label": "Dachshund", "aliases": ["Wiener dog", "Sausage dog"], "rarity": 32},
+        {"id": "Q39107", "label": "Shiba Inu", "aliases": ["Shiba"], "rarity": 45},
+        {"id": "Q38870", "label": "Basenji", "aliases": [], "rarity": 78}
+      ]
+    },
+    {
+      "id": "country",
+      "category": "Countries",
+      "text": "A country",
+      "entries": [
+        {"id": "Q30", "label": "United States", "aliases": ["USA", "US", "America"], "rarity": 0},
+        {"id": "Q145", "label": "United Kingdom", "aliases": ["UK", "Britain", "Great Britain"], "rarity": 2},
+        {"id": "Q142", "label": "France", "aliases": [], "rarity": 3},
+        {"id": "Q183", "label": "Germany", "aliases": [], "rarity": 4},
+        {"id": "Q17", "label": "Japan", "aliases": [], "rarity": 5},
+        {"id": "Q155", "label": "Brazil", "aliases": [], "rarity": 8},
+        {"id": "Q408", "label": "Australia", "aliases": [], "rarity": 10},
+        {"id": "Q889", "label": "Afghanistan", "aliases": [], "rarity": 35},
+        {"id": "Q1005", "label": "The Gambia", "aliases": ["Gambia"], "rarity": 72},
+        {"id": "Q23681", "label": "Nauru", "aliases": [], "rarity": 95}
+      ]
+    }
+  ]
+}
