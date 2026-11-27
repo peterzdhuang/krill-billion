@@ -3,6 +3,8 @@ package data
 // Tier is a CS career band mapped from an entry's rarity score.
 type Tier string
 
+func (t Tier) String() string { return string(t) }
+
 const (
 	TierIntern        Tier = "Intern"
 	TierJunior        Tier = "Junior"
