@@ -2,7 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { DepthMeter } from "@/components/DepthMeter";
+import { KrillionMark } from "@/components/KrillionMark";
+import { MuteToggle } from "@/components/MuteToggle";
 import { TierBadge } from "@/components/TierBadge";
+import { playSfx } from "@/lib/audio";
+import { useMatchSfx } from "@/lib/useMatchSfx";
 import type {
   MatchEndData,
   RoundResultData,
@@ -74,6 +78,20 @@ export function MatchScreen({
     });
   }, [result]);
 
+  useMatchSfx({
+    round,
+    phase: room?.phase,
+    result,
+    matchEnd,
+    yourSeat,
+  });
+
+  const lockAnswer = () => {
+    if (locked) return;
+    playSfx("submit");
+    onLock();
+  };
+
   if (matchEnd) {
     const youWin =
       !matchEnd.draw &&
@@ -81,6 +99,10 @@ export function MatchScreen({
       matchEnd.winner === mySide;
     return (
       <div className="mx-auto max-w-2xl space-y-6 text-center">
+        <div className="flex items-center justify-end gap-2">
+          <KrillionMark name="krillion" size={32} />
+          <MuteToggle />
+        </div>
         <p className="text-sm tracking-[0.35em] text-cyan-accent/50">
           MATCH END // {String(matchEnd.reason).toUpperCase()}
         </p>
@@ -116,6 +138,10 @@ export function MatchScreen({
 
   return (
     <div className="relative mx-auto w-full max-w-3xl space-y-6">
+      <div className="relative z-30 flex items-center justify-end gap-2">
+        <KrillionMark name="krillion" size={32} />
+        <MuteToggle />
+      </div>
       {paused && (
         <div className="absolute inset-0 z-20 flex items-center justify-center bg-[#050a14]/85 backdrop-blur-sm">
           <div className="rounded border border-amber-500/40 bg-slate-950/90 px-8 py-6 text-center">
@@ -166,7 +192,7 @@ export function MatchScreen({
               disabled={locked}
               onChange={(e) => onDraft(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter" && !locked) onLock();
+                if (e.key === "Enter") lockAnswer();
               }}
               placeholder="type answer…"
               className="w-full bg-transparent text-cyan-glow outline-none caret-cyan-glow placeholder:text-slate-600 disabled:opacity-60"
@@ -187,7 +213,7 @@ export function MatchScreen({
             <button
               type="button"
               disabled={locked}
-              onClick={onLock}
+              onClick={lockAnswer}
               className="rounded border border-cyan-accent/40 px-4 py-1 text-cyan-glow disabled:opacity-40"
             >
               LOCK (Enter)

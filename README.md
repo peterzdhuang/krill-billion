@@ -4,6 +4,10 @@ PvP rarity-guessing game: closed-category prompts (rarer valid answers score hig
 
 Stack: Go backend (WebSocket, in-memory lobbies/matches, JSON question packs) + Next.js frontend.
 
+## Sound and marks
+
+Locks, rejects, reveals, and match-end stingers are synthesized in the browser with the Web Audio API, following the sound design of [Krillion](https://krillion.io). The mark and tier sprites in `web/public/krillion/` (`krillion.png`, `schooler.png`, `rare.png`) are Krillion images, used with permission. Mute persists in `localStorage` under `kb-muted` (`"1"` is muted; absent or `"0"` leaves sound on).
+
 ## Prerequisites
 
 - Go 1.22+
