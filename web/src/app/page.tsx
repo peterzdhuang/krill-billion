@@ -83,13 +83,13 @@ export default function Home() {
           <MuteToggle />
         </div>
         <p className="mb-3 text-sm tracking-[0.4em] text-cyan-accent/60">
-          DEPTH PROTOCOL // COMMIT-BASED DUELS
+          CLIMB PROTOCOL // COMMIT-BASED DUELS
         </p>
         <h1 className="text-6xl leading-none tracking-wide text-cyan-glow sm:text-8xl">
           KRILL BILLION
         </h1>
         <p className="mt-5 text-xl text-slate-300/90 sm:text-2xl">
-          Guess rarer. Sink deeper. Drain their HP.
+          Climb the corporate ladder. Rarer answers climb higher and hit harder.
         </p>
 
         <div className="mx-auto mt-12 w-full max-w-md space-y-5 text-left">

@@ -11,7 +11,8 @@ const vt323 = VT323({
 
 export const metadata: Metadata = {
   title: "Krill Billion",
-  description: "PvP rarity-guessing duels — sink deeper for rarer answers.",
+  description:
+    "PvP rarity-guessing duels — climb the corporate ladder. Rarer answers climb higher and hit harder.",
 };
 
 export default function RootLayout({

@@ -16,6 +16,8 @@ body {
 }
 
 body {
+  /* Keeps the match tower (negative z-index) above this background and behind the HUD. */
+  isolation: isolate;
   background:
     radial-gradient(ellipse at top, #0a1628 0%, #050a14 55%, #02060d 100%),
     #050a14;

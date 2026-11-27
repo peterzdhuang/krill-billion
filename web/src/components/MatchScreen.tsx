@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { ClimbingScene } from "@/components/ClimbingScene";
 import { DepthMeter } from "@/components/DepthMeter";
 import { KrillionMark } from "@/components/KrillionMark";
 import { MuteToggle } from "@/components/MuteToggle";
@@ -92,13 +93,22 @@ export function MatchScreen({
     onLock();
   };
 
+  const sceneResult =
+    result ??
+    (matchEnd?.recap && matchEnd.recap.length > 0
+      ? matchEnd.recap[matchEnd.recap.length - 1]
+      : null);
+  const sceneRound = sceneResult?.round ?? round?.round ?? room?.round ?? 1;
+
   if (matchEnd) {
     const youWin =
       !matchEnd.draw &&
       mySide !== null &&
       matchEnd.winner === mySide;
     return (
-      <div className="mx-auto max-w-2xl space-y-6 text-center">
+      <>
+      <ClimbingScene round={sceneRound} result={sceneResult} />
+      <div className="relative z-10 mx-auto max-w-2xl space-y-6 text-center">
         <div className="flex items-center justify-end gap-2">
           <KrillionMark name="krillion" size={32} />
           <MuteToggle />
@@ -133,11 +143,14 @@ export function MatchScreen({
           REMATCH / LOBBY
         </button>
       </div>
+      </>
     );
   }
 
   return (
-    <div className="relative mx-auto w-full max-w-3xl space-y-6">
+    <>
+    <ClimbingScene round={sceneRound} result={sceneResult} />
+    <div className="relative z-10 mx-auto w-full max-w-3xl space-y-6">
       <div className="relative z-30 flex items-center justify-end gap-2">
         <KrillionMark name="krillion" size={32} />
         <MuteToggle />
@@ -261,6 +274,7 @@ export function MatchScreen({
         </div>
       )}
     </div>
+    </>
   );
 }
 
