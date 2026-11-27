@@ -74,6 +74,24 @@ func TestMatch(t *testing.T) {
 			wantID: "bart",
 			wantOK: true,
 		},
+		{
+			name:   "unrelated xyz is rejected",
+			guess:  "xyz",
+			wantID: "",
+			wantOK: false,
+		},
+		{
+			name:   "one-edit typo of a real label",
+			guess:  "Afghanistaan",
+			wantID: "afghan",
+			wantOK: true,
+		},
+		{
+			name:   "short label is exact only",
+			guess:  "catx",
+			wantID: "",
+			wantOK: false,
+		},
 	}
 
 	for _, tt := range tests {

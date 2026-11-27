@@ -36,6 +36,7 @@ export function MatchScreen({
   draft,
   locked,
   opponentLocked,
+  fieldError,
   onDraft,
   onLock,
   onRematch,
@@ -48,6 +49,7 @@ export function MatchScreen({
   draft: string;
   locked: boolean;
   opponentLocked: boolean;
+  fieldError?: string | null;
   onDraft: (text: string) => void;
   onLock: () => void;
   onRematch: () => void;
@@ -153,7 +155,11 @@ export function MatchScreen({
 
       {room?.phase === "answering" && (
         <div className="space-y-3">
-          <div className="flex items-center gap-2 rounded border border-cyan-900/60 bg-[#02060d]/80 px-3 py-3 text-2xl">
+          <div
+            className={`flex items-center gap-2 rounded border bg-[#02060d]/80 px-3 py-3 text-2xl ${
+              fieldError ? "border-rose-500/70" : "border-cyan-900/60"
+            }`}
+          >
             <span className="text-cyan-accent/70">$</span>
             <input
               value={draft}
@@ -187,6 +193,11 @@ export function MatchScreen({
               LOCK (Enter)
             </button>
           </div>
+          {fieldError && (
+            <p className="text-xl text-rose-300" role="alert">
+              {fieldError}
+            </p>
+          )}
         </div>
       )}
 

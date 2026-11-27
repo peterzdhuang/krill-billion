@@ -1,6 +1,7 @@
 package match
 
 import (
+	"strings"
 	"time"
 
 	"github.com/peterzdhuang/krill-billion/internal/data"
@@ -17,31 +18,31 @@ type Engine struct {
 	players map[string]*Player // playerID -> player
 	bySeat  map[string]*Player
 
-	phase         Phase
-	round         int // current round number (1-based, includes sudden death)
-	scoredRounds  int // completed scored rounds (0..MaxScoredRounds)
-	suddenDeath   bool
-	sdReason      EndReason // ReasonKO or ReasonCap — why SD was entered
-	matchStart    time.Time
-	deadline      time.Time
-	prompt        data.Prompt
-	usedPrompts   []string
-	drafts        map[string]string // seat -> text
-	locked        map[string]bool
-	lastDraftAt   map[string]time.Time
-	hp            [2]int
-	mult          [2]float64
-	recap         []RoundOutcome
-	ended         bool
-	end           MatchEnd
+	phase        Phase
+	round        int // current round number (1-based, includes sudden death)
+	scoredRounds int // completed scored rounds (0..MaxScoredRounds)
+	suddenDeath  bool
+	sdReason     EndReason // ReasonKO or ReasonCap — why SD was entered
+	matchStart   time.Time
+	deadline     time.Time
+	prompt       data.Prompt
+	usedPrompts  []string
+	drafts       map[string]string // seat -> text
+	locked       map[string]bool
+	lastDraftAt  map[string]time.Time
+	hp           [2]int
+	mult         [2]float64
+	recap        []RoundOutcome
+	ended        bool
+	end          MatchEnd
 
 	// reconnect / forfeit
-	pausesUsed    map[string]int  // playerID -> pause count
+	pausesUsed     map[string]int  // playerID -> pause count
 	pendingForfeit map[string]bool // second drop: forfeit after current round
-	pausedFor     string          // playerID currently paused for
-	pauseDeadline time.Time
-	savedPhase    Phase
-	savedRemain   time.Duration
+	pausedFor      string          // playerID currently paused for
+	pauseDeadline  time.Time
+	savedPhase     Phase
+	savedRemain    time.Duration
 
 	answeringTimer Timer
 	revealTimer    Timer
@@ -65,18 +66,18 @@ func NewEngine(clock Clock, store PromptStore, events Events) *Engine {
 	}
 }
 
-func (e *Engine) Phase() Phase          { return e.phase }
-func (e *Engine) Round() int            { return e.round }
-func (e *Engine) ScoredRounds() int     { return e.scoredRounds }
-func (e *Engine) SuddenDeath() bool     { return e.suddenDeath }
-func (e *Engine) Ended() bool           { return e.ended }
-func (e *Engine) End() MatchEnd         { return e.end }
-func (e *Engine) HP() [2]int            { return e.hp }
-func (e *Engine) Mult() [2]float64      { return e.mult }
-func (e *Engine) Prompt() data.Prompt   { return e.prompt }
-func (e *Engine) Deadline() time.Time   { return e.deadline }
-func (e *Engine) MatchStart() time.Time { return e.matchStart }
-func (e *Engine) Draft(seat string) string { return e.drafts[seat] }
+func (e *Engine) Phase() Phase              { return e.phase }
+func (e *Engine) Round() int                { return e.round }
+func (e *Engine) ScoredRounds() int         { return e.scoredRounds }
+func (e *Engine) SuddenDeath() bool         { return e.suddenDeath }
+func (e *Engine) Ended() bool               { return e.ended }
+func (e *Engine) End() MatchEnd             { return e.end }
+func (e *Engine) HP() [2]int                { return e.hp }
+func (e *Engine) Mult() [2]float64          { return e.mult }
+func (e *Engine) Prompt() data.Prompt       { return e.prompt }
+func (e *Engine) Deadline() time.Time       { return e.deadline }
+func (e *Engine) MatchStart() time.Time     { return e.matchStart }
+func (e *Engine) Draft(seat string) string  { return e.drafts[seat] }
 func (e *Engine) IsLocked(seat string) bool { return e.locked[seat] }
 
 // RemainingMs returns answering time left (unix-style ms remaining), min 0.
@@ -197,6 +198,14 @@ func (e *Engine) OnLock(playerID string) {
 	}
 	if e.locked[p.Seat] {
 		return
+	}
+	// An empty lock is a pass. Anything else must be a real entry (or a typo
+	// of one). A miss stays unlocked so the player can retype before the buzzer.
+	if text := strings.TrimSpace(e.drafts[p.Seat]); text != "" {
+		if _, ok := e.store.Match(e.prompt.ID, text); !ok {
+			e.events.OnError(playerID, "not_in_bank", "not in this category")
+			return
+		}
 	}
 	e.locked[p.Seat] = true
 	e.events.OnLocked(p.Seat)
