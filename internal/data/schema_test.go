@@ -60,8 +60,9 @@ func TestCorePackLoads(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Load: %v", err)
 	}
-	if store.PromptCount() < 86 {
-		t.Fatalf("prompts = %d, want sample plus core", store.PromptCount())
+	// sample (2) + core (84) + broad (4) + krillion (~100+)
+	if store.PromptCount() < 200 {
+		t.Fatalf("prompts = %d, want sample+core+broad+krillion", store.PromptCount())
 	}
 
 	b, err := os.ReadFile(filepath.Join(dir, "core-v1.json"))
@@ -77,6 +78,25 @@ func TestCorePackLoads(t *testing.T) {
 	}
 	if len(pack.Prompts) != 84 {
 		t.Fatalf("prompts = %d, want 84", len(pack.Prompts))
+	}
+
+	kb, err := os.ReadFile(filepath.Join(dir, "krillion-v1.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var kpack Pack
+	if err := json.Unmarshal(kb, &kpack); err != nil {
+		t.Fatal(err)
+	}
+	if kpack.PackID != "krillion-v1" {
+		t.Fatalf("krillion pack_id = %q", kpack.PackID)
+	}
+	if len(kpack.Prompts) < 100 {
+		t.Fatalf("krillion prompts = %d, want >= 100", len(kpack.Prompts))
+	}
+	attrK := strings.Join(kpack.Attribution, "\n")
+	if !strings.Contains(attrK, "Krillion") {
+		t.Fatalf("krillion attribution missing Krillion: %v", kpack.Attribution)
 	}
 	byCat := map[string]int{}
 	for _, p := range pack.Prompts {

@@ -33,7 +33,16 @@ FRONTEND_ORIGIN=http://localhost:3000 make server
 
 ## Packs
 
-`packs/core-v1.json` is built by `make packbuild` from Wikidata, Wikimedia pageviews, and the optional second datasets named on a prompt definition (`check: restcountries` or `check: pokeapi`). Sample pack: `packs/sample.json`. Prompt definitions are YAML under `packs/defs/`. A two-prompt acceptance fixture is in `packs/defs-sample/`.
+JSON packs under `packs/*.json` are loaded together when Supabase is not configured:
+
+| Pack | How to build | Source |
+| --- | --- | --- |
+| `core-v1.json` | `make packbuild` | Wikidata + pageviews (+ REST Countries / PokeAPI checks) |
+| `broad-v1.json` | `make packbuild-broad` | Static broad categories (programming languages, bands, fruit, NBA) |
+| `krillion-v1.json` | `make packbuild-krillion` | [Krillion](https://krillion.io) prompts & answer banks (used with permission) |
+| `sample.json` | hand-authored | Tiny local fixture |
+
+Prompt definitions: YAML under `packs/defs/` (Wikidata SPARQL) and `packs/defs-broad/` (static `entries:` lists). A two-prompt acceptance fixture is in `packs/defs-sample/`. Krillion day files land in `packs/import/krillion/` (gitignored); re-fetch with `make packbuild-krillion`.
 
 The server keeps one in-memory copy of the bank. On boot it loads that copy from Supabase when credentials are set, and from `packs/*.json` otherwise.
 

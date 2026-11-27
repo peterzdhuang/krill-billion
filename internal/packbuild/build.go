@@ -182,6 +182,9 @@ func packAttribution(pageviewsUsed, restUsed, pokeUsed bool, restDisagree, pokeD
 }
 
 func buildPrompt(ctx context.Context, def PromptDef, wd *WikidataClient, pv *PageviewsClient, checks *CheckClient) (*builtPrompt, error) {
+	if len(def.Entries) > 0 {
+		return buildStaticPrompt(def)
+	}
 	members, err := wd.Query(ctx, def.ID, def.SPARQL)
 	if err != nil {
 		return nil, err
@@ -319,6 +322,51 @@ func buildPrompt(ctx context.Context, def PromptDef, wd *WikidataClient, pv *Pag
 		check:         def.Check,
 		disagreed:     disagreed,
 		pageviewsUsed: pageviewsUsed,
+	}, nil
+}
+
+func buildStaticPrompt(def PromptDef) (*builtPrompt, error) {
+	entries := make([]data.Entry, 0, len(def.Entries))
+	seen := map[string]struct{}{}
+	for i, e := range def.Entries {
+		label := strings.TrimSpace(e.Label)
+		key := strings.ToLower(label)
+		if _, ok := seen[key]; ok {
+			continue
+		}
+		seen[key] = struct{}{}
+		id := fmt.Sprintf("static-%s-%d", def.ID, i+1)
+		aliases := make([]string, 0, len(e.Aliases))
+		for _, a := range e.Aliases {
+			a = strings.TrimSpace(a)
+			if a == "" || strings.EqualFold(a, label) {
+				continue
+			}
+			aliases = append(aliases, a)
+		}
+		entries = append(entries, data.Entry{
+			ID:      id,
+			Label:   label,
+			Aliases: aliases,
+			Rarity:  e.Rarity,
+		})
+	}
+	if len(entries) == 0 {
+		return nil, fmt.Errorf("no static entries")
+	}
+	sort.SliceStable(entries, func(i, j int) bool {
+		if entries[i].Rarity != entries[j].Rarity {
+			return entries[i].Rarity < entries[j].Rarity
+		}
+		return entries[i].ID < entries[j].ID
+	})
+	return &builtPrompt{
+		prompt: data.Prompt{
+			ID:       def.ID,
+			Category: def.Category,
+			Text:     def.Text,
+			Entries:  entries,
+		},
 	}, nil
 }
 

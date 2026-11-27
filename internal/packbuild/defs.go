@@ -11,22 +11,32 @@ import (
 
 // PromptDef is one prompt definition from packs/defs/*.yaml.
 // Check is an optional second membership list: "restcountries" or "pokeapi".
+// Static Entries skip Wikidata when SPARQL is empty.
 type PromptDef struct {
-	ID       string `yaml:"id"`
-	Category string `yaml:"category"`
-	Text     string `yaml:"text"`
-	SPARQL   string `yaml:"sparql"`
-	Check    string `yaml:"check"`
+	ID       string        `yaml:"id"`
+	Category string        `yaml:"category"`
+	Text     string        `yaml:"text"`
+	SPARQL   string        `yaml:"sparql"`
+	Check    string        `yaml:"check"`
+	Entries  []StaticEntry `yaml:"entries"`
+}
+
+// StaticEntry is a hand-authored answer used when SPARQL is omitted.
+type StaticEntry struct {
+	Label   string   `yaml:"label"`
+	Aliases []string `yaml:"aliases"`
+	Rarity  int      `yaml:"rarity"`
 }
 
 // DefFile is the on-disk YAML shape (single prompt or a list under prompts:).
 type DefFile struct {
-	ID       string      `yaml:"id"`
-	Category string      `yaml:"category"`
-	Text     string      `yaml:"text"`
-	SPARQL   string      `yaml:"sparql"`
-	Check    string      `yaml:"check"`
-	Prompts  []PromptDef `yaml:"prompts"`
+	ID       string        `yaml:"id"`
+	Category string        `yaml:"category"`
+	Text     string        `yaml:"text"`
+	SPARQL   string        `yaml:"sparql"`
+	Check    string        `yaml:"check"`
+	Entries  []StaticEntry `yaml:"entries"`
+	Prompts  []PromptDef   `yaml:"prompts"`
 }
 
 // LoadDefs reads all *.yaml / *.yml files under dir.
@@ -72,7 +82,7 @@ func loadDefFile(path string) ([]PromptDef, error) {
 		}
 		return f.Prompts, nil
 	}
-	p := PromptDef{ID: f.ID, Category: f.Category, Text: f.Text, SPARQL: f.SPARQL, Check: f.Check}
+	p := PromptDef{ID: f.ID, Category: f.Category, Text: f.Text, SPARQL: f.SPARQL, Check: f.Check, Entries: f.Entries}
 	if err := validateDef(p); err != nil {
 		return nil, fmt.Errorf("%s: %w", path, err)
 	}
@@ -89,13 +99,28 @@ func validateDef(p PromptDef) error {
 	if p.Text == "" {
 		return fmt.Errorf("missing text")
 	}
-	if strings.TrimSpace(p.SPARQL) == "" {
-		return fmt.Errorf("missing sparql")
+	hasSPARQL := strings.TrimSpace(p.SPARQL) != ""
+	if !hasSPARQL && len(p.Entries) == 0 {
+		return fmt.Errorf("missing sparql (or static entries)")
+	}
+	if hasSPARQL && len(p.Entries) > 0 {
+		return fmt.Errorf("sparql and static entries are mutually exclusive")
+	}
+	for i, e := range p.Entries {
+		if strings.TrimSpace(e.Label) == "" {
+			return fmt.Errorf("entries[%d]: missing label", i)
+		}
+		if e.Rarity < 0 || e.Rarity > 100 {
+			return fmt.Errorf("entries[%d]: rarity %d out of range", i, e.Rarity)
+		}
 	}
 	switch p.Check {
 	case "", "restcountries", "pokeapi":
 	default:
 		return fmt.Errorf("unknown check %q", p.Check)
+	}
+	if p.Check != "" && !hasSPARQL {
+		return fmt.Errorf("check requires sparql")
 	}
 	return nil
 }

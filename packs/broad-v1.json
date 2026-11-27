@@ -1,0 +1,1194 @@
+{
+  "pack_id": "broad-v1",
+  "version": 1,
+  "built_at": "2026-11-27T09:12:24Z",
+  "attribution": [
+    "Wikidata (CC0)"
+  ],
+  "prompts": [
+    {
+      "id": "fruit",
+      "category": "Food",
+      "text": "A fruit",
+      "entries": [
+        {
+          "id": "static-fruit-1",
+          "label": "Apple",
+          "aliases": [],
+          "rarity": 1
+        },
+        {
+          "id": "static-fruit-2",
+          "label": "Banana",
+          "aliases": [],
+          "rarity": 2
+        },
+        {
+          "id": "static-fruit-3",
+          "label": "Orange",
+          "aliases": [],
+          "rarity": 3
+        },
+        {
+          "id": "static-fruit-4",
+          "label": "Grape",
+          "aliases": [],
+          "rarity": 4
+        },
+        {
+          "id": "static-fruit-5",
+          "label": "Strawberry",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "static-fruit-8",
+          "label": "Watermelon",
+          "aliases": [],
+          "rarity": 6
+        },
+        {
+          "id": "static-fruit-32",
+          "label": "Tomato",
+          "aliases": [],
+          "rarity": 7
+        },
+        {
+          "id": "static-fruit-34",
+          "label": "Lemon",
+          "aliases": [],
+          "rarity": 8
+        },
+        {
+          "id": "static-fruit-6",
+          "label": "Mango",
+          "aliases": [],
+          "rarity": 8
+        },
+        {
+          "id": "static-fruit-9",
+          "label": "Peach",
+          "aliases": [],
+          "rarity": 9
+        },
+        {
+          "id": "static-fruit-7",
+          "label": "Pineapple",
+          "aliases": [],
+          "rarity": 10
+        },
+        {
+          "id": "static-fruit-10",
+          "label": "Pear",
+          "aliases": [],
+          "rarity": 11
+        },
+        {
+          "id": "static-fruit-11",
+          "label": "Cherry",
+          "aliases": [],
+          "rarity": 12
+        },
+        {
+          "id": "static-fruit-35",
+          "label": "Lime",
+          "aliases": [],
+          "rarity": 12
+        },
+        {
+          "id": "static-fruit-31",
+          "label": "Avocado",
+          "aliases": [],
+          "rarity": 13
+        },
+        {
+          "id": "static-fruit-12",
+          "label": "Blueberry",
+          "aliases": [],
+          "rarity": 14
+        },
+        {
+          "id": "static-fruit-13",
+          "label": "Raspberry",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "static-fruit-14",
+          "label": "Blackberry",
+          "aliases": [],
+          "rarity": 16
+        },
+        {
+          "id": "static-fruit-30",
+          "label": "Coconut",
+          "aliases": [],
+          "rarity": 17
+        },
+        {
+          "id": "static-fruit-15",
+          "label": "Kiwi",
+          "aliases": [
+            "Kiwifruit"
+          ],
+          "rarity": 18
+        },
+        {
+          "id": "static-fruit-39",
+          "label": "Plum",
+          "aliases": [],
+          "rarity": 18
+        },
+        {
+          "id": "static-fruit-33",
+          "label": "Olive",
+          "aliases": [],
+          "rarity": 19
+        },
+        {
+          "id": "static-fruit-29",
+          "label": "Pomegranate",
+          "aliases": [],
+          "rarity": 20
+        },
+        {
+          "id": "static-fruit-36",
+          "label": "Grapefruit",
+          "aliases": [],
+          "rarity": 21
+        },
+        {
+          "id": "static-fruit-16",
+          "label": "Papaya",
+          "aliases": [],
+          "rarity": 22
+        },
+        {
+          "id": "static-fruit-37",
+          "label": "Tangerine",
+          "aliases": [
+            "Mandarin"
+          ],
+          "rarity": 23
+        },
+        {
+          "id": "static-fruit-27",
+          "label": "Fig",
+          "aliases": [],
+          "rarity": 24
+        },
+        {
+          "id": "static-fruit-38",
+          "label": "Apricot",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "static-fruit-24",
+          "label": "Passion fruit",
+          "aliases": [
+            "Passionfruit"
+          ],
+          "rarity": 26
+        },
+        {
+          "id": "static-fruit-28",
+          "label": "Date",
+          "aliases": [],
+          "rarity": 27
+        },
+        {
+          "id": "static-fruit-17",
+          "label": "Guava",
+          "aliases": [],
+          "rarity": 28
+        },
+        {
+          "id": "static-fruit-40",
+          "label": "Nectarine",
+          "aliases": [],
+          "rarity": 29
+        },
+        {
+          "id": "static-fruit-23",
+          "label": "Dragon fruit",
+          "aliases": [
+            "Pitaya",
+            "Pitahaya"
+          ],
+          "rarity": 30
+        },
+        {
+          "id": "static-fruit-41",
+          "label": "Cranberry",
+          "aliases": [],
+          "rarity": 31
+        },
+        {
+          "id": "static-fruit-20",
+          "label": "Lychee",
+          "aliases": [
+            "Litchi"
+          ],
+          "rarity": 32
+        },
+        {
+          "id": "static-fruit-26",
+          "label": "Persimmon",
+          "aliases": [],
+          "rarity": 34
+        },
+        {
+          "id": "static-fruit-18",
+          "label": "Durian",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "static-fruit-52",
+          "label": "Jackfruit",
+          "aliases": [],
+          "rarity": 38
+        },
+        {
+          "id": "static-fruit-25",
+          "label": "Starfruit",
+          "aliases": [
+            "Carambola"
+          ],
+          "rarity": 40
+        },
+        {
+          "id": "static-fruit-42",
+          "label": "Gooseberry",
+          "aliases": [],
+          "rarity": 42
+        },
+        {
+          "id": "static-fruit-45",
+          "label": "Mulberry",
+          "aliases": [],
+          "rarity": 43
+        },
+        {
+          "id": "static-fruit-43",
+          "label": "Currant",
+          "aliases": [],
+          "rarity": 44
+        },
+        {
+          "id": "static-fruit-19",
+          "label": "Rambutan",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "static-fruit-44",
+          "label": "Elderberry",
+          "aliases": [],
+          "rarity": 46
+        },
+        {
+          "id": "static-fruit-57",
+          "label": "Tamarind",
+          "aliases": [],
+          "rarity": 47
+        },
+        {
+          "id": "static-fruit-22",
+          "label": "Mangosteen",
+          "aliases": [],
+          "rarity": 48
+        },
+        {
+          "id": "static-fruit-21",
+          "label": "Longan",
+          "aliases": [],
+          "rarity": 50
+        },
+        {
+          "id": "static-fruit-46",
+          "label": "Quince",
+          "aliases": [],
+          "rarity": 52
+        },
+        {
+          "id": "static-fruit-48",
+          "label": "Loquat",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "static-fruit-49",
+          "label": "Jujube",
+          "aliases": [
+            "Chinese date"
+          ],
+          "rarity": 58
+        },
+        {
+          "id": "static-fruit-51",
+          "label": "Breadfruit",
+          "aliases": [],
+          "rarity": 60
+        },
+        {
+          "id": "static-fruit-53",
+          "label": "Soursop",
+          "aliases": [
+            "Guanabana"
+          ],
+          "rarity": 62
+        },
+        {
+          "id": "static-fruit-54",
+          "label": "Cherimoya",
+          "aliases": [],
+          "rarity": 64
+        },
+        {
+          "id": "static-fruit-50",
+          "label": "Ackee",
+          "aliases": [],
+          "rarity": 65
+        },
+        {
+          "id": "static-fruit-56",
+          "label": "Feijoa",
+          "aliases": [
+            "Pineapple guava"
+          ],
+          "rarity": 66
+        },
+        {
+          "id": "static-fruit-55",
+          "label": "Sapote",
+          "aliases": [],
+          "rarity": 68
+        },
+        {
+          "id": "static-fruit-47",
+          "label": "Medlar",
+          "aliases": [],
+          "rarity": 70
+        },
+        {
+          "id": "static-fruit-58",
+          "label": "Horned melon",
+          "aliases": [
+            "Kiwano"
+          ],
+          "rarity": 72
+        },
+        {
+          "id": "static-fruit-59",
+          "label": "Buddha's hand",
+          "aliases": [
+            "Buddha hand",
+            "Fingered citron"
+          ],
+          "rarity": 75
+        }
+      ]
+    },
+    {
+      "id": "band",
+      "category": "Music",
+      "text": "A band",
+      "entries": [
+        {
+          "id": "static-band-1",
+          "label": "The Beatles",
+          "aliases": [
+            "Beatles"
+          ],
+          "rarity": 1
+        },
+        {
+          "id": "static-band-3",
+          "label": "Queen",
+          "aliases": [],
+          "rarity": 2
+        },
+        {
+          "id": "static-band-2",
+          "label": "The Rolling Stones",
+          "aliases": [
+            "Rolling Stones"
+          ],
+          "rarity": 3
+        },
+        {
+          "id": "static-band-4",
+          "label": "Led Zeppelin",
+          "aliases": [],
+          "rarity": 4
+        },
+        {
+          "id": "static-band-5",
+          "label": "Pink Floyd",
+          "aliases": [],
+          "rarity": 5
+        },
+        {
+          "id": "static-band-6",
+          "label": "Nirvana",
+          "aliases": [],
+          "rarity": 6
+        },
+        {
+          "id": "static-band-7",
+          "label": "Metallica",
+          "aliases": [],
+          "rarity": 7
+        },
+        {
+          "id": "static-band-34",
+          "label": "AC/DC",
+          "aliases": [
+            "ACDC"
+          ],
+          "rarity": 8
+        },
+        {
+          "id": "static-band-35",
+          "label": "U2",
+          "aliases": [],
+          "rarity": 9
+        },
+        {
+          "id": "static-band-8",
+          "label": "Radiohead",
+          "aliases": [],
+          "rarity": 10
+        },
+        {
+          "id": "static-band-36",
+          "label": "Coldplay",
+          "aliases": [],
+          "rarity": 11
+        },
+        {
+          "id": "static-band-32",
+          "label": "Black Sabbath",
+          "aliases": [],
+          "rarity": 12
+        },
+        {
+          "id": "static-band-39",
+          "label": "Red Hot Chili Peppers",
+          "aliases": [
+            "RHCP"
+          ],
+          "rarity": 12
+        },
+        {
+          "id": "static-band-38",
+          "label": "Foo Fighters",
+          "aliases": [],
+          "rarity": 13
+        },
+        {
+          "id": "static-band-33",
+          "label": "Iron Maiden",
+          "aliases": [],
+          "rarity": 14
+        },
+        {
+          "id": "static-band-37",
+          "label": "Imagine Dragons",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "static-band-12",
+          "label": "The Cure",
+          "aliases": [],
+          "rarity": 16
+        },
+        {
+          "id": "static-band-41",
+          "label": "Arctic Monkeys",
+          "aliases": [],
+          "rarity": 17
+        },
+        {
+          "id": "static-band-13",
+          "label": "Depeche Mode",
+          "aliases": [],
+          "rarity": 18
+        },
+        {
+          "id": "static-band-29",
+          "label": "Pixies",
+          "aliases": [],
+          "rarity": 20
+        },
+        {
+          "id": "static-band-56",
+          "label": "Björk",
+          "aliases": [
+            "Bjork"
+          ],
+          "rarity": 21
+        },
+        {
+          "id": "static-band-10",
+          "label": "Talking Heads",
+          "aliases": [],
+          "rarity": 22
+        },
+        {
+          "id": "static-band-54",
+          "label": "Massive Attack",
+          "aliases": [],
+          "rarity": 23
+        },
+        {
+          "id": "static-band-30",
+          "label": "The Velvet Underground",
+          "aliases": [
+            "Velvet Underground"
+          ],
+          "rarity": 24
+        },
+        {
+          "id": "static-band-40",
+          "label": "The Strokes",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "static-band-28",
+          "label": "Sonic Youth",
+          "aliases": [],
+          "rarity": 26
+        },
+        {
+          "id": "static-band-42",
+          "label": "Tame Impala",
+          "aliases": [],
+          "rarity": 27
+        },
+        {
+          "id": "static-band-9",
+          "label": "Arcade Fire",
+          "aliases": [],
+          "rarity": 28
+        },
+        {
+          "id": "static-band-51",
+          "label": "Aphex Twin",
+          "aliases": [],
+          "rarity": 29
+        },
+        {
+          "id": "static-band-11",
+          "label": "Joy Division",
+          "aliases": [],
+          "rarity": 30
+        },
+        {
+          "id": "static-band-55",
+          "label": "Portishead",
+          "aliases": [],
+          "rarity": 31
+        },
+        {
+          "id": "static-band-14",
+          "label": "Kraftwerk",
+          "aliases": [],
+          "rarity": 32
+        },
+        {
+          "id": "static-band-46",
+          "label": "Yes",
+          "aliases": [],
+          "rarity": 33
+        },
+        {
+          "id": "static-band-27",
+          "label": "Pavement",
+          "aliases": [],
+          "rarity": 34
+        },
+        {
+          "id": "static-band-24",
+          "label": "My Bloody Valentine",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "static-band-47",
+          "label": "King Crimson",
+          "aliases": [],
+          "rarity": 36
+        },
+        {
+          "id": "static-band-43",
+          "label": "King Gizzard \u0026 the Lizard Wizard",
+          "aliases": [
+            "King Gizzard"
+          ],
+          "rarity": 38
+        },
+        {
+          "id": "static-band-25",
+          "label": "Slowdive",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "static-band-53",
+          "label": "Burial",
+          "aliases": [],
+          "rarity": 41
+        },
+        {
+          "id": "static-band-22",
+          "label": "Explosions in the Sky",
+          "aliases": [],
+          "rarity": 42
+        },
+        {
+          "id": "static-band-23",
+          "label": "Mogwai",
+          "aliases": [],
+          "rarity": 44
+        },
+        {
+          "id": "static-band-21",
+          "label": "Godspeed You! Black Emperor",
+          "aliases": [
+            "GYBE",
+            "Godspeed You Black Emperor"
+          ],
+          "rarity": 45
+        },
+        {
+          "id": "static-band-26",
+          "label": "Ride",
+          "aliases": [],
+          "rarity": 46
+        },
+        {
+          "id": "static-band-50",
+          "label": "Boards of Canada",
+          "aliases": [],
+          "rarity": 47
+        },
+        {
+          "id": "static-band-15",
+          "label": "Can",
+          "aliases": [],
+          "rarity": 48
+        },
+        {
+          "id": "static-band-17",
+          "label": "Stereolab",
+          "aliases": [],
+          "rarity": 50
+        },
+        {
+          "id": "static-band-18",
+          "label": "Broadcast",
+          "aliases": [],
+          "rarity": 52
+        },
+        {
+          "id": "static-band-49",
+          "label": "Autechre",
+          "aliases": [],
+          "rarity": 54
+        },
+        {
+          "id": "static-band-16",
+          "label": "Neu!",
+          "aliases": [
+            "Neu"
+          ],
+          "rarity": 55
+        },
+        {
+          "id": "static-band-52",
+          "label": "Squarepusher",
+          "aliases": [],
+          "rarity": 56
+        },
+        {
+          "id": "static-band-19",
+          "label": "Tortoise",
+          "aliases": [],
+          "rarity": 58
+        },
+        {
+          "id": "static-band-20",
+          "label": "Slint",
+          "aliases": [],
+          "rarity": 60
+        },
+        {
+          "id": "static-band-48",
+          "label": "Soft Machine",
+          "aliases": [],
+          "rarity": 62
+        },
+        {
+          "id": "static-band-45",
+          "label": "Gentle Giant",
+          "aliases": [],
+          "rarity": 65
+        },
+        {
+          "id": "static-band-44",
+          "label": "Magma",
+          "aliases": [],
+          "rarity": 70
+        }
+      ]
+    },
+    {
+      "id": "nba-player",
+      "category": "NBA",
+      "text": "An NBA player",
+      "entries": [
+        {
+          "id": "static-nba-player-1",
+          "label": "LeBron James",
+          "aliases": [
+            "LeBron",
+            "King James"
+          ],
+          "rarity": 1
+        },
+        {
+          "id": "static-nba-player-11",
+          "label": "Michael Jordan",
+          "aliases": [
+            "MJ",
+            "Jordan"
+          ],
+          "rarity": 1
+        },
+        {
+          "id": "static-nba-player-12",
+          "label": "Kobe Bryant",
+          "aliases": [
+            "Kobe",
+            "Black Mamba"
+          ],
+          "rarity": 2
+        },
+        {
+          "id": "static-nba-player-2",
+          "label": "Stephen Curry",
+          "aliases": [
+            "Steph Curry",
+            "Curry"
+          ],
+          "rarity": 2
+        },
+        {
+          "id": "static-nba-player-3",
+          "label": "Kevin Durant",
+          "aliases": [
+            "KD"
+          ],
+          "rarity": 3
+        },
+        {
+          "id": "static-nba-player-4",
+          "label": "Giannis Antetokounmpo",
+          "aliases": [
+            "Giannis",
+            "Greek Freak"
+          ],
+          "rarity": 4
+        },
+        {
+          "id": "static-nba-player-5",
+          "label": "Nikola Jokic",
+          "aliases": [
+            "Jokic"
+          ],
+          "rarity": 5
+        },
+        {
+          "id": "static-nba-player-6",
+          "label": "Luka Doncic",
+          "aliases": [
+            "Luka",
+            "Doncic"
+          ],
+          "rarity": 6
+        },
+        {
+          "id": "static-nba-player-13",
+          "label": "Magic Johnson",
+          "aliases": [
+            "Magic"
+          ],
+          "rarity": 7
+        },
+        {
+          "id": "static-nba-player-14",
+          "label": "Larry Bird",
+          "aliases": [],
+          "rarity": 8
+        },
+        {
+          "id": "static-nba-player-7",
+          "label": "Jayson Tatum",
+          "aliases": [],
+          "rarity": 8
+        },
+        {
+          "id": "static-nba-player-8",
+          "label": "Joel Embiid",
+          "aliases": [],
+          "rarity": 9
+        },
+        {
+          "id": "static-nba-player-63",
+          "label": "Victor Wembanyama",
+          "aliases": [
+            "Wemby"
+          ],
+          "rarity": 10
+        },
+        {
+          "id": "static-nba-player-9",
+          "label": "Anthony Edwards",
+          "aliases": [
+            "Ant"
+          ],
+          "rarity": 10
+        },
+        {
+          "id": "static-nba-player-10",
+          "label": "Shai Gilgeous-Alexander",
+          "aliases": [
+            "SGA"
+          ],
+          "rarity": 11
+        },
+        {
+          "id": "static-nba-player-15",
+          "label": "Tim Duncan",
+          "aliases": [],
+          "rarity": 12
+        },
+        {
+          "id": "static-nba-player-58",
+          "label": "Kawhi Leonard",
+          "aliases": [
+            "Kawhi",
+            "The Klaw"
+          ],
+          "rarity": 12
+        },
+        {
+          "id": "static-nba-player-51",
+          "label": "Allen Iverson",
+          "aliases": [
+            "AI",
+            "The Answer"
+          ],
+          "rarity": 13
+        },
+        {
+          "id": "static-nba-player-16",
+          "label": "Dirk Nowitzki",
+          "aliases": [],
+          "rarity": 14
+        },
+        {
+          "id": "static-nba-player-55",
+          "label": "Chris Paul",
+          "aliases": [
+            "CP3"
+          ],
+          "rarity": 14
+        },
+        {
+          "id": "static-nba-player-48",
+          "label": "Yao Ming",
+          "aliases": [],
+          "rarity": 15
+        },
+        {
+          "id": "static-nba-player-57",
+          "label": "James Harden",
+          "aliases": [
+            "Harden",
+            "The Beard"
+          ],
+          "rarity": 15
+        },
+        {
+          "id": "static-nba-player-17",
+          "label": "Steve Nash",
+          "aliases": [],
+          "rarity": 16
+        },
+        {
+          "id": "static-nba-player-56",
+          "label": "Russell Westbrook",
+          "aliases": [
+            "Westbrook",
+            "Brodie"
+          ],
+          "rarity": 16
+        },
+        {
+          "id": "static-nba-player-50",
+          "label": "Vince Carter",
+          "aliases": [
+            "VC"
+          ],
+          "rarity": 17
+        },
+        {
+          "id": "static-nba-player-49",
+          "label": "Tracy McGrady",
+          "aliases": [
+            "T-Mac"
+          ],
+          "rarity": 18
+        },
+        {
+          "id": "static-nba-player-59",
+          "label": "Jimmy Butler",
+          "aliases": [],
+          "rarity": 18
+        },
+        {
+          "id": "static-nba-player-54",
+          "label": "Kevin Garnett",
+          "aliases": [
+            "KG"
+          ],
+          "rarity": 19
+        },
+        {
+          "id": "static-nba-player-52",
+          "label": "Ray Allen",
+          "aliases": [],
+          "rarity": 20
+        },
+        {
+          "id": "static-nba-player-53",
+          "label": "Paul Pierce",
+          "aliases": [],
+          "rarity": 21
+        },
+        {
+          "id": "static-nba-player-18",
+          "label": "Manu Ginobili",
+          "aliases": [
+            "Manu"
+          ],
+          "rarity": 22
+        },
+        {
+          "id": "static-nba-player-19",
+          "label": "Tony Parker",
+          "aliases": [],
+          "rarity": 24
+        },
+        {
+          "id": "static-nba-player-60",
+          "label": "Bam Adebayo",
+          "aliases": [],
+          "rarity": 25
+        },
+        {
+          "id": "static-nba-player-20",
+          "label": "Pau Gasol",
+          "aliases": [],
+          "rarity": 26
+        },
+        {
+          "id": "static-nba-player-61",
+          "label": "Tyrese Haliburton",
+          "aliases": [],
+          "rarity": 27
+        },
+        {
+          "id": "static-nba-player-35",
+          "label": "JR Smith",
+          "aliases": [
+            "J.R. Smith"
+          ],
+          "rarity": 28
+        },
+        {
+          "id": "static-nba-player-62",
+          "label": "Paolo Banchero",
+          "aliases": [],
+          "rarity": 29
+        },
+        {
+          "id": "static-nba-player-21",
+          "label": "Marc Gasol",
+          "aliases": [],
+          "rarity": 30
+        },
+        {
+          "id": "static-nba-player-36",
+          "label": "Metta World Peace",
+          "aliases": [
+            "Ron Artest"
+          ],
+          "rarity": 32
+        },
+        {
+          "id": "static-nba-player-38",
+          "label": "Robert Horry",
+          "aliases": [],
+          "rarity": 33
+        },
+        {
+          "id": "static-nba-player-34",
+          "label": "Nate Robinson",
+          "aliases": [],
+          "rarity": 34
+        },
+        {
+          "id": "static-nba-player-30",
+          "label": "Muggsy Bogues",
+          "aliases": [],
+          "rarity": 35
+        },
+        {
+          "id": "static-nba-player-31",
+          "label": "Manute Bol",
+          "aliases": [],
+          "rarity": 36
+        },
+        {
+          "id": "static-nba-player-24",
+          "label": "Vlade Divac",
+          "aliases": [],
+          "rarity": 38
+        },
+        {
+          "id": "static-nba-player-25",
+          "label": "Peja Stojakovic",
+          "aliases": [],
+          "rarity": 40
+        },
+        {
+          "id": "static-nba-player-23",
+          "label": "Arvydas Sabonis",
+          "aliases": [],
+          "rarity": 42
+        },
+        {
+          "id": "static-nba-player-26",
+          "label": "Toni Kukoc",
+          "aliases": [],
+          "rarity": 44
+        },
+        {
+          "id": "static-nba-player-22",
+          "label": "Drazen Petrovic",
+          "aliases": [],
+          "rarity": 45
+        },
+        {
+          "id": "static-nba-player-33",
+          "label": "Spud Webb",
+          "aliases": [],
+          "rarity": 46
+        },
+        {
+          "id": "static-nba-player-27",
+          "label": "Detlef Schrempf",
+          "aliases": [],
+          "rarity": 48
+        },
+        {
+          "id": "static-nba-player-29",
+          "label": "Mark Price",
+          "aliases": [],
+          "rarity": 50
+        },
+        {
+          "id": "static-nba-player-28",
+          "label": "Rik Smits",
+          "aliases": [],
+          "rarity": 52
+        },
+        {
+          "id": "static-nba-player-44",
+          "label": "Greg Oden",
+          "aliases": [],
+          "rarity": 53
+        },
+        {
+          "id": "static-nba-player-37",
+          "label": "Raja Bell",
+          "aliases": [],
+          "rarity": 54
+        },
+        {
+          "id": "static-nba-player-32",
+          "label": "Gheorghe Muresan",
+          "aliases": [],
+          "rarity": 55
+        },
+        {
+          "id": "static-nba-player-43",
+          "label": "Kwame Brown",
+          "aliases": [],
+          "rarity": 56
+        },
+        {
+          "id": "static-nba-player-45",
+          "label": "Andrea Bargnani",
+          "aliases": [],
+          "rarity": 57
+        },
+        {
+          "id": "static-nba-player-39",
+          "label": "Brian Scalabrine",
+          "aliases": [
+            "White Mamba"
+          ],
+          "rarity": 58
+        },
+        {
+          "id": "static-nba-player-40",
+          "label": "Darko Milicic",
+          "aliases": [],
+          "rarity": 60
+        },
+        {
+          "id": "static-nba-player-42",
+          "label": "Adam Morrison",
+          "aliases": [],
+          "rarity": 62
+        },
+        {
+          "id": "static-nba-player-46",
+          "label": "Yi Jianlian",
+          "aliases": [],
+          "rarity": 64
+        },
+        {
+          "id": "static-nba-player-41",
+          "label": "Hasheem Thabeet",
+          "aliases": [],
+          "rarity": 65
+        },
+        {
+          "id": "static-nba-player-47",
+          "label": "Wang Zhizhi",
+          "aliases": [],
+          "rarity": 70
+        }
+      ]
+    }
+  ]
+}
