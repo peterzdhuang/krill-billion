@@ -1,0 +1,101 @@
+prompts:
+  - id: tech-company
+    category: Tech companies
+    text: A tech company
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        VALUES ?item {
+          wd:Q2283 wd:Q312 wd:Q95 wd:Q3884 wd:Q380 wd:Q2013 wd:Q37033
+          wd:Q308991 wd:Q7414 wd:Q483551 wd:Q163261 wd:Q456084
+          wd:Q11422 wd:Q179200 wd:Q20800404 wd:Q355 wd:Q246065
+          wd:Q13916 wd:Q37156 wd:Q8092 wd:Q780712 wd:Q308962
+          wd:Q679182 wd:Q14001 wd:Q478214 wd:Q8072 wd:Q855124
+          wd:Q1630305 wd:Q191824 wd:Q4830453
+        }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: phone-company
+    category: Tech companies
+    text: A company that makes phones
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        VALUES ?item {
+          wd:Q312 wd:Q3884 wd:Q27978 wd:Q163261 wd:Q2013 wd:Q11422
+          wd:Q308991 wd:Q483551 wd:Q179200 wd:Q246065 wd:Q8092
+          wd:Q855124
+        }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: social-network-company
+    category: Tech companies
+    text: A social network company
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        VALUES ?item {
+          wd:Q380 wd:Q2013 wd:Q355 wd:Q1630305 wd:Q2283 wd:Q95
+          wd:Q246065 wd:Q179200 wd:Q308962 wd:Q4830453 wd:Q14001
+          wd:Q191824
+        }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: chip-company
+    category: Tech companies
+    text: A semiconductor company
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        VALUES ?item {
+          wd:Q182477 wd:Q11467 wd:Q475080 wd:Q209281 wd:Q7414 wd:Q1477735
+          wd:Q48911 wd:Q485046 wd:Q11422 wd:Q163261 wd:Q3884 wd:Q312
+        }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: streaming-company
+    category: Tech companies
+    text: A streaming / media tech company
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        VALUES ?item {
+          wd:Q907311 wd:Q163261 wd:Q95 wd:Q2283 wd:Q355 wd:Q179200
+          wd:Q246065 wd:Q8092 wd:Q483551 wd:Q191824 wd:Q308962 wd:Q14001
+        }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article

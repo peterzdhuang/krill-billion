@@ -11,4 +11,4 @@ test:
 	cd web && npm test --if-present
 
 packbuild:
-	go run ./cmd/packbuild
+	go run ./cmd/packbuild --defs packs/defs --out packs/core-v1.json

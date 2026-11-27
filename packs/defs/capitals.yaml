@@ -1,0 +1,94 @@
+prompts:
+  - id: national-capital
+    category: National capitals
+    text: A national capital
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?country wdt:P31 wd:Q3624078 ;
+                 wdt:P36 ?item .
+        FILTER NOT EXISTS { ?country wdt:P31 wd:Q3024240 }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: european-capital
+    category: National capitals
+    text: A European capital
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?country wdt:P31 wd:Q3624078 ;
+                 wdt:P30 wd:Q46 ;
+                 wdt:P36 ?item .
+        FILTER NOT EXISTS { ?country wdt:P31 wd:Q3024240 }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: asian-capital
+    category: National capitals
+    text: A capital in Asia
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?country wdt:P31 wd:Q3624078 ;
+                 wdt:P30 wd:Q48 ;
+                 wdt:P36 ?item .
+        FILTER NOT EXISTS { ?country wdt:P31 wd:Q3024240 }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: african-capital
+    category: National capitals
+    text: An African capital
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?country wdt:P31 wd:Q3624078 ;
+                 wdt:P30 wd:Q15 ;
+                 wdt:P36 ?item .
+        FILTER NOT EXISTS { ?country wdt:P31 wd:Q3024240 }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: south-american-capital
+    category: National capitals
+    text: A South American capital
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        ?country wdt:P31 wd:Q3624078 ;
+                 wdt:P30 wd:Q18 ;
+                 wdt:P36 ?item .
+        FILTER NOT EXISTS { ?country wdt:P31 wd:Q3024240 }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article

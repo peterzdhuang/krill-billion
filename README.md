@@ -23,12 +23,16 @@ Open http://localhost:3000. Health check: `curl http://localhost:8080/healthz` â
 
 ## Packs
 
-Question packs live in `packs/*.json`. Sample pack: `packs/sample.json`.
+Question packs live in `packs/*.json`. Main pack: `packs/core-v1.json`. Sample: `packs/sample.json`.
 
-Rebuild packs (after #3):
+Prompt definitions for the builder are YAML under `packs/defs/`. A two-prompt acceptance fixture is in `packs/defs-sample/`.
+
+Rebuild packs:
 
 ```bash
 make packbuild
+# or: go run ./cmd/packbuild --defs packs/defs --out packs/core-v1.json
+# flags: --only <prompt id>  --offline  --cache .packbuild-cache
 ```
 
 ## Tests

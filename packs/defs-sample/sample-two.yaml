@@ -1,0 +1,35 @@
+# Two-prompt sample for packbuild acceptance (#3).
+prompts:
+  - id: noble-gas
+    category: Chemical elements
+    text: A noble gas
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        VALUES ?item { wd:Q560 wd:Q654 wd:Q696 wd:Q888 wd:Q1106 wd:Q1133 wd:Q1307 }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
+
+  - id: solar-planet
+    category: Planets and moons
+    text: A planet in the Solar System
+    sparql: |
+      SELECT ?item ?itemLabel ?article (GROUP_CONCAT(DISTINCT ?alias; separator="|") AS ?aliases) WHERE {
+        VALUES ?item {
+          wd:Q2 wd:Q313 wd:Q308 wd:Q111 wd:Q319 wd:Q193 wd:Q324 wd:Q332
+        }
+        ?article schema:about ?item ;
+                 schema:isPartOf <https://en.wikipedia.org/> .
+        OPTIONAL {
+          ?item skos:altLabel ?alias .
+          FILTER(LANG(?alias) = "en")
+        }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+      }
+      GROUP BY ?item ?itemLabel ?article
