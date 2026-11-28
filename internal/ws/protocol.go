@@ -141,6 +141,7 @@ type SideAnswerData struct {
 type RoundResultData struct {
 	Round       int               `json:"round"`
 	SuddenDeath bool              `json:"sudden_death"`
+	Prompt      PromptInfo        `json:"prompt"`
 	Sides       [2]SideAnswerData `json:"sides"`
 	Damage      int               `json:"damage"`
 	Gap         int               `json:"gap"`

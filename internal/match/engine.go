@@ -288,6 +288,11 @@ func (e *Engine) resolveAnswering() {
 	var out RoundOutcome
 	out.Round = e.round
 	out.SuddenDeath = e.suddenDeath
+	out.Prompt = RoundPrompt{
+		ID:       e.prompt.ID,
+		Text:     e.prompt.Text,
+		Category: e.prompt.Category,
+	}
 	out.Sides = sides
 
 	if e.suddenDeath {

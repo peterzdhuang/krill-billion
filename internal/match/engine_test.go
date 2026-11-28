@@ -160,6 +160,29 @@ func TestCapEqualHPSuddenDeathDraw(t *testing.T) {
 	}
 }
 
+func TestRoundResultIncludesPrompt(t *testing.T) {
+	clock := NewFakeClock(time.Unix(0, 0).UTC())
+	ev := &recordingEvents{}
+	eng := NewEngine(clock, &tieStore{}, ev)
+	eng.AddPlayer(Player{ID: "a", Seat: SeatA1, DisplayName: "A", Side: 0})
+	eng.AddPlayer(Player{ID: "b", Seat: SeatB1, DisplayName: "B", Side: 1})
+	eng.Start()
+
+	prompt := eng.Prompt()
+	eng.OnDraft("a", "Alpha")
+	eng.OnDraft("b", "Alpha")
+	eng.OnLock("a")
+	eng.OnLock("b")
+
+	if len(ev.results) != 1 {
+		t.Fatalf("results = %d, want 1", len(ev.results))
+	}
+	got := ev.results[0].Prompt
+	if got.ID != prompt.ID || got.Text != prompt.Text || got.Category != prompt.Category {
+		t.Fatalf("prompt = %+v, want id/text/category from %+v", got, prompt)
+	}
+}
+
 func TestLockRejectsUnknown(t *testing.T) {
 	clock := NewFakeClock(time.Unix(0, 0).UTC())
 	ev := &recordingEvents{}
