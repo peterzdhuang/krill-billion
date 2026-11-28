@@ -6,7 +6,6 @@ export type ClientMessageType =
   | "ready"
   | "start"
   | "set_mode"
-  | "draft"
   | "lock"
   | "ping";
 
@@ -14,7 +13,6 @@ export type ServerMessageType =
   | "lobby_state"
   | "room_state"
   | "round_start"
-  | "teammate_draft"
   | "locked"
   | "round_result"
   | "match_end"
@@ -38,8 +36,8 @@ export type ClaimSeatData = { seat: string };
 export type ReadyData = Record<string, never>;
 export type StartData = Record<string, never>;
 export type SetModeData = { mode: "1v1" | "2v2" };
-export type DraftData = { text: string };
-export type LockData = Record<string, never>;
+/** Answer text travels only on lock (Enter) or final submit at the deadline. */
+export type LockData = { text: string };
 export type PingData = Record<string, never>;
 
 export type SeatState = {
@@ -92,7 +90,6 @@ export type RoundStartData = {
   sudden_death: boolean;
 };
 
-export type TeammateDraftData = { seat: string; text: string };
 export type LockedData = { seat: string };
 
 export type SideAnswerData = {
@@ -133,7 +130,6 @@ export type ErrorData = {
     | "not_ready"
     | "bad_phase"
     | "duplicate_answer"
-    | "rate_limited"
     | string;
   message: string;
 };
@@ -144,5 +140,4 @@ export const ErrorCodes = {
   not_ready: "not_ready",
   bad_phase: "bad_phase",
   duplicate_answer: "duplicate_answer",
-  rate_limited: "rate_limited",
 } as const;

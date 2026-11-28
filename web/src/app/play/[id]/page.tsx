@@ -20,7 +20,6 @@ import {
   loadHostToken,
   loadReconnectToken,
   saveReconnect,
-  useDraftThrottle,
   useGameSocket,
 } from "@/lib/ws";
 
@@ -138,6 +137,8 @@ export default function PlayPage() {
         }
         case "error": {
           const d = env.data as ErrorData;
+          // rate_limited is a dead path (no per-keystroke drafts); never toast it.
+          if (d.code === "rate_limited") break;
           if (d.code === "not_in_bank") {
             playSfx("reject");
             setAnswerError(d.message || "not in this category");
@@ -174,12 +175,14 @@ export default function PlayPage() {
     });
   }, [connected, nameReady, joined, lobbyId, name, send]);
 
-  const { draft: sendDraft, flushNow } = useDraftThrottle(send);
-
+  // Local typing only — nothing is sent until Enter lock or deadline submit.
   const onDraftChange = (text: string) => {
     setDraft(text);
     setAnswerError(null);
-    if (!locked) sendDraft(text);
+  };
+
+  const sendLock = (text: string) => {
+    send({ type: "lock", data: { text } });
   };
 
   const submitName = () => {
@@ -266,10 +269,8 @@ export default function PlayPage() {
           opponentLocked={opponentLocked}
           fieldError={answerError}
           onDraft={onDraftChange}
-          onLock={() => {
-            flushNow();
-            send({ type: "lock", data: {} });
-          }}
+          onLock={() => sendLock(draft)}
+          onTimeoutSubmit={(text) => sendLock(text)}
           onRematch={() => {
             setInMatch(false);
             setMatchEnd(null);

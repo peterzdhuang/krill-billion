@@ -46,6 +46,7 @@ export function MatchScreen({
   fieldError,
   onDraft,
   onLock,
+  onTimeoutSubmit,
   onRematch,
 }: {
   room: RoomStateData | null;
@@ -59,14 +60,16 @@ export function MatchScreen({
   fieldError?: string | null;
   onDraft: (text: string) => void;
   onLock: () => void;
+  /** Final submit at deadline so the server can accept text within grace. */
+  onTimeoutSubmit: (text: string) => void;
   onRematch: () => void;
 }) {
   const draftRef = useRef(draft);
   const lockedRef = useRef(locked);
-  const onLockRef = useRef(onLock);
+  const onTimeoutSubmitRef = useRef(onTimeoutSubmit);
   draftRef.current = draft;
   lockedRef.current = locked;
-  onLockRef.current = onLock;
+  onTimeoutSubmitRef.current = onTimeoutSubmit;
   const mySide = sideOf(yourSeat);
   const paused = room?.phase === "paused";
   const [revealStage, setRevealStage] = useState<RevealStage>("idle");
@@ -226,9 +229,8 @@ export function MatchScreen({
             phase={room?.phase}
             onTimeout={() => {
               if (lockedRef.current) return;
-              if (!draftRef.current.trim()) return;
               playSfx("submit");
-              onLockRef.current();
+              onTimeoutSubmitRef.current(draftRef.current);
             }}
           />
           <h2 className="mt-2 text-4xl text-cyan-glow sm:text-5xl">

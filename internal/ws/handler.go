@@ -151,18 +151,13 @@ func (h *Handler) readLoop(ctx context.Context, conn *Conn, room *lobby.Room, lo
 			if code, msg := room.Start(conn.PlayerID()); code != "" {
 				conn.Send(TypeError, ErrorData{Code: code, Message: msg})
 			}
-		case TypeDraft:
-			if !joined {
-				continue
-			}
-			var d DraftData
-			_ = json.Unmarshal(raw, &d)
-			room.Draft(conn.PlayerID(), d.Text)
 		case TypeLock:
 			if !joined {
 				continue
 			}
-			room.Lock(conn.PlayerID())
+			var d LockData
+			_ = json.Unmarshal(raw, &d)
+			room.Lock(conn.PlayerID(), d.Text)
 		default:
 			// ignore unknown / illegal
 		}
