@@ -50,82 +50,116 @@ func TestSamplePackParses(t *testing.T) {
 	}
 }
 
-func TestCorePackLoads(t *testing.T) {
+func TestSampleExcludedFromLoad(t *testing.T) {
 	_, file, _, ok := runtime.Caller(0)
 	if !ok {
 		t.Fatal("runtime.Caller failed")
 	}
 	dir := filepath.Join(filepath.Dir(file), "..", "..", "packs")
+	// Ensure sample.json alone is ignored when no other packs exist by loading
+	// via NewFromPacks after reading sample — Load skips sample.json by name.
 	store, err := Load(dir)
 	if err != nil {
 		t.Fatalf("Load: %v", err)
 	}
-	// sample (2) + core (84) + broad (4) + krillion (~100+)
-	if store.PromptCount() < 200 {
-		t.Fatalf("prompts = %d, want sample+core+broad+krillion", store.PromptCount())
+	if _, ok := store.Prompt("sample-country"); ok {
+		t.Fatal("sample-country should not load from packs/ via Load")
 	}
+	_ = store
+}
 
-	b, err := os.ReadFile(filepath.Join(dir, "core-v1.json"))
+func TestNewFromPacksIndexes(t *testing.T) {
+	store, err := NewFromPacks(Pack{
+		PackID: "t",
+		Prompts: []Prompt{{
+			ID: "p", Text: "A thing", Category: "T",
+			Entries: []Entry{
+				{ID: "1", Label: "Alpha", Aliases: []string{"A"}, Rarity: 1},
+				{ID: "2", Label: "Beta", Rarity: 50},
+			},
+		}},
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	var pack Pack
-	if err := json.Unmarshal(b, &pack); err != nil {
-		t.Fatal(err)
+	if store.PromptCount() != 1 || store.EntryCount() != 2 {
+		t.Fatalf("counts prompts=%d entries=%d", store.PromptCount(), store.EntryCount())
 	}
-	if pack.PackID != "core-v1" {
-		t.Fatalf("pack_id = %q", pack.PackID)
+	id, ok := store.Match("p", "a")
+	if !ok || id != "1" {
+		t.Fatalf("Match alias = (%q,%v)", id, ok)
 	}
-	if len(pack.Prompts) != 84 {
-		t.Fatalf("prompts = %d, want 84", len(pack.Prompts))
-	}
+}
 
-	kb, err := os.ReadFile(filepath.Join(dir, "krillion-v1.json"))
+func TestCoreDefsStillPresent(t *testing.T) {
+	_, file, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatal("runtime.Caller failed")
+	}
+	// Legacy narrow packs may be gitignored; defs must remain rebuildable.
+	defsDir := filepath.Join(filepath.Dir(file), "..", "..", "packs", "defs")
+	entries, err := os.ReadDir(defsDir)
 	if err != nil {
 		t.Fatal(err)
 	}
-	var kpack Pack
-	if err := json.Unmarshal(kb, &kpack); err != nil {
+	n := 0
+	for _, e := range entries {
+		if strings.HasSuffix(strings.ToLower(e.Name()), ".yaml") || strings.HasSuffix(strings.ToLower(e.Name()), ".yml") {
+			n++
+		}
+	}
+	if n < 10 {
+		t.Fatalf("defs yaml files = %d, want many", n)
+	}
+}
+
+func TestShippedPackMinEntries(t *testing.T) {
+	_, file, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatal("runtime.Caller failed")
+	}
+	dir := filepath.Join(filepath.Dir(file), "..", "..", "packs")
+	entries, err := os.ReadDir(dir)
+	if err != nil {
 		t.Fatal(err)
 	}
-	if kpack.PackID != "krillion-v1" {
-		t.Fatalf("krillion pack_id = %q", kpack.PackID)
-	}
-	if len(kpack.Prompts) < 100 {
-		t.Fatalf("krillion prompts = %d, want >= 100", len(kpack.Prompts))
-	}
-	attrK := strings.Join(kpack.Attribution, "\n")
-	if !strings.Contains(attrK, "Krillion") {
-		t.Fatalf("krillion attribution missing Krillion: %v", kpack.Attribution)
-	}
-	byCat := map[string]int{}
-	for _, p := range pack.Prompts {
-		byCat[p.Category]++
-	}
-	for _, cat := range []string{
-		"Cat breeds", "Currencies", "Constellations", "US states",
-		"Musical instruments", "Video game consoles", "Greek deities",
-		"Gemstones", "Cheeses", "Car manufacturers",
-	} {
-		if byCat[cat] < 3 {
-			t.Fatalf("category %q has %d prompts", cat, byCat[cat])
+	checked := 0
+	for _, e := range entries {
+		name := e.Name()
+		lower := strings.ToLower(name)
+		if e.IsDir() || lower == "sample.json" {
+			continue
 		}
-	}
-	attr := strings.Join(pack.Attribution, "\n")
-	for _, want := range []string{"Wikidata (CC0)", "Wikimedia Pageviews API", "REST Countries", "PokeAPI"} {
-		if !strings.Contains(attr, want) {
-			t.Fatalf("attribution missing %q: %v", want, pack.Attribution)
+		if !strings.HasSuffix(lower, ".json") && !strings.HasSuffix(lower, ".json.gz") {
+			continue
 		}
-	}
-	for _, p := range pack.Prompts {
-		if len(p.Entries) == 0 {
-			t.Fatalf("prompt %s has no entries", p.ID)
+		pack, err := loadPackFile(filepath.Join(dir, name))
+		if err != nil {
+			t.Fatalf("%s: %v", name, err)
 		}
-		for i := 1; i < len(p.Entries); i++ {
-			a, b := p.Entries[i-1], p.Entries[i]
-			if a.Rarity > b.Rarity || (a.Rarity == b.Rarity && a.ID > b.ID) {
-				t.Fatalf("prompt %s entries not ordered at %s", p.ID, b.ID)
+		if pack.PackID == "sample" || pack.PackID == "broad-v1" || pack.PackID == "core-v1" {
+			// Legacy/narrow packs: skip min-entries gate (may be absent or pruned).
+			continue
+		}
+		for _, p := range pack.Prompts {
+			if len(p.Entries) < 10000 {
+				t.Fatalf("%s prompt %s has %d entries, want >= 10000", name, p.ID, len(p.Entries))
+			}
+			checked++
+		}
+		attr := strings.Join(pack.Attribution, "\n")
+		if pack.PackID == "krillion-v1" && !strings.Contains(attr, "Krillion") {
+			t.Fatalf("krillion attribution missing: %v", pack.Attribution)
+		}
+		if pack.PackID == "deep-v1" {
+			for _, want := range []string{"Wikidata", "GeoNames", "IMDb", "Open Food Facts"} {
+				if !strings.Contains(attr, want) {
+					t.Fatalf("deep attribution missing %q: %v", want, pack.Attribution)
+				}
 			}
 		}
+	}
+	if checked == 0 {
+		t.Skip("no deep/krillion shipped packs present yet (rebuild with packbuild)")
 	}
 }

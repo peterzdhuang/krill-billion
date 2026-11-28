@@ -1,58 +1,99 @@
 package data
 
 import (
+	"compress/gzip"
 	"encoding/json"
 	"fmt"
+	"io"
 	"math/rand"
 	"os"
 	"path/filepath"
+	"runtime"
 	"sort"
 	"strings"
 )
 
-// indexedEntry holds an entry plus precomputed normalized forms for matching.
+// indexedEntry holds an entry. Aliases are folded into exact/byLen at index
+// time and not retained, cutting RAM on multi‑million‑entry banks.
 type indexedEntry struct {
-	Entry
-	norms []string // normalized label + aliases (deduped)
+	ID     string
+	Label  string
+	Rarity int
 }
 
 // bucketNorm is one precomputed normalized form, keyed by rune length for
-// fuzzy scans. runes are stored so Match avoids re-decoding on every compare.
+// fuzzy scans. The string is interned and shared with exact/norms.
 type bucketNorm struct {
-	runes    []rune
+	norm     string
 	entryIdx int
 }
 
 type indexedPrompt struct {
-	Prompt
-	entries []indexedEntry
+	ID       string
+	Category string
+	Text     string
+	entries  []indexedEntry
 	// exact maps normalized form -> entry index (first wins at load).
 	exact map[string]int
 	// byLen buckets normalized forms by rune length for fuzzy matching.
 	byLen map[int][]bucketNorm
 }
 
-// Store holds all loaded packs in memory for matching and prompt selection.
-type Store struct {
-	packs   []Pack
-	prompts map[string]*indexedPrompt // prompt id -> prompt
-	order   []string                  // prompt ids in load order
+type packMeta struct {
+	PackID      string
+	Version     int
+	BuiltAt     string
+	Attribution []string
+	PromptCount int
 }
 
-// Load reads every *.json pack under dir, validates them, and builds a Store.
-// On any invalid pack it returns a clear error suitable for aborting boot.
+// Store holds all loaded packs in memory for matching and prompt selection.
+type Store struct {
+	packs   []packMeta
+	prompts map[string]*indexedPrompt // prompt id -> prompt
+	order   []string                  // prompt ids in load order
+	intern  *stringIntern
+}
+
+// Load reads every *.json / *.json.gz pack under dir (skips nested dirs and
+// files named sample.json so the tiny fixture is not mixed into production).
 func Load(dir string) (*Store, error) {
 	entries, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, fmt.Errorf("read pack dir %q: %w", dir, err)
 	}
 
-	var jsonFiles []string
+	haveJSON := map[string]struct{}{}
 	for _, e := range entries {
-		if e.IsDir() || !strings.HasSuffix(strings.ToLower(e.Name()), ".json") {
+		if e.IsDir() {
 			continue
 		}
-		jsonFiles = append(jsonFiles, e.Name())
+		lower := strings.ToLower(e.Name())
+		if strings.HasSuffix(lower, ".json") && !strings.HasSuffix(lower, ".json.gz") {
+			haveJSON[lower] = struct{}{}
+		}
+	}
+	var jsonFiles []string
+	for _, e := range entries {
+		if e.IsDir() {
+			continue
+		}
+		name := e.Name()
+		lower := strings.ToLower(name)
+		if lower == "sample.json" {
+			continue
+		}
+		switch {
+		case strings.HasSuffix(lower, ".json.gz"):
+			// Prefer uncompressed twin when both exist.
+			base := strings.TrimSuffix(lower, ".gz")
+			if _, ok := haveJSON[base]; ok {
+				continue
+			}
+			jsonFiles = append(jsonFiles, name)
+		case strings.HasSuffix(lower, ".json"):
+			jsonFiles = append(jsonFiles, name)
+		}
 	}
 	sort.Strings(jsonFiles)
 
@@ -72,6 +113,7 @@ func Load(dir string) (*Store, error) {
 func NewFromPacks(packs ...Pack) (*Store, error) {
 	s := &Store{
 		prompts: make(map[string]*indexedPrompt),
+		intern:  newStringIntern(1 << 20),
 	}
 	promptSeen := make(map[string]string) // prompt id -> pack id
 	for _, pack := range packs {
@@ -81,18 +123,34 @@ func NewFromPacks(packs ...Pack) (*Store, error) {
 		if err := s.indexPack(pack, promptSeen); err != nil {
 			return nil, fmt.Errorf("pack %q: %w", pack.PackID, err)
 		}
-		s.packs = append(s.packs, pack)
+		s.packs = append(s.packs, packMeta{
+			PackID:      pack.PackID,
+			Version:     pack.Version,
+			BuiltAt:     pack.BuiltAt,
+			Attribution: pack.Attribution,
+			PromptCount: len(pack.Prompts),
+		})
 	}
 	return s, nil
 }
 
 func loadPackFile(path string) (Pack, error) {
-	b, err := os.ReadFile(path)
+	f, err := os.Open(path)
 	if err != nil {
 		return Pack{}, fmt.Errorf("read pack %q: %w", path, err)
 	}
+	defer f.Close()
+	var r io.Reader = f
+	if strings.HasSuffix(strings.ToLower(path), ".gz") {
+		gz, err := gzip.NewReader(f)
+		if err != nil {
+			return Pack{}, fmt.Errorf("gunzip pack %q: %w", path, err)
+		}
+		defer gz.Close()
+		r = gz
+	}
 	var pack Pack
-	if err := json.Unmarshal(b, &pack); err != nil {
+	if err := json.NewDecoder(r).Decode(&pack); err != nil {
 		return Pack{}, fmt.Errorf("parse pack %q: %w", path, err)
 	}
 	if pack.PackID == "" {
@@ -112,7 +170,7 @@ func (s *Store) indexPack(pack Pack, promptSeen map[string]string) error {
 		if p.Text == "" {
 			return fmt.Errorf("prompt %q: empty text", p.ID)
 		}
-		ip, err := indexPrompt(p)
+		ip, err := s.indexPrompt(p)
 		if err != nil {
 			return err
 		}
@@ -123,12 +181,14 @@ func (s *Store) indexPack(pack Pack, promptSeen map[string]string) error {
 	return nil
 }
 
-func indexPrompt(p Prompt) (*indexedPrompt, error) {
+func (s *Store) indexPrompt(p Prompt) (*indexedPrompt, error) {
 	ip := &indexedPrompt{
-		Prompt:  p,
-		entries: make([]indexedEntry, 0, len(p.Entries)),
-		exact:   make(map[string]int),
-		byLen:   make(map[int][]bucketNorm),
+		ID:       s.intern.Get(p.ID),
+		Category: s.intern.Get(p.Category),
+		Text:     s.intern.Get(p.Text),
+		entries:  make([]indexedEntry, 0, len(p.Entries)),
+		exact:    make(map[string]int, len(p.Entries)*2),
+		byLen:    make(map[int][]bucketNorm),
 	}
 	entrySeen := make(map[string]struct{})
 	for _, e := range p.Entries {
@@ -146,9 +206,13 @@ func indexPrompt(p Prompt) (*indexedPrompt, error) {
 			return nil, fmt.Errorf("prompt %q: entry %q rarity %d out of range 0-100", p.ID, e.ID, e.Rarity)
 		}
 
-		norms := uniqueNorms(e.Label, e.Aliases)
+		norms := uniqueNorms(e.Label, e.Aliases, s.intern)
 		entryIdx := len(ip.entries)
-		ie := indexedEntry{Entry: e, norms: norms}
+		ie := indexedEntry{
+			ID:     s.intern.Get(e.ID),
+			Label:  s.intern.Get(e.Label),
+			Rarity: e.Rarity,
+		}
 		ip.entries = append(ip.entries, ie)
 		for _, n := range norms {
 			if n == "" {
@@ -156,18 +220,19 @@ func indexPrompt(p Prompt) (*indexedPrompt, error) {
 			}
 			if _, exists := ip.exact[n]; !exists {
 				ip.exact[n] = entryIdx
+				// Only index the first owner of a norm into byLen (same as exact).
+				nLen := len([]rune(n))
+				ip.byLen[nLen] = append(ip.byLen[nLen], bucketNorm{
+					norm:     n,
+					entryIdx: entryIdx,
+				})
 			}
-			runes := []rune(n)
-			ip.byLen[len(runes)] = append(ip.byLen[len(runes)], bucketNorm{
-				runes:    runes,
-				entryIdx: entryIdx,
-			})
 		}
 	}
 	return ip, nil
 }
 
-func uniqueNorms(label string, aliases []string) []string {
+func uniqueNorms(label string, aliases []string, intern *stringIntern) []string {
 	seen := make(map[string]struct{})
 	var out []string
 	add := func(raw string) {
@@ -179,6 +244,9 @@ func uniqueNorms(label string, aliases []string) []string {
 			return
 		}
 		seen[n] = struct{}{}
+		if intern != nil {
+			n = intern.Get(n)
+		}
 		out = append(out, n)
 	}
 	add(label)
@@ -204,13 +272,25 @@ func (s *Store) PackCount() int {
 	return len(s.packs)
 }
 
-// Prompt returns a prompt by id.
+// EntryCount returns the total number of answer entries across all prompts.
+func (s *Store) EntryCount() int {
+	if s == nil {
+		return 0
+	}
+	n := 0
+	for _, id := range s.order {
+		n += len(s.prompts[id].entries)
+	}
+	return n
+}
+
+// Prompt returns a prompt by id (without the full entry list — use Entry/Match).
 func (s *Store) Prompt(id string) (Prompt, bool) {
 	ip, ok := s.prompts[id]
 	if !ok {
 		return Prompt{}, false
 	}
-	return ip.Prompt, true
+	return Prompt{ID: ip.ID, Category: ip.Category, Text: ip.Text}, true
 }
 
 // Entry returns an entry by prompt id and entry id.
@@ -221,7 +301,7 @@ func (s *Store) Entry(promptID, entryID string) (Entry, bool) {
 	}
 	for _, e := range ip.entries {
 		if e.ID == entryID {
-			return e.Entry, true
+			return Entry{ID: e.ID, Label: e.Label, Rarity: e.Rarity}, true
 		}
 	}
 	return Entry{}, false
@@ -247,6 +327,7 @@ func (s *Store) EntryTier(promptID, entryID string) (Tier, bool) {
 
 // RandomPrompts returns up to n prompts whose ids are not in exclude.
 // Selection is without replacement within the returned slice.
+// Returned prompts omit Entries (clients only need id/text/category).
 func (s *Store) RandomPrompts(n int, exclude []string) []Prompt {
 	if s == nil || n <= 0 {
 		return nil
@@ -271,7 +352,16 @@ func (s *Store) RandomPrompts(n int, exclude []string) []Prompt {
 	}
 	out := make([]Prompt, 0, n)
 	for _, id := range pool[:n] {
-		out = append(out, s.prompts[id].Prompt)
+		ip := s.prompts[id]
+		out = append(out, Prompt{ID: ip.ID, Category: ip.Category, Text: ip.Text})
 	}
 	return out
+}
+
+// HeapInUseMB returns approximate heap in-use after a GC, for sizing reports.
+func HeapInUseMB() float64 {
+	runtime.GC()
+	var m runtime.MemStats
+	runtime.ReadMemStats(&m)
+	return float64(m.HeapInuse) / (1024 * 1024)
 }

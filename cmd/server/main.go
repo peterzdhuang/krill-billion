@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/peterzdhuang/krill-billion/internal/data"
 	"github.com/peterzdhuang/krill-billion/internal/lobby"
 	"github.com/peterzdhuang/krill-billion/internal/match"
 	"github.com/peterzdhuang/krill-billion/internal/supabank"
@@ -19,7 +20,7 @@ func main() {
 	if packsDir == "" {
 		packsDir = "./packs"
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 45*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	store, source, err := supabank.LoadStore(ctx, packsDir)
 	cancel()
 	if err != nil {
@@ -28,7 +29,8 @@ func main() {
 	if source == "json-fallback" {
 		log.Printf("supabase answer bank is empty; using JSON packs in %s", packsDir)
 	}
-	log.Printf("loaded %d prompts from %d packs (%s)", store.PromptCount(), store.PackCount(), source)
+	log.Printf("loaded %d prompts / %d entries from %d packs (%s); heap≈%.0f MiB",
+		store.PromptCount(), store.EntryCount(), store.PackCount(), source, data.HeapInUseMB())
 
 	frontendOrigin := strings.TrimSpace(os.Getenv("FRONTEND_ORIGIN"))
 	reg := lobby.NewRegistry(store, match.RealClock{})

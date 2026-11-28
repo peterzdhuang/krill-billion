@@ -24,10 +24,19 @@ import (
 const (
 	krillionIOBase   = "https://krillion.io"
 	krillionGameBase = "https://krillion-game.com"
-	// Per-prompt cap keeps the committed JSON pack git-friendly while still
-	// leaving thousands of niche answers on broad prompts.
-	krillionMaxEntries = 2500
+	// krillionMaxEntries caps answers per prompt when > 0. Zero means keep all
+	// answers (preferred for the deep bank; large JSON is gitignored / gzipped).
+	krillionMaxEntries = 0
 )
+
+// KrillionBuildOptions controls aggregation of dated Krillion reveal files.
+type KrillionBuildOptions struct {
+	ImportDir  string
+	OutPath    string
+	PackID     string
+	MaxEntries int // 0 = DefaultMaxEntries; negative = unlimited
+	MinEntries int // 0 = keep all prompts
+}
 
 // KrillionDay is one dated reveal in the shape of krillion.io/api/reveal.
 type KrillionDay struct {
@@ -133,6 +142,19 @@ func FetchKrillion(ctx context.Context, dir string, httpClient *http.Client) err
 // BuildKrillionPack aggregates every dated JSON under importDir into one pack,
 // merging duplicate prompt texts and mapping Krillion scores onto rarity.
 func BuildKrillionPack(importDir, outPath, packID string) (*data.Pack, error) {
+	return BuildKrillionPackOpts(KrillionBuildOptions{
+		ImportDir:  importDir,
+		OutPath:    outPath,
+		PackID:     packID,
+		MaxEntries: krillionMaxEntries,
+	})
+}
+
+// BuildKrillionPackOpts is BuildKrillionPack with explicit caps / min-entries.
+func BuildKrillionPackOpts(opt KrillionBuildOptions) (*data.Pack, error) {
+	importDir := opt.ImportDir
+	outPath := opt.OutPath
+	packID := opt.PackID
 	if importDir == "" {
 		return nil, fmt.Errorf("krillion import dir required")
 	}
@@ -141,6 +163,12 @@ func BuildKrillionPack(importDir, outPath, packID string) (*data.Pack, error) {
 	}
 	if packID == "" {
 		packID = strings.TrimSuffix(filepath.Base(outPath), filepath.Ext(outPath))
+	}
+	maxEntries := opt.MaxEntries
+	if maxEntries == 0 {
+		maxEntries = DefaultMaxEntries
+	} else if maxEntries < 0 {
+		maxEntries = 0 // unlimited
 	}
 
 	entries, err := os.ReadDir(importDir)
@@ -247,14 +275,14 @@ func BuildKrillionPack(importDir, outPath, packID string) (*data.Pack, error) {
 			}
 			return strings.ToLower(rows[i].label) < strings.ToLower(rows[j].label)
 		})
-		if len(rows) > krillionMaxEntries {
+		if maxEntries > 0 && len(rows) > maxEntries {
 			// Keep the rarest tail (highest scores) plus a common head so
 			// easy answers still exist on huge banks.
 			head := 500
 			if head > len(rows)/5 {
 				head = len(rows) / 5
 			}
-			tail := krillionMaxEntries - head
+			tail := maxEntries - head
 			kept := append([]row{}, rows[:head]...)
 			kept = append(kept, rows[len(rows)-tail:]...)
 			rows = kept
@@ -268,13 +296,16 @@ func BuildKrillionPack(importDir, outPath, packID string) (*data.Pack, error) {
 
 		entriesOut := make([]data.Entry, 0, len(rows))
 		for _, r := range rows {
+			aliases := ExpandAliases(r.label, r.aliases)
 			entriesOut = append(entriesOut, data.Entry{
 				ID:      krillionEntityID(r.label),
 				Label:   r.label,
-				Aliases: r.aliases,
+				Aliases: aliases,
 				Rarity:  r.score,
 			})
 		}
+		entriesOut = FoldCaseVariantEntries(entriesOut)
+		sortEntries(entriesOut)
 		prompts = append(prompts, data.Prompt{
 			ID:       krillionPromptID(ap.text),
 			Category: krillionCategory(ap.text),
@@ -289,6 +320,12 @@ func BuildKrillionPack(importDir, outPath, packID string) (*data.Pack, error) {
 		return prompts[i].ID < prompts[j].ID
 	})
 
+	removed := 0
+	if opt.MinEntries > 0 {
+		prompts, removed = FilterPromptsMinEntries(prompts, opt.MinEntries)
+		fmt.Fprintf(os.Stderr, "krillion min-entries %d: kept %d, removed %d\n", opt.MinEntries, len(prompts), removed)
+	}
+
 	pack := &data.Pack{
 		PackID:  packID,
 		Version: 1,
@@ -302,6 +339,7 @@ func BuildKrillionPack(importDir, outPath, packID string) (*data.Pack, error) {
 	if err := writePack(outPath, pack); err != nil {
 		return nil, err
 	}
+	_ = writePackGZ(outPath+".gz", pack)
 	fmt.Fprintf(os.Stderr, "krillion pack: %d prompts from %d day files → %s\n", len(prompts), dayCount, outPath)
 	return pack, nil
 }

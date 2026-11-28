@@ -33,18 +33,62 @@ FRONTEND_ORIGIN=http://localhost:3000 make server
 
 ## Packs
 
-JSON packs under `packs/*.json` are loaded together when Supabase is not configured:
+JSON packs under `packs/*.json` (and `*.json.gz`) are loaded together when Supabase is not configured. `packs/sample.json` is a tiny fixture and is **not** loaded by the server.
+
+**Shipped prompts require ≥ 10,000 accepted answers.** Narrow defs under `packs/defs/` remain for experimentation but are not part of the deep bank.
 
 | Pack | How to build | Source |
 | --- | --- | --- |
-| `core-v1.json` | `make packbuild` | Wikidata + pageviews (+ REST Countries / PokeAPI checks) |
-| `broad-v1.json` | `make packbuild-broad` | Static broad categories (programming languages, bands, fruit, NBA) |
+| `deep-v1.json` | `make packbuild-deep` | Wikidata (paginated) + GeoNames + IMDb + Open Food Facts |
 | `krillion-v1.json` | `make packbuild-krillion` | [Krillion](https://krillion.io) prompts & answer banks (used with permission) |
-| `sample.json` | hand-authored | Tiny local fixture |
+| `core-v1.json` | `make packbuild` | Legacy Wikidata defs (mostly &lt;10k; optional) |
+| `broad-v1.json` | `make packbuild-broad` | Legacy static broad categories |
+| `sample.json` | hand-authored | Tiny local fixture (tests only) |
 
-Prompt definitions: YAML under `packs/defs/` (Wikidata SPARQL) and `packs/defs-broad/` (static `entries:` lists). A two-prompt acceptance fixture is in `packs/defs-sample/`. Krillion day files land in `packs/import/krillion/` (gitignored); re-fetch with `make packbuild-krillion`.
+Large generated `*-v1.json` files are **gitignored**. Rebuild locally (also writes `*.json.gz`). Optional: commit the `.gz` for Docker JSON fallback.
 
-The server keeps one in-memory copy of the bank. On boot it loads that copy from Supabase when credentials are set, and from `packs/*.json` otherwise.
+```bash
+make packbuild-deep          # → packs/deep-v1.json[.gz]
+make packbuild-krillion      # fetch + build, min 10k answers/prompt
+# or both:
+make packbuild-all
+```
+
+Equivalent `go run` forms:
+
+```bash
+go run ./cmd/packbuild --deep --out packs/deep-v1.json
+# Faster datasets-only (GeoNames/IMDb/OFF); add Wikidata with full --deep:
+go run ./cmd/packbuild --deep --skip-wikidata --out packs/deep-v1.json
+go run ./cmd/packbuild --fetch-krillion --krillion-import packs/import/krillion --out packs/krillion-v1.json
+# flags: --min-entries 10000  --offline  --cache .packbuild-cache
+#         --skip-datasets  --skip-wikidata
+```
+
+Per-prompt banks are capped at 40,000 answers (common head + rare tail) so the in-memory store fits a 1 GiB Fly VM while still meeting the 10,000 minimum. Measure heap after load:
+
+```bash
+go run ./cmd/heapcheck packs
+```
+
+The server keeps one in-memory copy of the bank (string-interned, compact indexes). On boot it loads from Supabase when credentials are set, otherwise from `packs/*.json` / `*.json.gz`.
+
+### Data sources and licenses
+
+Documented in each pack’s `attribution` field and summarized here:
+
+| Source | License / terms | Used for |
+| --- | --- | --- |
+| [Wikidata](https://www.wikidata.org/) | CC0 | Large classes (actors, musicians, games, books, companies, compounds, species, songs, albums, rivers, mountains, brands, …) via paginated SPARQL; English `skos:altLabel` aliases; sitelinks for rarity |
+| [Wikimedia Pageviews API](https://wikimedia.org/api/rest_v1/) | public API terms | Optional rarity signal for smaller Wikidata builds |
+| [GeoNames](https://www.geonames.org/) `cities5000` | [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/) | Cities / towns (population → rarity) |
+| [IMDb non-commercial datasets](https://developer.imdb.com/non-commercial-datasets/) | IMDb non-commercial license | Films and TV shows (`title.basics` + `title.ratings`) |
+| [Open Food Facts](https://world.openfoodfacts.org/) ingredient taxonomy | ODbL / CC-BY-SA | Food ingredients |
+| [Krillion](https://krillion.io) (+ archive via krillion-game.com) | **Used with permission** (CEO) | Full prompt/answer banks Krillion exposes |
+| REST Countries / PokeAPI | their public terms | Optional membership checks on legacy `packs/defs` |
+| MusicBrainz / Wikipedia | CC0 / CC BY-SA via Wikidata sitelinks | Covered indirectly through Wikidata entities that cite them |
+
+Answer variants also synthesize short forms from source labels: drop `The`, titles/middle names, parenthetical disambiguators, `&`/`and`, small number words, and accent-free forms. Case-variant labels fold into one entity (first spelling wins; others become aliases) so Supabase upserts do not conflict.
 
 ### Supabase answer bank
 
@@ -61,12 +105,17 @@ If you do not have the database string, set `SUPABASE_SERVICE_ROLE_KEY` instead 
 
 ```bash
 # Fill Supabase from a built pack. Omitted prompts are left as they are.
+# Upserts are chunked (~300 KB JSON per RPC) to avoid statement timeouts.
 SUPABASE_URL=https://<ref>.supabase.co \
 SUPABASE_DB_URL='postgresql://...' \
-  make packbuild
+  make packbuild-deep
+
+SUPABASE_URL=https://<ref>.supabase.co \
+SUPABASE_DB_URL='postgresql://...' \
+  make packbuild-krillion
 ```
 
-Without those variables, `make packbuild` only writes JSON and logs that the upsert was skipped. If Supabase is configured but the bank has no prompts, the server logs that and uses the JSON packs. If it is configured and the query fails, the process exits.
+Without those variables, packbuild only writes JSON and logs that the upsert was skipped. If Supabase is configured but the bank has no prompts, the server logs that and uses the JSON packs. If it is configured and the query fails, the process exits.
 
 Fly (do not put the values in `fly.toml`):
 
@@ -75,14 +124,6 @@ flyctl secrets set \
   SUPABASE_URL=https://<ref>.supabase.co \
   SUPABASE_DB_URL='postgresql://...'
 # or SUPABASE_SERVICE_ROLE_KEY=... instead of SUPABASE_DB_URL
-```
-
-Rebuild packs:
-
-```bash
-make packbuild
-# or: go run ./cmd/packbuild --defs packs/defs --out packs/core-v1.json
-# flags: --only <prompt id>  --offline  --cache .packbuild-cache
 ```
 
 ## Tests
@@ -95,15 +136,13 @@ make test
 
 ### Go server → Fly.io (`krill-billion`, region `sjc`)
 
-Multi-stage `Dockerfile` bakes `packs/` into the image. Listens on `$PORT` (default 8080). `/healthz` for checks.
+Multi-stage `Dockerfile` bakes `packs/` into the image (decompresses any `*.json.gz`). Listens on `$PORT` (default 8080). `/healthz` for checks. VM memory is **1 GB** (see `fly.toml`) so the deep bank can load without OOM.
 
 ```bash
 flyctl launch --no-deploy   # or use existing fly.toml
 flyctl secrets set FRONTEND_ORIGIN=https://YOUR_VERCEL_APP.vercel.app
 flyctl deploy
 ```
-
-`fly.toml` targets shared-cpu-1x / 256MB with `auto_stop_machines` and `min_machines_running = 0`. Force HTTPS is on; WebSocket upgrades go through the HTTP service.
 
 ### Frontend → Vercel
 
