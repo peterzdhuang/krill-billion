@@ -2,7 +2,6 @@ package data
 
 import (
 	"strings"
-	"unicode/utf8"
 )
 
 type matchKind int
@@ -64,15 +63,17 @@ func (s *Store) bestMatch(promptID, guess string) (*matchCandidate, bool) {
 	guessLen := len(guessRunes)
 	var best *matchCandidate
 
-	// Prefix path: incomplete submissions that are a unique prefix of a label
-	// or alias. Prefer the shortest remaining suffix, then rarity/id.
+	// Prefix path: scan length buckets ≥ guessLen for norms with this prefix.
 	if guessLen >= 2 {
-		for _, e := range ip.entries {
-			for _, n := range e.norms {
-				if !strings.HasPrefix(n, normGuess) {
+		for nLen, bucket := range ip.byLen {
+			if nLen < guessLen {
+				continue
+			}
+			for _, bn := range bucket {
+				if !strings.HasPrefix(bn.norm, normGuess) {
 					continue
 				}
-				nLen := utf8.RuneCountInString(n)
+				e := ip.entries[bn.entryIdx]
 				cand := matchCandidate{
 					entryID: e.ID,
 					label:   e.Label,
@@ -104,7 +105,7 @@ func (s *Store) bestMatch(promptID, guess string) (*matchCandidate, bool) {
 		}
 		bucket := ip.byLen[nLen]
 		for _, bn := range bucket {
-			d := osaDistanceCutoff(&sc, guessRunes, bn.runes, budget)
+			d := osaDistanceCutoff(&sc, guessRunes, []rune(bn.norm), budget)
 			if d > budget {
 				continue
 			}
@@ -145,4 +146,13 @@ func betterMatch(cand matchCandidate, best *matchCandidate) bool {
 		return cand.rarity < best.rarity
 	}
 	return cand.entryID < best.entryID
+}
+
+// Suggest returns the canonical label of the best Match candidate for guess.
+func (s *Store) Suggest(promptID, guess string) (label string, ok bool) {
+	best, ok := s.bestMatch(promptID, guess)
+	if !ok {
+		return "", false
+	}
+	return best.label, true
 }

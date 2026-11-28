@@ -9,14 +9,9 @@ import (
 
 func testStore(t *testing.T, prompts ...Prompt) *Store {
 	t.Helper()
-	s := &Store{prompts: make(map[string]*indexedPrompt)}
-	for _, p := range prompts {
-		ip, err := indexPrompt(p)
-		if err != nil {
-			t.Fatalf("indexPrompt(%q): %v", p.ID, err)
-		}
-		s.prompts[p.ID] = ip
-		s.order = append(s.order, p.ID)
+	s, err := NewFromPacks(Pack{PackID: "test", Prompts: prompts})
+	if err != nil {
+		t.Fatalf("NewFromPacks: %v", err)
 	}
 	return s
 }
@@ -232,7 +227,7 @@ func TestLargestPromptShipped(t *testing.T) {
 	s := loadShippedStore(t)
 	id, n := largestPrompt(s)
 	if n == 0 || id == "" {
-		t.Fatal("no prompts loaded")
+		t.Skip("no shipped packs present (rebuild with make packbuild-deep)")
 	}
 	t.Logf("largest prompt %q has %d entries (%d prompts, %d packs)", id, n, s.PromptCount(), s.PackCount())
 }
@@ -241,7 +236,7 @@ func BenchmarkMatchMissLargest(b *testing.B) {
 	s := loadShippedStore(b)
 	id, n := largestPrompt(s)
 	if n == 0 {
-		b.Fatal("empty store")
+		b.Skip("empty store")
 	}
 	// Unrelated medium-length miss so the fuzzy path scans ±budget buckets.
 	guess := "zzzxqqwvutsr"

@@ -1,6 +1,7 @@
 package packbuild
 
 import (
+	"compress/gzip"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -19,12 +20,13 @@ var qidLabel = regexp.MustCompile(`^Q\d+$`)
 
 // Options configures a pack build.
 type Options struct {
-	DefsDir  string
-	OutPath  string
-	PackID   string
-	Only     string
-	Offline  bool
-	CacheDir string
+	DefsDir    string
+	OutPath    string
+	PackID     string
+	Only       string
+	Offline    bool
+	CacheDir   string
+	MinEntries int // drop prompts below this; 0 = keep all (legacy packs)
 }
 
 type builtPrompt struct {
@@ -139,6 +141,12 @@ func Build(ctx context.Context, opt Options) (*data.Pack, error) {
 	})
 	sort.Strings(restDisagree)
 	sort.Strings(pokeDisagree)
+
+	removed := 0
+	if opt.MinEntries > 0 {
+		prompts, removed = FilterPromptsMinEntries(prompts, opt.MinEntries)
+		fmt.Fprintf(os.Stderr, "min-entries %d: kept %d, removed %d\n", opt.MinEntries, len(prompts), removed)
+	}
 
 	pack := &data.Pack{
 		PackID:      opt.PackID,
@@ -294,9 +302,9 @@ func buildPrompt(ctx context.Context, def PromptDef, wd *WikidataClient, pv *Pag
 	}
 	rarities := AssignBlendedRarity(scored)
 
-	entries := make([]data.Entry, 0, len(kept))
+		entries := make([]data.Entry, 0, len(kept))
 	for _, c := range kept {
-		aliases := filterAliases(c.Member.Aliases, c.Member.Label, labelSet, c.Member.ID)
+		aliases := ExpandAliases(c.Member.Label, filterAliases(c.Member.Aliases, c.Member.Label, labelSet, c.Member.ID))
 		entries = append(entries, data.Entry{
 			ID:      c.Member.ID,
 			Label:   c.Member.Label,
@@ -304,13 +312,8 @@ func buildPrompt(ctx context.Context, def PromptDef, wd *WikidataClient, pv *Pag
 			Rarity:  rarities[c.Member.ID],
 		})
 	}
-
-	sort.SliceStable(entries, func(i, j int) bool {
-		if entries[i].Rarity != entries[j].Rarity {
-			return entries[i].Rarity < entries[j].Rarity
-		}
-		return entries[i].ID < entries[j].ID
-	})
+	entries = FoldCaseVariantEntries(entries)
+	sortEntries(entries)
 
 	return &builtPrompt{
 		prompt: data.Prompt{
@@ -336,14 +339,7 @@ func buildStaticPrompt(def PromptDef) (*builtPrompt, error) {
 		}
 		seen[key] = struct{}{}
 		id := fmt.Sprintf("static-%s-%d", def.ID, i+1)
-		aliases := make([]string, 0, len(e.Aliases))
-		for _, a := range e.Aliases {
-			a = strings.TrimSpace(a)
-			if a == "" || strings.EqualFold(a, label) {
-				continue
-			}
-			aliases = append(aliases, a)
-		}
+		aliases := ExpandAliases(label, e.Aliases)
 		entries = append(entries, data.Entry{
 			ID:      id,
 			Label:   label,
@@ -354,12 +350,8 @@ func buildStaticPrompt(def PromptDef) (*builtPrompt, error) {
 	if len(entries) == 0 {
 		return nil, fmt.Errorf("no static entries")
 	}
-	sort.SliceStable(entries, func(i, j int) bool {
-		if entries[i].Rarity != entries[j].Rarity {
-			return entries[i].Rarity < entries[j].Rarity
-		}
-		return entries[i].ID < entries[j].ID
-	})
+	entries = FoldCaseVariantEntries(entries)
+	sortEntries(entries)
 	return &builtPrompt{
 		prompt: data.Prompt{
 			ID:       def.ID,
@@ -472,4 +464,57 @@ func writePack(path string, pack *data.Pack) error {
 		return err
 	}
 	return os.Rename(tmp, path)
+}
+
+func writePackGZ(path string, pack *data.Pack) error {
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return err
+	}
+	tmp := path + ".tmp"
+	f, err := os.Create(tmp)
+	if err != nil {
+		return err
+	}
+	gz := gzip.NewWriter(f)
+	enc := json.NewEncoder(gz)
+	enc.SetIndent("", "  ")
+	if err := enc.Encode(pack); err != nil {
+		gz.Close()
+		f.Close()
+		os.Remove(tmp)
+		return err
+	}
+	if err := gz.Close(); err != nil {
+		f.Close()
+		os.Remove(tmp)
+		return err
+	}
+	if err := f.Close(); err != nil {
+		os.Remove(tmp)
+		return err
+	}
+	return os.Rename(tmp, path)
+}
+
+// LoadPackFile reads a pack JSON or .json.gz file.
+func LoadPackFile(path string) (*data.Pack, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	var r interface{ Read([]byte) (int, error) } = f
+	if strings.HasSuffix(strings.ToLower(path), ".gz") {
+		gz, err := gzip.NewReader(f)
+		if err != nil {
+			return nil, err
+		}
+		defer gz.Close()
+		r = gz
+	}
+	var pack data.Pack
+	if err := json.NewDecoder(r).Decode(&pack); err != nil {
+		return nil, err
+	}
+	return &pack, nil
 }

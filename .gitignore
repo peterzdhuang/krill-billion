@@ -19,6 +19,14 @@ yarn-error.log*
 *.cache/
 # Raw dated Krillion reveals (regenerate with --fetch-krillion)
 packs/import/krillion/*.json
+# Large generated packs (rebuild with make packbuild-deep / packbuild-krillion).
+# Keep packs/sample.json; commit compressed *.json.gz for Docker JSON fallback.
+packs/core-v1.json
+packs/broad-v1.json
+packs/krillion-v1.json
+packs/deep-v1.json
+packs/*.json.tmp
+# Allow: packs/*-v1.json.gz
 
 # IDE / OS
 .DS_Store

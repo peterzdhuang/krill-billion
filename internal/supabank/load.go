@@ -28,18 +28,24 @@ func Load(ctx context.Context, cfg Config) (*data.Pack, error) {
 
 // Upsert writes pack into Supabase. Prompts included in pack have their
 // entity links replaced. Prompts omitted from pack are left in place.
+// Large packs are split into ~300KB REST/RPC chunks to avoid statement timeouts.
 func Upsert(ctx context.Context, cfg Config, pack *data.Pack) error {
-	var err error
-	switch cfg.Mode() {
-	case "postgres":
-		err = upsertPostgres(ctx, cfg.DBURL, pack)
-	case "rest":
-		err = upsertREST(ctx, cfg.URL, cfg.ServiceKey, pack)
-	default:
-		err = fmt.Errorf("supabase is not configured")
-	}
+	chunks, err := chunkPacks(pack, restUpsertBudget)
 	if err != nil {
-		return fmt.Errorf("%w — if the schema is missing, run db/migrations/001_answer_bank.sql", err)
+		return err
+	}
+	for i, ch := range chunks {
+		switch cfg.Mode() {
+		case "postgres":
+			err = upsertPostgres(ctx, cfg.DBURL, ch)
+		case "rest":
+			err = upsertREST(ctx, cfg.URL, cfg.ServiceKey, ch)
+		default:
+			err = fmt.Errorf("supabase is not configured")
+		}
+		if err != nil {
+			return fmt.Errorf("chunk %d/%d: %w — if the schema is missing, run db/migrations/001_answer_bank.sql", i+1, len(chunks), err)
+		}
 	}
 	return nil
 }

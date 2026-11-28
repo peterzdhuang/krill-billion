@@ -48,10 +48,17 @@ func payloadFromPack(pack *data.Pack) (bankPayload, error) {
 	if pack == nil {
 		return bankPayload{}, fmt.Errorf("nil pack")
 	}
-	var out bankPayload
+	// Always emit [] not null — jsonb_array_elements rejects JSON null.
+	out := bankPayload{
+		Categories:     []categoryRow{},
+		Prompts:        []promptRow{},
+		Entities:       []entityRow{},
+		Aliases:        []aliasRow{},
+		PromptEntities: []linkRow{},
+	}
 	catID := make(map[string]string)
 	usedID := make(map[string]string)
-	labels := make(map[string]string)
+	labels := make(map[string]string) // entity id → canonical label
 	aliases := make(map[string]map[string]struct{})
 	seenPrompt := make(map[string]struct{})
 	seenLink := make(map[string]struct{})
@@ -88,10 +95,26 @@ func payloadFromPack(pack *data.Pack) (bankPayload, error) {
 			if e.Rarity < 0 || e.Rarity > 100 {
 				return bankPayload{}, fmt.Errorf("prompt %s entity %s rarity %d out of range", p.ID, e.ID, e.Rarity)
 			}
-			if prev, ok := labels[e.ID]; ok && prev != e.Label {
-				return bankPayload{}, fmt.Errorf("entity %s label %q conflicts with %q", e.ID, e.Label, prev)
+
+			set := aliases[e.ID]
+			if set == nil {
+				set = make(map[string]struct{})
+				aliases[e.ID] = set
 			}
-			labels[e.ID] = e.Label
+
+			if prev, ok := labels[e.ID]; ok {
+				if prev != e.Label {
+					if strings.EqualFold(prev, e.Label) {
+						// Case-variant of the same label: keep first, fold other as alias.
+						set[e.Label] = struct{}{}
+					} else {
+						return bankPayload{}, fmt.Errorf("entity %s label %q conflicts with %q", e.ID, e.Label, prev)
+					}
+				}
+			} else {
+				labels[e.ID] = e.Label
+			}
+
 			linkKey := p.ID + "\x00" + e.ID
 			if _, ok := seenLink[linkKey]; ok {
 				return bankPayload{}, fmt.Errorf("prompt %s lists entity %s twice", p.ID, e.ID)
@@ -99,14 +122,9 @@ func payloadFromPack(pack *data.Pack) (bankPayload, error) {
 			seenLink[linkKey] = struct{}{}
 			out.PromptEntities = append(out.PromptEntities, linkRow{PromptID: p.ID, EntityID: e.ID, Rarity: e.Rarity})
 
-			set := aliases[e.ID]
-			if set == nil {
-				set = make(map[string]struct{})
-				aliases[e.ID] = set
-			}
 			for _, a := range e.Aliases {
 				a = strings.TrimSpace(a)
-				if a == "" || a == e.Label {
+				if a == "" || strings.EqualFold(a, labels[e.ID]) {
 					continue
 				}
 				set[a] = struct{}{}
@@ -117,6 +135,10 @@ func payloadFromPack(pack *data.Pack) (bankPayload, error) {
 	for id, label := range labels {
 		out.Entities = append(out.Entities, entityRow{ID: id, Label: label})
 		for alias := range aliases[id] {
+			// Drop aliases that only differ by case from the canonical label.
+			if strings.EqualFold(alias, label) {
+				continue
+			}
 			out.Aliases = append(out.Aliases, aliasRow{EntityID: id, Alias: alias})
 		}
 	}

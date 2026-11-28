@@ -29,5 +29,6 @@ primary_region = "sjc"
 
 [[vm]]
   size = "shared-cpu-1x"
-  memory = "256mb"
+  # Deep answer bank needs headroom; 256mb OOMed around ~295k entries.
+  memory = "1gb"
   cpus = 1
