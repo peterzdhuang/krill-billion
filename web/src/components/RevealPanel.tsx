@@ -25,6 +25,15 @@ function sideLabel(seat: string, names?: { a?: string; b?: string }) {
   return names?.b?.trim() || "SIDE B";
 }
 
+/** True when the typed guess was fuzzy/prefix-corrected to a different label. */
+export function wasCorrected(side: SideAnswerData): boolean {
+  if (!side.valid) return false;
+  const typed = side.text?.trim() ?? "";
+  const canon = side.matched_label?.trim() ?? "";
+  if (!typed || !canon) return false;
+  return typed.toLowerCase() !== canon.toLowerCase();
+}
+
 function AnswerCard({
   side,
   label,
@@ -45,6 +54,7 @@ function AnswerCard({
       </div>
     );
   }
+  const corrected = wasCorrected(side);
   return (
     <div
       className={`kb-reveal-card rounded border px-4 py-4 ${
@@ -63,7 +73,19 @@ function AnswerCard({
         </>
       ) : (
         <>
-          <p className="mt-2 text-3xl text-cyan-glow">{side.matched_label}</p>
+          {corrected ? (
+            <p className="mt-2 text-3xl text-cyan-glow">
+              <span className="text-slate-500 line-through decoration-slate-600">
+                {side.text.trim()}
+              </span>
+              <span className="mx-2 text-slate-500" aria-hidden>
+                →
+              </span>
+              <span>{side.matched_label}</span>
+            </p>
+          ) : (
+            <p className="mt-2 text-3xl text-cyan-glow">{side.matched_label}</p>
+          )}
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <TierBadge tier={side.tier as TierName} />
             <span className="font-mono text-lg text-slate-400">

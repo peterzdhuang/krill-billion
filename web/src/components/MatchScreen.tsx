@@ -41,12 +41,10 @@ export function MatchScreen({
   matchEnd,
   yourSeat,
   draft,
-  suggestion,
   locked,
   opponentLocked,
   fieldError,
   onDraft,
-  onAcceptSuggestion,
   onLock,
   onRematch,
 }: {
@@ -56,24 +54,18 @@ export function MatchScreen({
   matchEnd: MatchEndData | null;
   yourSeat?: string | null;
   draft: string;
-  suggestion: string;
   locked: boolean;
   opponentLocked: boolean;
   fieldError?: string | null;
   onDraft: (text: string) => void;
-  onAcceptSuggestion: () => void;
   onLock: () => void;
   onRematch: () => void;
 }) {
   const draftRef = useRef(draft);
   const lockedRef = useRef(locked);
-  const suggestionRef = useRef(suggestion);
-  const onAcceptRef = useRef(onAcceptSuggestion);
   const onLockRef = useRef(onLock);
   draftRef.current = draft;
   lockedRef.current = locked;
-  suggestionRef.current = suggestion;
-  onAcceptRef.current = onAcceptSuggestion;
   onLockRef.current = onLock;
   const mySide = sideOf(yourSeat);
   const paused = room?.phase === "paused";
@@ -124,19 +116,10 @@ export function MatchScreen({
   const multA = room?.multipliers?.[0] ?? 1;
   const multB = room?.multipliers?.[1] ?? 1;
 
-  const activeSuggestion =
-    !locked && suggestion && suggestion !== draft ? suggestion : "";
-
   const lockAnswer = () => {
     if (locked) return;
-    if (activeSuggestion) onAcceptSuggestion();
     playSfx("submit");
     onLock();
-  };
-
-  const acceptOnly = () => {
-    if (locked || !activeSuggestion) return;
-    onAcceptSuggestion();
   };
 
   const sceneResult =
@@ -243,10 +226,7 @@ export function MatchScreen({
             phase={room?.phase}
             onTimeout={() => {
               if (lockedRef.current) return;
-              const text = draftRef.current.trim();
-              const sug = suggestionRef.current.trim();
-              if (!text && !sug) return;
-              if (sug && sug !== draftRef.current) onAcceptRef.current();
+              if (!draftRef.current.trim()) return;
               playSfx("submit");
               onLockRef.current();
             }}
@@ -269,54 +249,26 @@ export function MatchScreen({
               }`}
             >
               <span className="text-cyan-accent/70">$</span>
-              <div className="relative min-w-0 flex-1">
-                <input
-                  value={draft}
-                  disabled={locked}
-                  onChange={(e) => onDraft(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Tab" && activeSuggestion) {
-                      e.preventDefault();
-                      acceptOnly();
-                      return;
-                    }
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      lockAnswer();
-                    }
-                  }}
-                  placeholder="type answer…"
-                  className="relative z-10 w-full bg-transparent text-cyan-glow outline-none caret-cyan-glow placeholder:text-slate-600 disabled:opacity-60"
-                  autoFocus
-                  autoComplete="off"
-                  spellCheck={false}
-                />
-                {activeSuggestion && (
-                  <p
-                    className="pointer-events-none absolute inset-0 truncate text-slate-600"
-                    aria-hidden
-                  >
-                    <span className="invisible whitespace-pre">{draft}</span>
-                    {draft &&
-                    activeSuggestion
-                      .toLowerCase()
-                      .startsWith(draft.toLowerCase())
-                      ? activeSuggestion.slice(draft.length)
-                      : ""}
-                  </p>
-                )}
-              </div>
+              <input
+                value={draft}
+                disabled={locked}
+                onChange={(e) => onDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    lockAnswer();
+                  }
+                }}
+                placeholder="type answer…"
+                className="w-full bg-transparent text-cyan-glow outline-none caret-cyan-glow placeholder:text-slate-600 disabled:opacity-60"
+                autoFocus
+                autoComplete="off"
+                spellCheck={false}
+              />
               {!locked && (
                 <span className="inline-block h-5 w-2 animate-pulse bg-cyan-glow/80" />
               )}
             </div>
-            {activeSuggestion && (
-              <p className="text-lg text-slate-500">
-                suggest{" "}
-                <span className="text-cyan-accent/80">{activeSuggestion}</span>
-                <span className="text-slate-600"> — Tab or Enter</span>
-              </p>
-            )}
             <div className="flex flex-wrap items-center justify-between gap-2 rounded bg-[#050a14] px-2 py-1 text-lg text-slate-400">
               <span>
                 {locked

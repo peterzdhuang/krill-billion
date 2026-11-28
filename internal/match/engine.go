@@ -177,11 +177,6 @@ func (e *Engine) OnDraft(playerID, text string) {
 	}
 	e.lastDraftAt[p.Seat] = now
 	e.drafts[p.Seat] = text
-	label, ok := e.store.Suggest(e.prompt.ID, text)
-	if !ok {
-		label = ""
-	}
-	e.events.OnSuggest(playerID, label)
 	// teammate_draft only for same side other seats (2v2); 1v1 has none
 	for seat, other := range e.bySeat {
 		if other == nil || other.ID == playerID {
@@ -206,17 +201,13 @@ func (e *Engine) OnLock(playerID string) {
 		return
 	}
 	// An empty lock is a pass. Anything else must be a real entry (prefix,
-	// typo, alias, or exact). On hit, rewrite the draft to the canonical
-	// label so an accepted suggestion and a raw fuzzy lock score the same.
-	// A miss stays unlocked so the player can retype before the buzzer.
+	// typo, alias, or exact). Keep the raw draft so reveal can show
+	// typed → canonical (e.g. eagel → Eagle). A miss stays unlocked so the
+	// player can retype before the buzzer.
 	if text := strings.TrimSpace(e.drafts[p.Seat]); text != "" {
-		id, ok := e.store.Match(e.prompt.ID, text)
-		if !ok {
+		if _, ok := e.store.Match(e.prompt.ID, text); !ok {
 			e.events.OnError(playerID, "not_in_bank", "not in this category")
 			return
-		}
-		if entry, found := e.store.Entry(e.prompt.ID, id); found {
-			e.drafts[p.Seat] = entry.Label
 		}
 	}
 	e.locked[p.Seat] = true

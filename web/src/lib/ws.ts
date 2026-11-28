@@ -128,7 +128,7 @@ export function useDraftThrottle(
     [flush, intervalMs, send],
   );
 
-  /** Send text (or pending) immediately — use before lock after accepting a suggestion. */
+  /** Send pending text immediately — call before lock so the server has the latest draft. */
   const flushNow = useCallback(
     (text?: string) => {
       if (timer.current) {

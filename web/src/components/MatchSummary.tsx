@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { ClimbingScene } from "@/components/ClimbingScene";
 import { KrillionMark } from "@/components/KrillionMark";
 import { MuteToggle } from "@/components/MuteToggle";
+import { wasCorrected } from "@/components/RevealPanel";
 import { TierBadge } from "@/components/TierBadge";
 import { useReducedMotion } from "@/lib/hit";
 import type {
@@ -64,6 +65,16 @@ function RoundRecapRow({
               <span className="text-rose-300/80">miss</span>
             ) : (
               <>
+                {wasCorrected(a) ? (
+                  <>
+                    <span className="text-slate-500 line-through">
+                      {a.text.trim()}
+                    </span>
+                    <span className="mx-1 text-slate-600" aria-hidden>
+                      →
+                    </span>
+                  </>
+                ) : null}
                 <span className="text-cyan-glow/90">{a.matched_label}</span>
                 {a.tier && (
                   <span className="ml-2 inline-block align-middle">
