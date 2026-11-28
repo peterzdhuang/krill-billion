@@ -16,12 +16,20 @@ type indexedEntry struct {
 	norms []string // normalized label + aliases (deduped)
 }
 
+// bucketNorm is one precomputed normalized form, keyed by rune length for
+// fuzzy scans. runes are stored so Match avoids re-decoding on every compare.
+type bucketNorm struct {
+	runes    []rune
+	entryIdx int
+}
+
 type indexedPrompt struct {
 	Prompt
 	entries []indexedEntry
-	// exact maps normalized form -> entry id (first wins at load; Match
-	// resolves ambiguity among candidates via rarity/id for fuzzy path).
-	exact map[string]string
+	// exact maps normalized form -> entry index (first wins at load).
+	exact map[string]int
+	// byLen buckets normalized forms by rune length for fuzzy matching.
+	byLen map[int][]bucketNorm
 }
 
 // Store holds all loaded packs in memory for matching and prompt selection.
@@ -119,7 +127,8 @@ func indexPrompt(p Prompt) (*indexedPrompt, error) {
 	ip := &indexedPrompt{
 		Prompt:  p,
 		entries: make([]indexedEntry, 0, len(p.Entries)),
-		exact:   make(map[string]string),
+		exact:   make(map[string]int),
+		byLen:   make(map[int][]bucketNorm),
 	}
 	entrySeen := make(map[string]struct{})
 	for _, e := range p.Entries {
@@ -138,6 +147,7 @@ func indexPrompt(p Prompt) (*indexedPrompt, error) {
 		}
 
 		norms := uniqueNorms(e.Label, e.Aliases)
+		entryIdx := len(ip.entries)
 		ie := indexedEntry{Entry: e, norms: norms}
 		ip.entries = append(ip.entries, ie)
 		for _, n := range norms {
@@ -145,8 +155,13 @@ func indexPrompt(p Prompt) (*indexedPrompt, error) {
 				continue
 			}
 			if _, exists := ip.exact[n]; !exists {
-				ip.exact[n] = e.ID
+				ip.exact[n] = entryIdx
 			}
+			runes := []rune(n)
+			ip.byLen[len(runes)] = append(ip.byLen[len(runes)], bucketNorm{
+				runes:    runes,
+				entryIdx: entryIdx,
+			})
 		}
 	}
 	return ip, nil

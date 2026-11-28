@@ -1,6 +1,11 @@
 package data
 
-import "testing"
+import (
+	"path/filepath"
+	"runtime"
+	"testing"
+	"unicode/utf8"
+)
 
 func testStore(t *testing.T, prompts ...Prompt) *Store {
 	t.Helper()
@@ -16,6 +21,23 @@ func testStore(t *testing.T, prompts ...Prompt) *Store {
 	return s
 }
 
+func TestNormalize(t *testing.T) {
+	tests := []struct {
+		in, want string
+	}{
+		{"Thé Citiés", "city"},
+		{"  The   Cat  ", "cat"},
+		{"an apple", "apple"},
+		{"A Brand!", "brand"},
+		{"café", "cafe"},
+	}
+	for _, tt := range tests {
+		if got := Normalize(tt.in); got != tt.want {
+			t.Fatalf("Normalize(%q) = %q, want %q", tt.in, got, tt.want)
+		}
+	}
+}
+
 func TestMatch(t *testing.T) {
 	s := testStore(t, Prompt{
 		ID:   "p1",
@@ -27,26 +49,25 @@ func TestMatch(t *testing.T) {
 			{ID: "afghan", Label: "Afghanistan", Rarity: 40, Aliases: []string{"AF"}},
 			{ID: "cart", Label: "cart", Rarity: 50},
 			{ID: "bart", Label: "bart", Rarity: 20},
+			{ID: "banana", Label: "banana", Rarity: 25},
 		},
 	})
 
 	tests := []struct {
-		name      string
-		guess     string
-		wantID    string
-		wantOK    bool
-		checkNorm string // optional: assert Normalize(guess)
+		name   string
+		guess  string
+		wantID string
+		wantOK bool
 	}{
 		{
-			name:      "accent article plural fold",
-			guess:     "Thé Citiés",
-			wantID:    "city",
-			wantOK:    true,
-			checkNorm: "city",
+			name:   "accent article plural fold exact",
+			guess:  "Thé Citiés",
+			wantID: "city",
+			wantOK: true,
 		},
 		{
-			name:   "teh-style transposition is 1 edit",
-			guess:  "tset", // adjacent transposition of "test"
+			name:   "adjacent transposition is 1 edit",
+			guess:  "tset",
 			wantID: "test",
 			wantOK: true,
 		},
@@ -57,20 +78,50 @@ func TestMatch(t *testing.T) {
 			wantOK: true,
 		},
 		{
-			name:   "3-letter one-edit fuzzy",
+			name:   "3-letter one-edit not over-matched",
 			guess:  "cot",
-			wantID: "cat",
+			wantID: "",
+			wantOK: false,
+		},
+		{
+			name:   "short unrelated rejected",
+			guess:  "zz",
+			wantID: "",
+			wantOK: false,
+		},
+		{
+			name:   "4-7 one substitution",
+			guess:  "banama",
+			wantID: "banana",
 			wantOK: true,
 		},
 		{
-			name:   "11+ chars with typos matches",
-			guess:  "Xyghanistaa", // Afghanistan with substitutions
+			name:   "4-7 two edits rejected",
+			guess:  "banxxa",
+			wantID: "",
+			wantOK: false,
+		},
+		{
+			name:   "long label one insertion",
+			guess:  "Afghanistaan",
 			wantID: "afghan",
 			wantOK: true,
 		},
 		{
-			name:   "ambiguity tie-break picks lower rarity",
-			guess:  "xart", // distance 1 to both cart (r50) and bart (r20)
+			name:   "long label two substitutions",
+			guess:  "Afthanistan",
+			wantID: "afghan",
+			wantOK: true,
+		},
+		{
+			name:   "long label three edits rejected",
+			guess:  "Xxthanistan",
+			wantID: "",
+			wantOK: false,
+		},
+		{
+			name:   "ambiguity tie-break picks lower rarity (more common)",
+			guess:  "xart",
 			wantID: "bart",
 			wantOK: true,
 		},
@@ -79,12 +130,6 @@ func TestMatch(t *testing.T) {
 			guess:  "xyz",
 			wantID: "",
 			wantOK: false,
-		},
-		{
-			name:   "one-edit typo of a real label",
-			guess:  "Afghanistaan",
-			wantID: "afghan",
-			wantOK: true,
 		},
 		{
 			name:   "prefix of label",
@@ -98,21 +143,10 @@ func TestMatch(t *testing.T) {
 			wantID: "afghan",
 			wantOK: true,
 		},
-		{
-			name:   "short unrelated rejected",
-			guess:  "zz",
-			wantID: "",
-			wantOK: false,
-		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if tt.checkNorm != "" {
-				if got := Normalize(tt.guess); got != tt.checkNorm {
-					t.Fatalf("Normalize(%q) = %q, want %q", tt.guess, got, tt.checkNorm)
-				}
-			}
 			gotID, ok := s.Match("p1", tt.guess)
 			if ok != tt.wantOK || gotID != tt.wantID {
 				t.Fatalf("Match(%q) = (%q, %v), want (%q, %v)", tt.guess, gotID, ok, tt.wantID, tt.wantOK)
@@ -159,6 +193,90 @@ func TestSuggest(t *testing.T) {
 		id2, mok2 := s.Match("p1", q)
 		if !mok2 || id2 != id {
 			t.Fatalf("Match(%q) = (%q, %v), want same entry as suggestion %q (%q)", q, id2, mok2, sug, id)
+		}
+	}
+}
+
+func TestFuzzyBudget(t *testing.T) {
+	cases := map[int]int{0: 0, 1: 0, 3: 0, 4: 1, 7: 1, 8: 2, 20: 2}
+	for len, want := range cases {
+		if got := fuzzyBudget(len); got != want {
+			t.Fatalf("fuzzyBudget(%d) = %d, want %d", len, got, want)
+		}
+	}
+}
+
+func TestOsaDistanceCutoff(t *testing.T) {
+	if d := osaDistance("test", "tset"); d != 1 {
+		t.Fatalf("transposition distance = %d, want 1", d)
+	}
+	var sc osaScratch
+	if d := osaDistanceCutoff(&sc, []rune("abcdef"), []rune("abXdef"), 1); d != 1 {
+		t.Fatalf("one sub within cutoff = %d, want 1", d)
+	}
+	if d := osaDistanceCutoff(&sc, []rune("abcdef"), []rune("abXXef"), 1); d != 2 {
+		t.Fatalf("two subs over cutoff = %d, want 2 (max+1)", d)
+	}
+	if d := osaDistanceCutoff(&sc, []rune("short"), []rune("muchlonger"), 2); d != 3 {
+		t.Fatalf("length skip = %d, want 3", d)
+	}
+}
+
+func packsDir(t testing.TB) string {
+	t.Helper()
+	_, file, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatal("runtime.Caller failed")
+	}
+	return filepath.Join(filepath.Dir(file), "..", "..", "packs")
+}
+
+func loadShippedStore(t testing.TB) *Store {
+	t.Helper()
+	s, err := Load(packsDir(t))
+	if err != nil {
+		t.Fatalf("Load packs: %v", err)
+	}
+	return s
+}
+
+func largestPrompt(s *Store) (id string, entries int) {
+	for _, pid := range s.order {
+		ip := s.prompts[pid]
+		n := len(ip.entries)
+		if n > entries {
+			entries = n
+			id = pid
+		}
+	}
+	return id, entries
+}
+
+func TestLargestPromptShipped(t *testing.T) {
+	s := loadShippedStore(t)
+	id, n := largestPrompt(s)
+	if n == 0 || id == "" {
+		t.Fatal("no prompts loaded")
+	}
+	t.Logf("largest prompt %q has %d entries (%d prompts, %d packs)", id, n, s.PromptCount(), s.PackCount())
+}
+
+func BenchmarkMatchMissLargest(b *testing.B) {
+	s := loadShippedStore(b)
+	id, n := largestPrompt(s)
+	if n == 0 {
+		b.Fatal("empty store")
+	}
+	// Unrelated medium-length miss so the fuzzy path scans ±budget buckets.
+	guess := "zzzxqqwvutsr"
+	if utf8.RuneCountInString(Normalize(guess)) < 8 {
+		b.Fatal("guess should use budget 2")
+	}
+	b.ReportMetric(float64(n), "entries")
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		if _, ok := s.Match(id, guess); ok {
+			b.Fatal("expected miss")
 		}
 	}
 }

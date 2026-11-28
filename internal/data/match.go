@@ -23,8 +23,10 @@ type matchCandidate struct {
 
 // Match maps a raw guess onto exactly one canonical entry of the prompt.
 // Empty guesses never match. Exact normalized hits win; otherwise a prefix
-// or fuzzy Damerau–Levenshtein (OSA) search runs within a length-based budget.
-// Ties prefer tighter kind, then smaller distance, then lower rarity, then id.
+// (#42 autocomplete) or fuzzy Damerau–Levenshtein (OSA) search runs within the
+// length-based edit budget. Ties prefer tighter kind, then smaller distance,
+// then lower rarity (more common / higher commonness), then entry id.
+// On accept, callers rewrite the draft to the canonical Entry.Label.
 func (s *Store) Match(promptID, guess string) (entryID string, ok bool) {
 	best, ok := s.bestMatch(promptID, guess)
 	if !ok {
@@ -57,54 +59,72 @@ func (s *Store) bestMatch(promptID, guess string) (*matchCandidate, bool) {
 		return nil, false
 	}
 
-	if id, hit := ip.exact[normGuess]; hit {
-		e, ok := entryByID(ip, id)
-		if !ok {
-			return nil, false
-		}
+	if idx, hit := ip.exact[normGuess]; hit {
+		e := ip.entries[idx]
 		return &matchCandidate{
-			entryID: id,
+			entryID: e.ID,
 			label:   e.Label,
 			kind:    kindExact,
 			rarity:  e.Rarity,
 		}, true
 	}
 
-	budget := fuzzyBudget(utf8.RuneCountInString(normGuess))
-	guessLen := utf8.RuneCountInString(normGuess)
+	guessRunes := []rune(normGuess)
+	guessLen := len(guessRunes)
 	var best *matchCandidate
 
-	for _, e := range ip.entries {
-		for _, n := range e.norms {
-			nLen := utf8.RuneCountInString(n)
-			cand := matchCandidate{entryID: e.ID, label: e.Label, rarity: e.Rarity}
-
-			if guessLen >= 2 && strings.HasPrefix(n, normGuess) {
-				cand.kind = kindPrefix
-				cand.dist = nLen - guessLen
+	// Prefix path (#42): keep autocomplete while typing. Prefer the shortest
+	// remaining suffix (tightest prefix), then rarity/id via betterMatch.
+	if guessLen >= 2 {
+		for _, e := range ip.entries {
+			for _, n := range e.norms {
+				if !strings.HasPrefix(n, normGuess) {
+					continue
+				}
+				nLen := utf8.RuneCountInString(n)
+				cand := matchCandidate{
+					entryID: e.ID,
+					label:   e.Label,
+					kind:    kindPrefix,
+					dist:    nLen - guessLen,
+					rarity:  e.Rarity,
+				}
 				if betterMatch(cand, best) {
 					c := cand
 					best = &c
 				}
-				continue
 			}
+		}
+		if best != nil && best.kind == kindPrefix {
+			return best, true
+		}
+	}
 
-			if budget == 0 {
+	budget := fuzzyBudget(guessLen)
+	if budget == 0 {
+		return nil, false
+	}
+
+	// Fuzzy path: only scan length buckets within ±budget of the guess.
+	var sc osaScratch
+	for nLen := guessLen - budget; nLen <= guessLen+budget; nLen++ {
+		if nLen < 0 {
+			continue
+		}
+		bucket := ip.byLen[nLen]
+		for _, bn := range bucket {
+			d := osaDistanceCutoff(&sc, guessRunes, bn.runes, budget)
+			if d > budget {
 				continue
 			}
-			diff := guessLen - nLen
-			if diff < 0 {
-				diff = -diff
+			e := ip.entries[bn.entryIdx]
+			cand := matchCandidate{
+				entryID: e.ID,
+				label:   e.Label,
+				kind:    kindFuzzy,
+				dist:    d,
+				rarity:  e.Rarity,
 			}
-			if diff > budget {
-				continue
-			}
-			d := osaDistance(normGuess, n)
-			if d > budget || !fuzzyCloseEnough(guessLen, nLen, d) {
-				continue
-			}
-			cand.kind = kindFuzzy
-			cand.dist = d
 			if betterMatch(cand, best) {
 				c := cand
 				best = &c
@@ -117,33 +137,9 @@ func (s *Store) bestMatch(promptID, guess string) (*matchCandidate, bool) {
 	return best, true
 }
 
-func entryByID(ip *indexedPrompt, id string) (Entry, bool) {
-	for _, e := range ip.entries {
-		if e.ID == id {
-			return e.Entry, true
-		}
-	}
-	return Entry{}, false
-}
-
-// fuzzyCloseEnough keeps a typo of a real entry and drops unrelated strings.
-// Forms shorter than 3 characters stay exact/prefix-only. Distance must fit
-// in half the longer string (generous autocomplete threshold).
-func fuzzyCloseEnough(guessLen, normLen, dist int) bool {
-	if dist == 0 || normLen < 3 {
-		return false
-	}
-	longer := guessLen
-	if normLen > longer {
-		longer = normLen
-	}
-	limit := longer / 2
-	if limit < 1 {
-		limit = 1
-	}
-	return dist <= limit
-}
-
+// betterMatch prefers exact over prefix over fuzzy, then lower distance, then
+// lower rarity (more common / higher commonness), then lexicographically
+// smaller entry id for a stable final tie-break.
 func betterMatch(cand matchCandidate, best *matchCandidate) bool {
 	if best == nil {
 		return true
