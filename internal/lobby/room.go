@@ -364,25 +364,14 @@ func (r *Room) Start(playerID string) (code, message string) {
 	return out[0], out[1]
 }
 
-func (r *Room) Draft(playerID, text string) {
+func (r *Room) Lock(playerID, text string) {
 	r.do(func() {
 		r.touch()
 		if r.match == nil {
 			r.sendErr(playerID, "bad_phase", "match not started")
 			return
 		}
-		r.match.OnDraft(playerID, text)
-	})
-}
-
-func (r *Room) Lock(playerID string) {
-	r.do(func() {
-		r.touch()
-		if r.match == nil {
-			r.sendErr(playerID, "bad_phase", "match not started")
-			return
-		}
-		r.match.OnLock(playerID)
+		r.match.OnLock(playerID, text)
 	})
 }
 
@@ -476,12 +465,12 @@ func (r *Room) lobbyStateData(forPlayer string) map[string]any {
 		hostName = h.DisplayName
 	}
 	out := map[string]any{
-		"seats": seats,
-		"mode":  string(r.mode),
-		"link":  r.link,
-		"host":  hostName,
+		"seats":          seats,
+		"mode":           string(r.mode),
+		"link":           r.link,
+		"host":           hostName,
 		"host_player_id": r.hostID,
-		"started": r.started,
+		"started":        r.started,
 	}
 	if forPlayer != "" {
 		if p := r.players[forPlayer]; p != nil {
@@ -580,18 +569,6 @@ func (e *roomEvents) OnRoundStart(round int, prompt data.Prompt, deadlineMs int6
 
 func (e *roomEvents) OnLocked(seat string) {
 	e.room.broadcastAll("locked", map[string]any{"seat": seat})
-}
-
-func (e *roomEvents) OnTeammateDraft(seat, text string) {
-	side := SideOf(seat)
-	for _, p := range e.room.players {
-		if p.Conn == nil || p.Seat == "" {
-			continue
-		}
-		if SideOf(p.Seat) == side && p.Seat != seat {
-			p.Conn.Send("teammate_draft", map[string]any{"seat": seat, "text": text})
-		}
-	}
 }
 
 func (e *roomEvents) OnRoundResult(out match.RoundOutcome) {

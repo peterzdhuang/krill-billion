@@ -9,20 +9,18 @@ const (
 	TypeReady     = "ready"
 	TypeStart     = "start"
 	TypeSetMode   = "set_mode"
-	TypeDraft     = "draft"
 	TypeLock      = "lock"
 	TypePing      = "ping"
 
 	// Server → client
-	TypeLobbyState    = "lobby_state"
-	TypeRoomState     = "room_state"
-	TypeRoundStart    = "round_start"
-	TypeTeammateDraft = "teammate_draft"
-	TypeLocked        = "locked"
-	TypeRoundResult   = "round_result"
-	TypeMatchEnd      = "match_end"
-	TypeError         = "error"
-	TypePong          = "pong"
+	TypeLobbyState  = "lobby_state"
+	TypeRoomState   = "room_state"
+	TypeRoundStart  = "round_start"
+	TypeLocked      = "locked"
+	TypeRoundResult = "round_result"
+	TypeMatchEnd    = "match_end"
+	TypeError       = "error"
+	TypePong        = "pong"
 )
 
 // Envelope is the wire format for every WS message.
@@ -53,11 +51,11 @@ type SetModeData struct {
 	Mode string `json:"mode"`
 }
 
-type DraftData struct {
+// LockData carries the answer text. Nothing is streamed while typing; the
+// client sends text only on Enter or as a final submit at the deadline.
+type LockData struct {
 	Text string `json:"text"`
 }
-
-type LockData struct{}
 
 type PingData struct{}
 
@@ -113,11 +111,6 @@ type RoundStartData struct {
 	SuddenDeath bool       `json:"sudden_death"`
 }
 
-type TeammateDraftData struct {
-	Seat string `json:"seat"`
-	Text string `json:"text"`
-}
-
 type LockedData struct {
 	Seat string `json:"seat"`
 }
@@ -165,6 +158,5 @@ const (
 	ErrNotReady        = "not_ready"
 	ErrBadPhase        = "bad_phase"
 	ErrDuplicateAnswer = "duplicate_answer"
-	ErrRateLimited     = "rate_limited"
 	ErrNotInBank       = "not_in_bank"
 )

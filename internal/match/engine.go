@@ -27,15 +27,15 @@ type Engine struct {
 	deadline     time.Time
 	prompt       data.Prompt
 	usedPrompts  []string
-	drafts       map[string]string // seat -> text
+	drafts       map[string]string // seat -> text (set only on lock / final submit)
 	locked       map[string]bool
-	lastDraftAt  map[string]time.Time
 	hp           [2]int
 	mult         [2]float64
 	streak       [2]int
 	recap        []RoundOutcome
 	ended        bool
 	end          MatchEnd
+	inGrace      bool // answering deadline passed; accepting final locks briefly
 
 	// reconnect / forfeit
 	pausesUsed     map[string]int  // playerID -> pause count
@@ -46,6 +46,7 @@ type Engine struct {
 	savedRemain    time.Duration
 
 	answeringTimer Timer
+	graceTimer     Timer
 	revealTimer    Timer
 	pauseTimer     Timer
 }
@@ -61,7 +62,6 @@ func NewEngine(clock Clock, store PromptStore, events Events) *Engine {
 		phase:          PhaseIdle,
 		drafts:         make(map[string]string),
 		locked:         make(map[string]bool),
-		lastDraftAt:    make(map[string]time.Time),
 		pausesUsed:     make(map[string]int),
 		pendingForfeit: make(map[string]bool),
 	}
@@ -118,9 +118,9 @@ func (e *Engine) beginRound(sudden bool) {
 	e.suddenDeath = sudden
 	e.round++
 	e.phase = PhaseAnswering
+	e.inGrace = false
 	e.drafts = make(map[string]string)
 	e.locked = make(map[string]bool)
-	e.lastDraftAt = make(map[string]time.Time)
 
 	prompts := e.store.RandomPrompts(1, e.usedPrompts)
 	if len(prompts) == 0 {
@@ -144,6 +144,10 @@ func (e *Engine) stopTimers() {
 		e.answeringTimer.Stop()
 		e.answeringTimer = nil
 	}
+	if e.graceTimer != nil {
+		e.graceTimer.Stop()
+		e.graceTimer = nil
+	}
 	if e.revealTimer != nil {
 		e.revealTimer.Stop()
 		e.revealTimer = nil
@@ -158,37 +162,10 @@ func (e *Engine) activeSeats() []string {
 	return []string{SeatA1, SeatB1}
 }
 
-func (e *Engine) OnDraft(playerID, text string) {
-	if e.ended || e.phase != PhaseAnswering {
-		e.events.OnError(playerID, "bad_phase", "not accepting drafts")
-		return
-	}
-	p := e.players[playerID]
-	if p == nil {
-		return
-	}
-	if e.locked[p.Seat] {
-		return // ignore late draft after lock
-	}
-	now := e.clock.Now()
-	if last, ok := e.lastDraftAt[p.Seat]; ok && now.Sub(last) < 50*time.Millisecond {
-		e.events.OnError(playerID, "rate_limited", "draft too fast")
-		return
-	}
-	e.lastDraftAt[p.Seat] = now
-	e.drafts[p.Seat] = text
-	// teammate_draft only for same side other seats (2v2); 1v1 has none
-	for seat, other := range e.bySeat {
-		if other == nil || other.ID == playerID {
-			continue
-		}
-		if other.Side == p.Side {
-			e.events.OnTeammateDraft(seat, text)
-		}
-	}
-}
-
-func (e *Engine) OnLock(playerID string) {
+// OnLock records the player's answer text and locks their seat. Text is only
+// accepted on lock (Enter) or as a final submit during the post-deadline grace
+// window — nothing is streamed while typing.
+func (e *Engine) OnLock(playerID, text string) {
 	if e.ended || e.phase != PhaseAnswering {
 		e.events.OnError(playerID, "bad_phase", "not accepting locks")
 		return
@@ -200,16 +177,19 @@ func (e *Engine) OnLock(playerID string) {
 	if e.locked[p.Seat] {
 		return
 	}
-	// An empty lock is a pass. Anything else must be a real entry (prefix,
-	// typo, alias, or exact). Keep the raw draft so reveal can show
-	// typed → canonical (e.g. eagel → Eagle). A miss stays unlocked so the
-	// player can retype before the buzzer.
-	if text := strings.TrimSpace(e.drafts[p.Seat]); text != "" {
-		if _, ok := e.store.Match(e.prompt.ID, text); !ok {
+
+	trimmed := strings.TrimSpace(text)
+	// Before the deadline, a non-empty lock must match the bank (prefix, typo,
+	// alias, or exact). Keep the raw text so reveal can show typed → canonical.
+	// After the deadline (grace), accept whatever they typed — timeout
+	// auto-submit — and score it as invalid if it does not match.
+	if !e.inGrace && trimmed != "" {
+		if _, ok := e.store.Match(e.prompt.ID, trimmed); !ok {
 			e.events.OnError(playerID, "not_in_bank", "not in this category")
 			return
 		}
 	}
+	e.drafts[p.Seat] = trimmed
 	e.locked[p.Seat] = true
 	e.events.OnLocked(p.Seat)
 	if e.allLocked() {
@@ -227,9 +207,23 @@ func (e *Engine) allLocked() bool {
 }
 
 func (e *Engine) onAnsweringTimeout() {
+	if e.ended || e.phase != PhaseAnswering || e.inGrace {
+		return
+	}
+	// Brief grace so in-flight final locks (client submit at deadline) can
+	// still carry text before we fall back to empty for unlocked seats.
+	e.inGrace = true
+	e.answeringTimer = nil
+	e.graceTimer = e.clock.AfterFunc(SubmitGrace, func() {
+		e.onGraceExpired()
+	})
+}
+
+func (e *Engine) onGraceExpired() {
 	if e.ended || e.phase != PhaseAnswering {
 		return
 	}
+	e.graceTimer = nil
 	for _, seat := range e.activeSeats() {
 		if !e.locked[seat] {
 			e.locked[seat] = true
@@ -244,6 +238,11 @@ func (e *Engine) resolveAnswering() {
 		e.answeringTimer.Stop()
 		e.answeringTimer = nil
 	}
+	if e.graceTimer != nil {
+		e.graceTimer.Stop()
+		e.graceTimer = nil
+	}
+	e.inGrace = false
 	e.phase = PhaseReveal
 
 	var sides [2]SideAnswer

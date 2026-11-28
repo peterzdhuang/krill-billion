@@ -15,6 +15,9 @@ const (
 	ReconnectPause  = 15 * time.Second
 	MinResumeTime   = 5 * time.Second
 	LobbyDropGrace  = 15 * time.Second
+	// SubmitGrace is how long after the answering deadline the engine still
+	// accepts a final lock-with-text from the client before forcing empty.
+	SubmitGrace = 500 * time.Millisecond
 )
 
 // Phase is the authoritative match phase.
@@ -108,7 +111,6 @@ type MatchEnd struct {
 type Events interface {
 	OnRoundStart(round int, prompt data.Prompt, deadlineMs int64, suddenDeath bool)
 	OnLocked(seat string)
-	OnTeammateDraft(seat, text string)
 	OnRoundResult(out RoundOutcome)
 	OnMatchEnd(end MatchEnd)
 	OnRoomState()
