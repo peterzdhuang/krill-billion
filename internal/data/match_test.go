@@ -155,45 +155,21 @@ func TestMatch(t *testing.T) {
 	}
 }
 
-func TestSuggest(t *testing.T) {
+func TestMatchCanonicalLabel(t *testing.T) {
 	s := testStore(t, Prompt{
 		ID:   "p1",
-		Text: "test",
+		Text: "birds",
 		Entries: []Entry{
-			{ID: "afghan", Label: "Afghanistan", Rarity: 40, Aliases: []string{"AF"}},
-			{ID: "test", Label: "test", Rarity: 15},
+			{ID: "eagle", Label: "Eagle", Rarity: 40},
 		},
 	})
-
-	label, ok := s.Suggest("p1", "afghanis")
-	if !ok || label != "Afghanistan" {
-		t.Fatalf("Suggest(prefix) = (%q, %v), want Afghanistan", label, ok)
+	id, ok := s.Match("p1", "eagel")
+	if !ok || id != "eagle" {
+		t.Fatalf("Match(eagel) = (%q, %v), want eagle", id, ok)
 	}
-	label, ok = s.Suggest("p1", "tset")
-	if !ok || label != "test" {
-		t.Fatalf("Suggest(typo) = (%q, %v), want test", label, ok)
-	}
-	label, ok = s.Suggest("p1", "af")
-	if !ok || label != "Afghanistan" {
-		t.Fatalf("Suggest(alias) = (%q, %v), want Afghanistan", label, ok)
-	}
-	if _, ok := s.Suggest("p1", "zzz"); ok {
-		t.Fatal("Suggest(unrelated) should fail")
-	}
-	// Accepted suggestion must always Match.
-	for _, q := range []string{"afghanis", "tset", "af", "Afghanistaan"} {
-		sug, ok := s.Suggest("p1", q)
-		if !ok {
-			t.Fatalf("Suggest(%q) failed", q)
-		}
-		id, mok := s.Match("p1", sug)
-		if !mok {
-			t.Fatalf("Match(Suggest(%q)=%q) failed", q, sug)
-		}
-		id2, mok2 := s.Match("p1", q)
-		if !mok2 || id2 != id {
-			t.Fatalf("Match(%q) = (%q, %v), want same entry as suggestion %q (%q)", q, id2, mok2, sug, id)
-		}
+	ent, found := s.Entry("p1", id)
+	if !found || ent.Label != "Eagle" {
+		t.Fatalf("Entry = %+v, want Label Eagle", ent)
 	}
 }
 

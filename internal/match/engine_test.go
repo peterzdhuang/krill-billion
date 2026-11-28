@@ -39,13 +39,6 @@ func (s *tieStore) Match(promptID, guess string) (string, bool) {
 	return "e1", true
 }
 
-func (s *tieStore) Suggest(promptID, guess string) (string, bool) {
-	if guess == "" {
-		return "", false
-	}
-	return "Alpha", true
-}
-
 func (s *tieStore) Entry(promptID, entryID string) (data.Entry, bool) {
 	if entryID == "e1" {
 		return data.Entry{ID: "e1", Label: "Alpha", Rarity: 40}, true
@@ -83,13 +76,6 @@ func (s *selectiveStore) Match(promptID, guess string) (string, bool) {
 	return "e1", true
 }
 
-func (s *selectiveStore) Suggest(promptID, guess string) (string, bool) {
-	if _, ok := s.Match(promptID, guess); !ok {
-		return "", false
-	}
-	return "Alpha", true
-}
-
 func (r *recordingEvents) OnRoundStart(round int, prompt data.Prompt, deadlineMs int64, suddenDeath bool) {
 	r.rounds++
 	if round > r.maxRound {
@@ -98,7 +84,6 @@ func (r *recordingEvents) OnRoundStart(round int, prompt data.Prompt, deadlineMs
 }
 func (r *recordingEvents) OnLocked(seat string)                   {}
 func (r *recordingEvents) OnTeammateDraft(seat, text string)      {}
-func (r *recordingEvents) OnSuggest(playerID, label string)       {}
 func (r *recordingEvents) OnRoundResult(out RoundOutcome)         { r.results = append(r.results, out) }
 func (r *recordingEvents) OnMatchEnd(end MatchEnd)                { r.ends = append(r.ends, end) }
 func (r *recordingEvents) OnRoomState()                           {}
@@ -211,5 +196,27 @@ func TestLockRejectsUnknown(t *testing.T) {
 		if side.Seat == SeatA1 && (side.Valid || side.Score != 0) {
 			t.Fatalf("timeout answer = %+v, want invalid score 0", side)
 		}
+	}
+}
+
+func TestLockKeepsRawGuessForReveal(t *testing.T) {
+	clock := NewFakeClock(time.Unix(0, 0).UTC())
+	ev := &recordingEvents{}
+	eng := NewEngine(clock, &tieStore{}, ev)
+	eng.AddPlayer(Player{ID: "a", Seat: SeatA1, DisplayName: "A", Side: 0})
+	eng.AddPlayer(Player{ID: "b", Seat: SeatB1, DisplayName: "B", Side: 1})
+	eng.Start()
+
+	eng.OnDraft("a", "alfa")
+	eng.OnDraft("b", "Alpha")
+	eng.OnLock("a")
+	eng.OnLock("b")
+
+	if len(ev.results) != 1 {
+		t.Fatalf("results = %d, want 1", len(ev.results))
+	}
+	a := ev.results[0].Sides[0]
+	if !a.Valid || a.Text != "alfa" || a.MatchedLabel != "Alpha" {
+		t.Fatalf("side A = %+v, want text=alfa matched_label=Alpha", a)
 	}
 }

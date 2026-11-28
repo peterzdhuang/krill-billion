@@ -23,26 +23,17 @@ type matchCandidate struct {
 
 // Match maps a raw guess onto exactly one canonical entry of the prompt.
 // Empty guesses never match. Exact normalized hits win; otherwise a prefix
-// (#42 autocomplete) or fuzzy Damerau–Levenshtein (OSA) search runs within the
-// length-based edit budget. Ties prefer tighter kind, then smaller distance,
-// then lower rarity (more common / higher commonness), then entry id.
-// On accept, callers rewrite the draft to the canonical Entry.Label.
+// or fuzzy Damerau–Levenshtein (OSA) search runs within the length-based edit
+// budget. Ties prefer tighter kind, then smaller distance, then lower rarity
+// (more common / higher commonness), then entry id.
+// Callers should keep the raw guess for display and use Entry.Label as the
+// canonical matched label after a hit.
 func (s *Store) Match(promptID, guess string) (entryID string, ok bool) {
 	best, ok := s.bestMatch(promptID, guess)
 	if !ok {
 		return "", false
 	}
 	return best.entryID, true
-}
-
-// Suggest returns the canonical label of the best Match candidate for guess.
-// Used for lenient autocomplete; anything it returns is accepted by Match.
-func (s *Store) Suggest(promptID, guess string) (label string, ok bool) {
-	best, ok := s.bestMatch(promptID, guess)
-	if !ok {
-		return "", false
-	}
-	return best.label, true
 }
 
 func (s *Store) bestMatch(promptID, guess string) (*matchCandidate, bool) {
@@ -73,8 +64,8 @@ func (s *Store) bestMatch(promptID, guess string) (*matchCandidate, bool) {
 	guessLen := len(guessRunes)
 	var best *matchCandidate
 
-	// Prefix path (#42): keep autocomplete while typing. Prefer the shortest
-	// remaining suffix (tightest prefix), then rarity/id via betterMatch.
+	// Prefix path: incomplete submissions that are a unique prefix of a label
+	// or alias. Prefer the shortest remaining suffix, then rarity/id.
 	if guessLen >= 2 {
 		for _, e := range ip.entries {
 			for _, n := range e.norms {

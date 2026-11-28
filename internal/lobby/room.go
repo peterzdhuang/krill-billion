@@ -594,14 +594,6 @@ func (e *roomEvents) OnTeammateDraft(seat, text string) {
 	}
 }
 
-func (e *roomEvents) OnSuggest(playerID, label string) {
-	p := e.room.players[playerID]
-	if p == nil || p.Conn == nil {
-		return
-	}
-	p.Conn.Send("suggest", map[string]any{"label": label})
-}
-
 func (e *roomEvents) OnRoundResult(out match.RoundOutcome) {
 	e.room.broadcastAll("round_result", out)
 }
