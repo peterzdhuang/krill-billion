@@ -64,10 +64,20 @@ type SideAnswer struct {
 	Streak       int    `json:"streak"`
 }
 
+// RoundPrompt is the prompt identity carried on round_result / match_end.recap
+// so clients can show a GeoGuessr-style reveal and end-of-game summary without
+// stashing round_start locally.
+type RoundPrompt struct {
+	ID       string `json:"id"`
+	Text     string `json:"text"`
+	Category string `json:"category"`
+}
+
 // RoundOutcome is emitted after resolve.
 type RoundOutcome struct {
 	Round       int           `json:"round"`
 	SuddenDeath bool          `json:"sudden_death"`
+	Prompt      RoundPrompt   `json:"prompt"`
 	Sides       [2]SideAnswer `json:"sides"`
 	Damage      int           `json:"damage"`
 	Gap         int           `json:"gap"`

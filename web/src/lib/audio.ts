@@ -16,7 +16,10 @@ export type SfxName =
   | "krillion"
   | "stinger"
   | "flourish"
-  | "miss";
+  | "miss"
+  | "reveal"
+  | "hit"
+  | "win";
 
 type MuteListener = (muted: boolean) => void;
 
@@ -235,6 +238,21 @@ function emit(ac: AudioContext, out: GainNode, name: SfxName) {
     case "miss":
       tone(ac, out, { f0: 220, f1: 52, dur: 0.7, peak: 0.24 });
       noise(ac, out, { dur: 0.5, lp: 400, peak: 0.14, delay: 0.05 });
+      break;
+    case "reveal":
+      // Soft card-flip bubble for sequential answer reveals.
+      tone(ac, out, { type: "triangle", f0: 740, f1: 1180, dur: 0.18, peak: 0.16, lp: 3600 });
+      tone(ac, out, { f0: 1480, dur: 0.12, peak: 0.08, delay: 0.05 });
+      noise(ac, out, { dur: 0.1, lp: 2800, hp: 1200, peak: 0.04 });
+      break;
+    case "hit":
+      tone(ac, out, { f0: 90, f1: 42, dur: 0.45, peak: 0.38, lp: 700 });
+      noise(ac, out, { dur: 0.35, lp: 900, hp: 180, peak: 0.16 });
+      tone(ac, out, { type: "triangle", f0: 392, dur: 0.22, peak: 0.1, delay: 0.08 });
+      break;
+    case "win":
+      // Same silhouette as krillion — celebratory climb.
+      emit(ac, out, "krillion");
       break;
     default:
       break;

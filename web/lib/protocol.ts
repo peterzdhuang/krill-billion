@@ -111,6 +111,7 @@ export type SideAnswerData = {
 export type RoundResultData = {
   round: number;
   sudden_death: boolean;
+  prompt?: PromptInfo;
   sides: [SideAnswerData, SideAnswerData];
   damage: number;
   gap: number;
